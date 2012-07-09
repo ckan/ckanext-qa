@@ -20,6 +20,7 @@ Before installing ckanext-qa, make sure that you have installed the following:
 
 * CKAN 1.5.1+
 * ckanext-archiver (http://github.com/okfn/ckanext-archiver)
+* ckan-service-prototype (http://github.com/okfn/ckan-service-prototype)
 
 
 Installation
@@ -45,13 +46,12 @@ and openness score interface should be available at http://your-ckan-instance/qa
 Configuration
 -------------
 
-The QA extension now depends on the CKAN Archiver extension and CKAN 1.5 (with Celery). 
-
-You must also make sure that the following is set in your CKAN config:
+You must make sure that the following is set in your CKAN config:
 
 ::
 
     ckan.site_url = <URL to your CKAN instance>
+    qa.service_url = <URL to QA web service>
 
 
 **Optional:**

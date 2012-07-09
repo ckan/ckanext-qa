@@ -7,8 +7,12 @@ import mimetypes
 import json
 import requests
 import urlparse
-import ckan.lib.celery_app as celery_app
-from ckanext.archiver.tasks import link_checker, LinkCheckerError
+import flask
+import ckanserviceprototype.web as web
+import ckanserviceprototype.job as job
+import ckanext.archiver.tasks as archiver
+
+app = web.app
 
 
 class QAError(Exception):
@@ -50,17 +54,27 @@ MIME_TYPE_SCORE = {
 }
 
 
-def _update_task_status(context, data):
+@app.route("/status", methods=['GET'])
+def status():
+    job_types = web.async_types.keys() + web.sync_types.keys()
+    return flask.jsonify(
+        version=1.8,
+        job_types=job_types,
+        name='qa'
+    )
+
+
+def _update_task_status(data, site_url, apikey):
     """
     Use CKAN API to update the task status. The data parameter
     should be a dict representing one row in the task_status table.
 
     Returns the content of the response.
     """
-    api_url = urlparse.urljoin(context['site_url'], 'api/action')
+    api_url = urlparse.urljoin(site_url, 'api/action')
     res = requests.post(
         api_url + '/task_status_update', json.dumps(data),
-        headers={'Authorization': context['apikey'],
+        headers={'Authorization': apikey,
                  'Content-Type': 'application/json'}
     )
     if res.status_code == 200:
@@ -99,8 +113,8 @@ def _task_status_data(id, result):
     ]
 
 
-@celery_app.celery.task(name="qa.update")
-def update(context, data):
+@job.async
+def qa_update(task_id, input):
     """
     Score resources on Sir Tim Bernes-Lee's five stars of openness
     based on mime-type.
@@ -112,18 +126,19 @@ def update(context, data):
         'openness_score_failure_count': the number of consecutive times that
                                         this resource has returned a score of 0
     """
+    resource = input['data']['resource']
+    site_url = input['data']['site_url']
+    apikey = input['data']['apikey']
+
     try:
-        data = json.loads(data)
-        context = json.loads(context)
+        result = resource_score(resource, site_url, apikey)
+        task_status_data = _task_status_data(resource['id'], result)
 
-        result = resource_score(context, data)
-        task_status_data = _task_status_data(data['id'], result)
-
-        api_url = urlparse.urljoin(context['site_url'], 'api/action')
+        api_url = urlparse.urljoin(site_url, 'api/action')
         response = requests.post(
             api_url + '/task_status_update_many',
             json.dumps({'data': task_status_data}),
-            headers={'Authorization': context['apikey'],
+            headers={'Authorization': apikey,
                      'Content-Type': 'application/json'}
         )
         if response.status_code != 200:
@@ -132,19 +147,20 @@ def update(context, data):
 
         return json.dumps(result)
     except Exception, e:
-        _update_task_status(context, {
-            'entity_id': data['id'],
+        data = {
+            'entity_id': resource['id'],
             'entity_type': u'resource',
             'task_type': 'qa',
-            'key': u'celery_task_id',
-            'value': unicode(update.request.id),
+            'key': u'job_id',
+            'value': unicode(task_id),
             'error': '%s: %s' % (e.__class__.__name__,  unicode(e)),
             'last_updated': datetime.datetime.now().isoformat()
-        })
+        }
+        _update_task_status(data, site_url, apikey)
         raise
 
 
-def resource_score(context, data):
+def resource_score(resource, site_url, apikey):
     """
     Score resources on Sir Tim Bernes-Lee's five stars of openness
     based on mime-type.
@@ -161,23 +177,23 @@ def resource_score(context, data):
     score_failure_count = 0
 
     # get openness score failure count for task status table if exists
-    api_url = urlparse.urljoin(context['site_url'], 'api/action')
+    api_url = urlparse.urljoin(site_url, 'api/action')
     response = requests.post(
         api_url + '/task_status_show',
-        json.dumps({'entity_id': data['id'], 'task_type': 'qa',
+        json.dumps({'entity_id': resource['id'], 'task_type': 'qa',
                     'key': 'openness_score_failure_count'}),
-        headers={'Authorization': context['apikey'],
+        headers={'Authorization': apikey,
                  'Content-Type': 'application/json'}
     )
     if json.loads(response.content)['success']:
         score_failure_count = int(json.loads(response.content)['result'].get('value', '0'))
 
     # no score for resources that don't have an open license
-    if not data.get('is_open'):
+    if not resource.get('is_open'):
         score_reason = 'License not open'
     else:
         try:
-            headers = json.loads(link_checker("{}", json.dumps(data)))
+            headers = json.loads(archiver.link_checker("{}", json.dumps(resource)))
             ct = headers.get('content-type')
 
             # ignore charset if exists (just take everything before the ';')
@@ -185,8 +201,8 @@ def resource_score(context, data):
                 ct = ct.split(';')[0]
 
             # also get format from resource and by guessing from file extension
-            format = data.get('format', '').lower()
-            file_type = mimetypes.guess_type(data['url'])[0]
+            format = resource.get('format', '').lower()
+            file_type = mimetypes.guess_type(resource['url'])[0]
 
             # file type takes priority for scoring
             if file_type:
@@ -218,7 +234,7 @@ def resource_score(context, data):
                     # TODO: use the todo extension to flag this issue
                     pass
 
-        except LinkCheckerError, e:
+        except archiver.LinkCheckerError, e:
             score_reason = str(e)
         except Exception, e:
             score_reason = 'Unknown error: %s' % str(e)
@@ -233,3 +249,8 @@ def resource_score(context, data):
         'openness_score_reason': score_reason,
         'openness_score_failure_count': score_failure_count
     }
+
+
+if __name__ == "__main__":
+    web.configure()
+    app.run()

@@ -46,18 +46,10 @@ class QACommand(p.toolkit.CkanCommand):
         cmd = self.args[0]
         self._load_config()
 
-        # import tasks after load config so CKAN_CONFIG evironment variable
-        # can be set
-        import tasks
-
         user = p.toolkit.get_action('get_site_user')(
             {'model': model, 'ignore_auth': True}, {}
         )
-        context = json.dumps({
-            'site_url': config['ckan.site_url'],
-            'apikey': user.get('apikey'),
-            'username': user.get('name'),
-        })
+        apikey = user.get('apikey')
 
         if cmd == 'update':
             for package in self._package_list():
@@ -67,8 +59,6 @@ class QACommand(p.toolkit.CkanCommand):
                 for resource in package.get('resources', []):
                     pkg = model.Package.get(package['id'])
                     resource['is_open'] = pkg.isopen()
-
-                    data = json.dumps(resource)
 
                     task_id = make_uuid()
                     task_status = {
@@ -86,7 +76,21 @@ class QACommand(p.toolkit.CkanCommand):
                     }
 
                     p.toolkit.get_action('task_status_update')(task_context, task_status)
-                    tasks.update.apply_async(args=[context, data], task_id=task_id)
+
+                    job_url = urlparse.urljoin(
+                        config['qa.service_url'], 'job/%s' % task_id
+                    )
+                    job_data = json.dumps({
+                        'job_type': 'qa_update',
+                        'data': {'resource': resource,
+                                 'site_url': config['ckan.site_url'],
+                                 'apikey': apikey},
+                        'metadata': {'resource_id': resource['id']}
+                    })
+                    job_headers = {'Content-Type': 'application/json'}
+                    requests.post(job_url, job_data, headers=job_headers)
+                    logger.info("Updating resource %s (job id: %s)" % \
+                                (resource['id'], task_id))
 
         elif cmd == 'clean':
             logger.error('Command "%s" not implemented' % (cmd,))

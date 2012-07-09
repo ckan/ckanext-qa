@@ -1,19 +1,20 @@
 import json
 import datetime
+import urlparse
 from genshi.input import HTML
 from genshi.filters import Transformer
 from pylons import request, tmpl_context as c
+import requests
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.model as model
 import ckan.plugins as p
 import ckan.lib.helpers as h
-import ckan.lib.celery_app as celery_app
+import ckan.model.domain_object as domain_object
 from ckan.model.types import make_uuid
 import html
 import reports
 
 resource_dictize = model_dictize.resource_dictize
-send_task = celery_app.celery.send_task
 
 
 class QAPlugin(p.SingletonPlugin):
@@ -25,7 +26,8 @@ class QAPlugin(p.SingletonPlugin):
     p.implements(p.IResourceUrlChange)
 
     def configure(self, config):
-        self.site_url = config.get('ckan.site_url')
+        self.site_url = config['ckan.site_url']
+        self.service_url = config['qa.service_url']
 
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'templates')
@@ -84,9 +86,8 @@ class QAPlugin(p.SingletonPlugin):
         if not isinstance(entity, model.Resource):
             return
 
-        if operation:
-            if operation == model.DomainObjectOperation.new:
-                self._create_task(entity)
+        if operation and operation == domain_object.DomainObjectOperation.new:
+            self._create_task(entity)
         else:
             # if operation is None, resource URL has been changed, as the
             # notify function in IResourceUrlChange only takes 1 parameter
@@ -96,18 +97,12 @@ class QAPlugin(p.SingletonPlugin):
         user = p.toolkit.get_action('get_site_user')(
             {'model': model, 'ignore_auth': True, 'defer_commit': True}, {}
         )
-        context = json.dumps({
-            'site_url': self.site_url,
-            'apikey': user.get('apikey')
-        })
 
         resource_dict = resource_dictize(resource, {'model': model})
 
         related_packages = resource.related_packages()
         if related_packages:
             resource_dict['is_open'] = related_packages[0].isopen()
-
-        data = json.dumps(resource_dict)
 
         task_id = make_uuid()
         task_status = {
@@ -125,7 +120,17 @@ class QAPlugin(p.SingletonPlugin):
         }
 
         p.toolkit.get_action('task_status_update')(task_context, task_status)
-        send_task('qa.update', args=[context, data], task_id=task_id)
+
+        job_url = urlparse.urljoin(self.service_url, 'job/%s' % task_id)
+        job_data = json.dumps({
+            'job_type': 'qa_update',
+            'data': {'resource': resource_dict,
+                     'site_url': self.site_url,
+                     'apikey': user.get('apikey')},
+            'metadata': {'resource_id': resource.id}
+        })
+        job_headers = {'Content-Type': 'application/json'}
+        requests.post(job_url, job_data, headers=job_headers)
 
     def filter(self, stream):
         routes = request.environ.get('pylons.routes_dict')

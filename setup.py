@@ -33,8 +33,5 @@ setup(
 
     [ckan.plugins]
     qa=ckanext.qa.plugin:QAPlugin
-
-    [ckan.celery_task]
-    tasks=ckanext.qa.celery_import:task_imports
     ''',
 )
