@@ -8,8 +8,12 @@ import json
 import requests
 import urlparse
 import ckan.lib.celery_app as celery_app
+
 from ckanext.archiver.tasks import link_checker, LinkCheckerError
 
+import urllib2
+import logging
+log = logging.getLogger('ckanext.qa')
 
 class QAError(Exception):
     pass
@@ -58,13 +62,26 @@ def _update_task_status(context, data):
     Returns the content of the response.
     """
     api_url = urlparse.urljoin(context['site_url'], 'api/action')
-    res = requests.post(
+    '''res = requests.post(
         api_url + '/task_status_update', json.dumps(data),
         headers={'Authorization': context['apikey'],
                  'Content-Type': 'application/json'}
-    )
-    if res.status_code == 200:
-        return res.content
+    )'''
+
+    url = api_url + '/task_status_update'
+    params = '%s=1' % json.dumps({'data': task_status_data})
+    headers = { "Accept" : "application/json",
+                "Conthent-Type": "application/json",
+                'Authorization': context['apikey']
+              }
+                 
+    req = urllib2.Request(url, params, headers)
+    response = urllib2.urlopen(req)
+    f = response.read()
+    content = json.loads(f)
+    
+    if content.getcode() == 200:
+        return json.dumps(content.get('result').get('results'))
     else:
         raise CkanError('ckan failed to update task_status, status_code (%s), error %s'
                         % (res.status_code, res.content))
@@ -112,7 +129,7 @@ def update(context, data):
         'openness_score_failure_count': the number of consecutive times that
                                         this resource has returned a score of 0
     """
-    log = update.get_logger()
+    #log = update.get_logger()
     try:
         data = json.loads(data)
         context = json.loads(context)
@@ -125,24 +142,38 @@ def update(context, data):
         task_status_data = _task_status_data(data['id'], result)
 
         api_url = urlparse.urljoin(context['site_url'], 'api/action')
-        response = requests.post(
+        '''response = requests.post(
             api_url + '/task_status_update_many',
             json.dumps({'data': task_status_data}),
             headers={'Authorization': context['apikey'],
                      'Content-Type': 'application/json'}
-        )
-        if not response.ok:
+        )'''
+        
+        url = api_url + '/task_status_update_many'
+        params = '%s=1' % json.dumps({'data': task_status_data})
+        headers = { "Accept" : "application/json",
+                    "Conthent-Type": "application/json",
+                    'Authorization': context['apikey']
+                  }
+                 
+        req = urllib2.Request(url, params, headers)
+        response = urllib2.urlopen(req)
+        f = response.read()
+        content = json.loads(f)
+                         
+        if not content.get('success'):
             err = 'ckan failed to update task_status, error %s' \
-                  % response.error
+                  % content['error']
             log.error(err)
             raise CkanError(err)
-        elif response.status_code != 200:
+        elif response.getcode() != 200:
             err = 'ckan failed to update task_status, status_code (%s), error %s' \
-                  % (response.status_code, response.content)
+                  % (response.getcode(), content.get('result').get('results'))
             log.error(err)
             raise CkanError(err)
 
-        return json.dumps(result)
+        #return json.dumps(result)
+        return json.dumps(content.get('result').get('results'))
     except Exception, e:
         log.error('Exception occurred during QA update: %s: %s', e.__class__.__name__,  unicode(e))
         _update_task_status(context, {
@@ -169,7 +200,7 @@ def resource_score(context, data):
         'openness_score_failure_count': the number of consecutive times that
                                         this resource has returned a score of 0
     """
-    log = update.get_logger()
+    #log = update.get_logger()
 
     score = 0
     score_reason = ''
@@ -177,15 +208,22 @@ def resource_score(context, data):
 
     # get openness score failure count for task status table if exists
     api_url = urlparse.urljoin(context['site_url'], 'api/action')
-    response = requests.post(
+    '''response = requests.post(
         api_url + '/task_status_show',
         json.dumps({'entity_id': data['id'], 'task_type': 'qa',
                     'key': 'openness_score_failure_count'}),
         headers={'Authorization': context['apikey'],
                  'Content-Type': 'application/json'}
-    )
-    if json.loads(response.content)['success']:
-        score_failure_count = int(json.loads(response.content)['result'].get('value', '0'))
+    )'''
+  
+    args = {'entity_id': data['id'], 'task_type': 'qa',
+            'key': 'openness_score_failure_count'}
+            
+    response = requests.get(api_url + '/task_status_show', params=args).text
+    
+    
+    if json.loads(response)['success']:
+        score_failure_count = int(json.loads(response)['result'].get('value', '0'))
 
     # no score for resources that don't have an open license
     if not data.get('is_open'):
