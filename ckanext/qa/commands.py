@@ -138,23 +138,26 @@ class QACommand(p.toolkit.CkanCommand):
                     raise CkanApiError(err)
                 yield response.get('result')
         else:
-            page, limit = 1, 100
+            #page, limit = 1, 100
+            page, limit = 0, 100
             url = api_url + '/current_package_list_with_resources'
             #response = self.make_post(url, {'page': page, 'limit': limit})
-            response = self.get_response(url, {'page': page, 'limit': limit})
+            response = self.get_response(url, {'start': page, 'rows': limit})
+                        
             if not response.get('success'):
                 err = ('Failed to get package list with resources from url %r: %s' %
                        (url, response.get('error')))
                 self.log.error(err)
                 raise CkanApiError(err)
-            chunk = response.get('result')
+            chunk = response.get('result').get('results')
             while(chunk):
-                page += 1
+                #page += 1
+                page = page + limit
                 for p in chunk:
                     yield p
                 url = api_url + '/current_package_list_with_resources'
                 #response = self.make_post(url, {'page': page, 'limit': limit})
-                response = self.get_response(url, {'page': page, 'limit': limit})
+                response = self.get_response(url, {'start': page, 'rows': limit})
 
                 try:
                     response.raise_for_status()
@@ -163,4 +166,5 @@ class QACommand(p.toolkit.CkanCommand):
                        (url, str(e)))
                     self.log.error(err)
                     raise CkanApiError(err)
-                chunk = response.get('result')
+                chunk = response.get('result').get('results')
+                
