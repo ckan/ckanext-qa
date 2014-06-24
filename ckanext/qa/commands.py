@@ -160,7 +160,10 @@ class QACommand(p.toolkit.CkanCommand):
                 response = self.get_response(url, {'start': page, 'rows': limit})
 
                 try:
-                    response.raise_for_status()
+                    #response.raise_for_status()
+                    data = {'start': page, 'rows': limit}
+                    r = requests.get(url, params=data)
+                    r.raise_for_status()
                 except requests.exceptions.RequestException, e:
                     err = ('Failed to get package list with resources from url %r: %s' %
                        (url, str(e)))
