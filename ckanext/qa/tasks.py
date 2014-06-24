@@ -69,22 +69,32 @@ def _update_task_status(context, data):
     )'''
 
     url = api_url + '/task_status_update'
-    params = '%s=1' % json.dumps({'data': task_status_data})
+    params = '%s=1' % json.dumps({'data': data})
     headers = { "Accept" : "application/json",
                 "Conthent-Type": "application/json",
                 'Authorization': context['apikey']
               }
                  
     req = urllib2.Request(url, params, headers)
-    response = urllib2.urlopen(req)
-    f = response.read()
-    content = json.loads(f)
-    
-    if content.getcode() == 200:
-        return json.dumps(content.get('result').get('results'))
+    try:
+        response = urllib2.urlopen(req)
+    except HTTPError as e:            
+      raise CkanError('The server couldn\'t fulfill the request. Error code: %s'
+                            % (e.code))
+    except URLError as e:      
+      raise CkanError('We failed to reach a server. Reason: %s'
+                            % (e.reason))      
+    except:      
+      pass     
     else:
-        raise CkanError('ckan failed to update task_status, status_code (%s), error %s'
-                        % (res.status_code, res.content))
+        f = response.read()
+        content = json.loads(f)
+        
+        if content.getcode() == 200:
+            return json.dumps(content.get('result').get('results'))
+        else:
+            raise CkanError('ckan failed to update task_status, status_code (%s), error %s'
+                            % (res.status_code, res.content))
 
 
 def _task_status_data(id, result):
