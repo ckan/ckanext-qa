@@ -80,11 +80,15 @@ def _update_task_status(context, data):
     try:
         response = urllib2.urlopen(req)
     except HTTPError as e:            
-      raise CkanError('The server couldn\'t fulfill the request. Error code: %s'
+      #raise CkanError('The server couldn\'t fulfill the request. Error code: %s'
+      #                      % (e.code))
+      log.error('The server couldn\'t fulfill the request. Error code: %s'
                             % (e.code))
     except URLError as e:      
-      raise CkanError('We failed to reach a server. Reason: %s'
-                            % (e.reason))      
+      #raise CkanError('We failed to reach a server. Reason: %s'
+      #                      % (e.reason))      
+      log.error('We failed to reach a server. Reason: %s'
+                            % (e.reason))
     except:      
       pass     
     else:
