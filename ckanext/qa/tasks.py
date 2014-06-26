@@ -12,6 +12,7 @@ import ckan.lib.celery_app as celery_app
 from ckanext.archiver.tasks import link_checker, LinkCheckerError
 
 import urllib2
+from urllib2 import Request, urlopen, URLError, HTTPError
 import logging
 log = logging.getLogger('ckanext.qa')
 
