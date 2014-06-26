@@ -98,9 +98,10 @@ def _update_task_status(context, data):
         if content.getcode() == 200:
             return json.dumps(content.get('result').get('results'))
         else:
-            raise CkanError('ckan failed to update task_status, status_code (%s), error %s'
+            #raise CkanError('ckan failed to update task_status, status_code (%s), error %s'
+            #                % (res.status_code, res.content))
+            log.error('ckan failed to update task_status, status_code (%s), error %s'
                             % (res.status_code, res.content))
-
 
 def _task_status_data(id, result):
     return [
@@ -180,12 +181,12 @@ def update(context, data):
             err = 'ckan failed to update task_status, error %s' \
                   % content['error']
             log.error(err)
-            raise CkanError(err)
+            #raise CkanError(err)
         elif response.getcode() != 200:
             err = 'ckan failed to update task_status, status_code (%s), error %s' \
                   % (response.getcode(), content.get('result').get('results'))
             log.error(err)
-            raise CkanError(err)
+            #raise CkanError(err)
 
         #return json.dumps(result)
         return json.dumps(content.get('result').get('results'))
@@ -200,7 +201,7 @@ def update(context, data):
             'error': '%s: %s' % (e.__class__.__name__,  unicode(e)),
             'last_updated': datetime.datetime.now().isoformat()
         })
-        raise
+        #raise
 
 
 def resource_score(context, data):

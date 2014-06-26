@@ -135,7 +135,7 @@ class QACommand(p.toolkit.CkanCommand):
                     err = ('Failed to get package %s from url %r: %s' %
                            (id, url, response.get('error')))
                     self.log.error(err)
-                    raise CkanApiError(err)
+                    #raise CkanApiError(err)
                 yield response.get('result')
         else:
             #page, limit = 1, 100
@@ -148,7 +148,7 @@ class QACommand(p.toolkit.CkanCommand):
                 err = ('Failed to get package list with resources from url %r: %s' %
                        (url, response.get('error')))
                 self.log.error(err)
-                raise CkanApiError(err)
+                #raise CkanApiError(err)
             chunk = response.get('result').get('results')
             while(chunk):
                 #page += 1
@@ -168,6 +168,6 @@ class QACommand(p.toolkit.CkanCommand):
                     err = ('Failed to get package list with resources from url %r: %s' %
                        (url, str(e)))
                     self.log.error(err)
-                    raise CkanApiError(err)
+                    #raise CkanApiError(err)
                 chunk = response.get('result').get('results')
                 
