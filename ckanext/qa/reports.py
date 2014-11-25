@@ -124,6 +124,7 @@ def broken_resource_links_by_dataset():
         from ckan.model import ResourceGroup 
 
         query = model.Session.query(model.Package.name, model.Package.title, model.Resource)\
+            .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
             .join(model.Resource)\
             .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
             .filter(model.TaskStatus.key == u'openness_score')\
@@ -132,7 +133,6 @@ def broken_resource_links_by_dataset():
 
     except ImportError:
         query = model.Session.query(model.Package.name, model.Package.title, model.Resource)\
-            .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
             .join(model.Resource)\
             .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
             .filter(model.TaskStatus.key == u'openness_score')\
