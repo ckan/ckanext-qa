@@ -19,12 +19,28 @@ def five_stars(id=None):
         if not pkg:
             return "Not found"
 
-    # take the maximum openness score among dataset resources to be the
-    # overall dataset openness core
-    query = model.Session.query(model.Package.name, model.Package.title,
+
+    # Test whether ckan.model.ResourceGroup still exists
+    # see https://github.com/ckan/ckanext-qa/issues/7
+    try:
+        from ckan.model import ResourceGroup 
+        # take the maximum openness score among dataset resources to be the
+        # overall dataset openness core
+        query = model.Session.query(model.Package.name, model.Package.title,
+                                    model.Resource.id,
+                                    model.TaskStatus.value.label('value'))\
+            .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
+            .join(model.Resource)\
+            .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
+            .filter(model.TaskStatus.key==u'openness_score')\
+            .group_by(model.Package.name, model.Package.title, model.Resource.id, model.TaskStatus.value)\
+            .distinct()
+
+    except ImportError:
+        # Newer versions of CKAN (from 2.3) have dropped ResourceGroup        
+        query = model.Session.query(model.Package.name, model.Package.title,
                                 model.Resource.id,
                                 model.TaskStatus.value.label('value'))\
-        .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
         .join(model.Resource)\
         .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
         .filter(model.TaskStatus.key==u'openness_score')\
@@ -104,13 +120,25 @@ def broken_resource_links_by_dataset():
     The named tuple is of the form:
         (name (str), title (str), resources (list of dicts))
     """
-    query = model.Session.query(model.Package.name, model.Package.title, model.Resource)\
-        .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
-        .join(model.Resource)\
-        .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
-        .filter(model.TaskStatus.key == u'openness_score')\
-        .filter(model.TaskStatus.value == u'0')\
-        .distinct()
+    try:
+        from ckan.model import ResourceGroup 
+
+        query = model.Session.query(model.Package.name, model.Package.title, model.Resource)\
+            .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
+            .join(model.Resource)\
+            .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
+            .filter(model.TaskStatus.key == u'openness_score')\
+            .filter(model.TaskStatus.value == u'0')\
+            .distinct()
+
+    except ImportError:
+        query = model.Session.query(model.Package.name, model.Package.title, model.Resource)\
+            .join(model.Resource)\
+            .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
+            .filter(model.TaskStatus.key == u'openness_score')\
+            .filter(model.TaskStatus.value == u'0')\
+            .distinct()
+    
 
     context = {'model': model, 'session': model.Session}
     results = {}
@@ -159,22 +187,42 @@ def organisations_with_broken_resource_links():
 def _get_broken_resource_links(organisation_id=None):
     organisation_id = None
 
-    query = model.Session.query(model.Package.name, model.Package.title,
+    try:
+        from ckan.model import ResourceGroup 
+
+        query = model.Session.query(model.Package.name, model.Package.title,
                                 model.PackageExtra.value, model.Resource)\
-        .join(model.PackageExtra)\
-        .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
-        .join(model.Resource)\
-        .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
-        .filter(model.TaskStatus.key == u'openness_score')\
-        .filter(model.TaskStatus.value == u'0')\
-        .filter(or_(
-            and_(model.PackageExtra.key=='published_by',
-                 model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
-            and_(model.PackageExtra.key=='published_via',
-                 model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
+            .join(model.PackageExtra)\
+            .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
+            .join(model.Resource)\
+            .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
+            .filter(model.TaskStatus.key == u'openness_score')\
+            .filter(model.TaskStatus.value == u'0')\
+            .filter(or_(
+                and_(model.PackageExtra.key=='published_by',
+                    model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
+                and_(model.PackageExtra.key=='published_via',
+                    model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
+                )\
             )\
-        )\
-        .distinct()
+            .distinct()
+
+    except ImportError:
+        query = model.Session.query(model.Package.name, model.Package.title,
+                                model.PackageExtra.value, model.Resource)\
+            .join(model.PackageExtra)\
+            .join(model.Resource)\
+            .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
+            .filter(model.TaskStatus.key == u'openness_score')\
+            .filter(model.TaskStatus.value == u'0')\
+            .filter(or_(
+                and_(model.PackageExtra.key=='published_by',
+                    model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
+                and_(model.PackageExtra.key=='published_via',
+                    model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
+                )\
+            )\
+            .distinct()
 
     context = {'model': model, 'session': model.Session}
     data = []
