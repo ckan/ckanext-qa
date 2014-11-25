@@ -24,7 +24,6 @@ def five_stars(id=None):
     query = model.Session.query(model.Package.name, model.Package.title,
                                 model.Resource.id,
                                 model.TaskStatus.value.label('value'))\
-        .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
         .join(model.Resource)\
         .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
         .filter(model.TaskStatus.key==u'openness_score')\
@@ -105,7 +104,6 @@ def broken_resource_links_by_dataset():
         (name (str), title (str), resources (list of dicts))
     """
     query = model.Session.query(model.Package.name, model.Package.title, model.Resource)\
-        .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
         .join(model.Resource)\
         .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
         .filter(model.TaskStatus.key == u'openness_score')\
@@ -162,7 +160,6 @@ def _get_broken_resource_links(organisation_id=None):
     query = model.Session.query(model.Package.name, model.Package.title,
                                 model.PackageExtra.value, model.Resource)\
         .join(model.PackageExtra)\
-        .join(model.ResourceGroup, model.Package.id == model.ResourceGroup.package_id)\
         .join(model.Resource)\
         .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
         .filter(model.TaskStatus.key == u'openness_score')\
