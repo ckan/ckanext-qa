@@ -119,7 +119,7 @@ def update(context, data):
 
         result = resource_score(context, data)
         log.info('Openness score for dataset %s (res#%s): %r (%s)',
-                 data['package'], data['position'],
+                 data['package_id'], data['position'],
                  result['openness_score'], result['openness_score_reason'])
         
         task_status_data = _task_status_data(data['id'], result)
