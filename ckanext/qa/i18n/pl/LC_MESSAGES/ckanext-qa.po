@@ -1,0 +1,193 @@
+# Polish translations for ckanext-qa.
+# This file is distributed under the same license as the ckanext-qa project.
+#
+# Translators
+# Krzysztof Madejski <krzysztof.madejski@epf.org.pl>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-qa 0.3\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2015-03-28 18:41+0100\n"
+"PO-Revision-Date: 2015-03-28 18:07+0100\n"
+"Last-Translator: Krzysztof Madejski <krzysztof.madejski@epf.org.pl>\n"
+"Language-Team: pl <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: ckanext/qa/html.py:26
+#: ckanext/qa/templates_new/qa/snippets/stars_info.html:14
+msgid "Available under an open license."
+msgstr "Dostępne na otwartej licencji."
+
+#: ckanext/qa/html.py:27
+#: ckanext/qa/templates_new/qa/snippets/stars_info.html:15
+msgid "Available as structured data (eg. Excel instead of a scanned table)."
+msgstr "Dane są ustrukturyzowane (np. w Excel zamiast skanu dokumentu z tabelą)."
+
+#: ckanext/qa/html.py:28
+#: ckanext/qa/templates_new/qa/snippets/stars_info.html:16
+msgid "Uses non-proprietary formats (e.g., CSV instead of Excel)."
+msgstr "Użyty został otwarty format (np. CSV zamiast Excel)."
+
+#: ckanext/qa/html.py:29
+#: ckanext/qa/templates_new/qa/snippets/stars_info.html:17
+msgid "Uses URIs to identify things, so that people can link to it."
+msgstr "Dane posiadają identyfikatory URI, do których odbiorcy mogą linkować."
+
+#: ckanext/qa/html.py:30
+#: ckanext/qa/templates_new/qa/snippets/stars_info.html:18
+msgid "Linked to other data to provide context."
+msgstr "Dane linkują do innych danych tworząc powiązania."
+
+#: ckanext/qa/plugin.py:159
+msgid "Not Rated"
+msgstr "Brak oceny"
+
+#: ckanext/qa/templates_new/qa/base.html:3
+#: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:4
+#: ckanext/qa/templates_new/qa/five_stars.html:4
+#: ckanext/qa/templates_new/qa/index.html:4
+#: ckanext/qa/templates_new/qa/organisation_broken_resource_links.html:4
+msgid "Quality Assurance"
+msgstr "Raporty jakości danych"
+
+#: ckanext/qa/templates_new/qa/broken_resource_links_for_organisation.html:8
+msgid "Report in CSV format"
+msgstr "Raport w formacie CSV"
+
+#: ckanext/qa/templates_new/qa/broken_resource_links_for_organisation.html:12
+#: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:11
+msgid "Dataset"
+msgstr "Zbiór danych"
+
+#: ckanext/qa/templates_new/qa/broken_resource_links_for_organisation.html:13
+msgid "Resources"
+msgstr "Zasoby"
+
+#: ckanext/qa/templates_new/qa/broken_resource_links_for_organisation.html:36
+msgid "No results found for this organization"
+msgstr "Nie znaleziono wyyników dla tej organizacji"
+
+#: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:7
+msgid "Report of all broken links by dataset in CSV format"
+msgstr "Raport zawierający niedziałające linki dla zbioru danych [format CSV]"
+
+#: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:12
+msgid "Resource URL"
+msgstr "Adres URL zasobu"
+
+#: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:13
+msgid "Reason"
+msgstr "Przyczyna"
+
+#: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:27
+msgid "No datasets with at least one broken resource found"
+msgstr "Nie znaleziono zbiorów danych z niedziałającymi linkami"
+
+#: ckanext/qa/templates_new/qa/datasets.html:4
+msgid "Package Quality Assurance"
+msgstr "Analiza Jakości Zbioru Danych"
+
+#: ckanext/qa/templates_new/qa/datasets.html:6
+msgid "5 stars of openness scores"
+msgstr "5 gwiazdek opisujących otwartość"
+
+#: ckanext/qa/templates_new/qa/datasets.html:10
+#: ckanext/qa/templates_new/qa/organisations.html:6
+msgid "Broken resource links"
+msgstr "Niedziałające linki zasobów"
+
+#: ckanext/qa/templates_new/qa/five_stars.html:5
+#: ckanext/qa/templates_new/qa/index.html:6
+msgid "Dataset openness scores"
+msgstr "Raport podsumowujący otwartość wszystkich zbiorów danych"
+
+#: ckanext/qa/templates_new/qa/five_stars.html:7
+msgid ""
+"A list of all datasets in CKAN, together with their\n"
+"  <a href=\"http://www.w3.org/DesignIssues/LinkedData.html\" "
+"target=\"_blank\">5 stars of openness rating</a>."
+msgstr ""
+"Lista wszsytkich zbiorów danych w serwisie, razem z ich\n"
+"  <a href=\"http://www.w3.org/DesignIssues/LinkedData.html\" "
+"target=\"_blank\">oceną otwartości</a>."
+
+#: ckanext/qa/templates_new/qa/five_stars.html:9
+msgid ""
+"The rating is calculated by looking at the reported mime-type of\n"
+"  each of the datasets resources and calculating the 5 stars of openness "
+"score\n"
+"  for each. The overall dataset score is taken to be the highest score of"
+" any of\n"
+"  the resources."
+msgstr ""
+"Ocena tworzona jest na podstawie zwróconych nagłówków mime-type \n"
+"  każdego z zasobów danego zbioru danych. Zagregowana ocena dla zbioru to"
+" najwyższa z ocen  dla poszczególnych zasobów."
+
+#: ckanext/qa/templates_new/qa/five_stars.html:16
+msgid "Dataset name"
+msgstr "Nazwa zbioru danych"
+
+#: ckanext/qa/templates_new/qa/five_stars.html:17
+msgid "5 Stars of Openness"
+msgstr "Stopień otwartości"
+
+#: ckanext/qa/templates_new/qa/five_stars.html:28
+msgid "No QA results found"
+msgstr "Brak raportów jakości danych"
+
+#: ckanext/qa/templates_new/qa/index.html:7
+msgid "Datasets with broken resource links"
+msgstr "Zbiory danych z niedziałającymi linkami"
+
+#: ckanext/qa/templates_new/qa/index.html:9
+msgid "Organisations whose datasets contain broken resource links"
+msgstr "Organizacje, których zbiory danych zawierają niedziałające linki"
+
+#: ckanext/qa/templates_new/qa/organisation_broken_resource_links.html:6
+msgid "Organizations who have published datasets with broken resource links"
+msgstr "Organizacje, które opublikowały zbiory danych z niedziałającymi linkami"
+
+#: ckanext/qa/templates_new/qa/organisation_broken_resource_links.html:8
+msgid "Report of all broken links by organisation in CSV format"
+msgstr ""
+"Raport zawierający wszystkie niedziałające linki dla organizacji w "
+"formacie CSV"
+
+#: ckanext/qa/templates_new/qa/organisation_broken_resource_links.html:12
+msgid "Organization name"
+msgstr "Nazwa organizacji"
+
+#: ckanext/qa/templates_new/qa/organisation_broken_resource_links.html:22
+msgid ""
+"No organizations that have published datasets with broken resource links "
+"found"
+msgstr ""
+"Nie znaleziono organizacji, które posiadają zasoby z nie działającymi "
+"linkami"
+
+#: ckanext/qa/templates_new/qa/organisations.html:4
+msgid "Organisation Quality Assurance"
+msgstr "Analiza jakości zbiorów organizacji"
+
+#: ckanext/qa/templates_new/qa/snippets/stars_module.html:14
+msgid "Resource Quality"
+msgstr "Jakość zasobu danych"
+
+#: ckanext/qa/templates_new/qa/snippets/stars_module.html:16
+msgid "Rating"
+msgstr "Ocena"
+
+#: ckanext/qa/templates_new/qa/snippets/stars_module.html:18
+msgid "Hide rating info"
+msgstr "Schowaj opis"
+
+#: ckanext/qa/templates_new/qa/snippets/stars_module.html:18
+msgid "About these ratings"
+msgstr "Co znaczy ta skala"
+

@@ -1,15 +1,15 @@
 {% extends "qa/base.html" %}
 
 {% block primary_content %}
-  <h1>Quality Assurance</h1>
+  <h1>{% trans %}Quality Assurance{% endtrans %}</h1>
 
-  <h3>Organizations who have published datasets with broken resource links.</h3>
+  <h3>{% trans %}Organizations who have published datasets with broken resource links{% endtrans %}.</h3>
   <ul>
-    <li>{{ h.link_to('Report of all broken links by organisation in CSV format', h.url_for(controller='ckanext.qa.controller:QAController', action='organisations_with_broken_resource_links', format='csv', id='all')) }}</li>
+    <li>{{ h.link_to(_('Report of all broken links by organisation in CSV format'), h.url_for(controller='ckanext.qa.controller:QAController', action='organisations_with_broken_resource_links', format='csv', id='all')) }}</li>
   </ul>
   <table class="qa-table">
     <tr>
-        <th class="qa-table-name">Organization name</th>
+        <th class="qa-table-name">{% trans %}Organization name{% endtrans %}</th>
     </tr>
     {% for organisation_title, organisation_id in c.organisations %}
       <tr>
@@ -19,6 +19,6 @@
   </table>
 
   {% if not c.organisations %}
-    <p>No organizations that have published datasets with broken resource links found.</p>
+    <p>{% trans %}No organizations that have published datasets with broken resource links found{% endtrans %}.</p>
   {% endif %}
 {% endblock %}

@@ -5,12 +5,12 @@
     <h1>{{ c.organisation.title }}</h1>
     <h4>Download this report.</h4>
     <ul>
-      <li>{{ h.link_to('Report in CSV format', h.url_for(controller='ckanext.qa.controller:QAController', action='broken_resource_links_by_dataset_for_organisation', id=c.id, format='csv')) }}</li>
+      <li>{{ h.link_to(_('Report in CSV format'), h.url_for(controller='ckanext.qa.controller:QAController', action='broken_resource_links_by_dataset_for_organisation', id=c.id, format='csv')) }}</li>
     </ul>
     <table class="qa-table">
       <tr>
-          <th class="qa-table-name">Dataset</th>
-          <th class="qa-table-resources">Resources</th>
+          <th class="qa-table-name">{{ _('Dataset') }}</th>
+          <th class="qa-table-resources">{{ _('Resources') }}</th>
       </tr>
       {% for package, resources in c.organisations.packages.items() %}
         <tr>
@@ -33,6 +33,6 @@
       {% endfor %}
     </table>
   {% else %}
-    <p>No results found for this organization.</p>
+    <p>{{ _('No results found for this organization') }}.</p>
   {% endif %}
 {% endblock %}
