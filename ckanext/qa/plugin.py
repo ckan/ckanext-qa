@@ -7,6 +7,7 @@ import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.model as model
 import ckan.plugins as p
 import ckan.lib.celery_app as celery_app
+from ckan.common import _
 
 resource_dictize = model_dictize.resource_dictize
 send_task = celery_app.celery.send_task
@@ -175,7 +176,18 @@ class QAPlugin(p.SingletonPlugin):
         return p.toolkit.literal(p.toolkit.render('qa/snippets/stars.html',
                                  extra_vars=extra_vars))
 
+    @classmethod
+    def get_qa_captions(cls):
+        return [
+          _('Available under an open license.'),
+          _('Available as structured data (eg. Excel instead of a scanned table).'),
+          _('Uses non-proprietary formats (e.g., CSV instead of Excel).'),
+          _('Uses URIs to identify things, so that people can link to it.'),
+          _('Linked to other data to provide context.')
+        ]
+
     def get_helpers(self):
         return {'qa_stars': self.new_get_star_html,
                 'qa_stars_rating': self.get_star_rating_html,
-                'qa_stars_info': self.get_star_info_html}
+                'qa_stars_info': self.get_star_info_html,
+                'qa_captions': self.get_qa_captions}
