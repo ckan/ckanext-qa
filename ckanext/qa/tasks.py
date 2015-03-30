@@ -69,6 +69,33 @@ def _update_task_status(context, data):
         raise CkanError('ckan failed to update task_status, status_code (%s), error %s'
                         % (res.status_code, res.content))
 
+def _update_resource(context, resource, log):
+    """
+    Use CKAN API to update the given resource.
+    If cannot update, records this fact in the task_status table.
+    Returns the content of the response.
+
+    """
+    api_url = urlparse.urljoin(context['site_url'], 'api/3/action') + '/resource_update'
+    resource['last_modified'] = datetime.datetime.now().isoformat()
+    post_data = json.dumps(resource)
+    res = requests.post(
+        api_url, post_data,
+        headers = {'Authorization': context['apikey'],
+                   'Content-Type': 'application/json'}
+    )
+
+    if res.status_code == 200:
+        log.info('Resource updated OK: %s', resource['id'])
+        return res.content
+    else:
+        try:
+            content = res.content
+        except:
+            content = '<could not read request content to discover error>'
+        log.error('ckan failed to update resource, status_code (%s), error %s. Maybe the API key or site URL are wrong?.\ncontext: %r\nresource: %r\nres: %r\nres.error: %r\npost_data: %r\napi_url: %r'
+                        % (res.status_code, content, context, resource, res, res.error, post_data, api_url))
+        raise CkanError('ckan failed to update resource, status_code (%s), error %s'  % (res.status_code, content))
 
 def _task_status_data(id, result):
     return [
@@ -124,6 +151,9 @@ def update(context, data):
         
         task_status_data = _task_status_data(data['id'], result)
 
+        data['openness_score'] = result['openness_score']
+        _update_resource(context, data, log)
+
         api_url = urlparse.urljoin(context['site_url'], 'api/action')
         response = requests.post(
             api_url + '/task_status_update_many',
@@ -131,6 +161,7 @@ def update(context, data):
             headers={'Authorization': context['apikey'],
                      'Content-Type': 'application/json'}
         )
+
         if not response.ok:
             err = 'ckan failed to update task_status, error %s' \
                   % response.error
