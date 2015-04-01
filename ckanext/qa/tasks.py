@@ -34,6 +34,7 @@ MIME_TYPE_SCORE = {
     'text': 1,
     'txt': 1,
     'application/vnd.ms-excel': 2,
+    'application/msword': 1,
     'application/vnd.ms-excel.sheet.binary.macroenabled.12': 2,
     'application/vnd.ms-excel.sheet.macroenabled.12': 2,
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 2,
@@ -46,7 +47,13 @@ MIME_TYPE_SCORE = {
     'xml': 3,
     'json': 3,
     'application/rdf+xml': 4,
-    'rdf': 4
+    'rdf': 4,
+    'application/pdf': 1, # PDF is not really structured :)
+    'application/rtf': 1,
+    'application/zip': 1, # no idea what's inside
+    'application/x-7z-compressed': 1,
+    'text/html': 1, # like all other presentation formats
+    'html': 1,
 }
 
 
@@ -243,6 +250,9 @@ def resource_score(context, data):
                 score = MIME_TYPE_SCORE.get(format, -1)
 
             score_reason = OPENNESS_SCORE_REASON[score]
+            if score < 0:
+                score_reason = score_reason + " [%s, %s, %s]" % (file_type, ct, format)
+                log.warning(score_reason)
 
             # negative scores are only useful for getting the reason message,
             # set it back to 0 if it's still <0 at this point
