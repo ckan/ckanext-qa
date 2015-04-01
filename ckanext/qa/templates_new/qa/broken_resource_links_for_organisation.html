@@ -12,9 +12,9 @@
           <th class="qa-table-name">{{ _('Dataset') }}</th>
           <th class="qa-table-resources">{{ _('Resources') }}</th>
       </tr>
-      {% for package, resources in c.organisations.packages.items() %}
+      {% for package, resources in c.organisation.packages.items() %}
         <tr>
-          <td>{{ h.link_to(package[0], h.url_for(controller='package', action='read', id=package[0])) }}</td>
+          <td>{{ h.link_to(package[1], h.url_for(controller='package', action='read', id=package[0])) }}</td>
             <td>
                 <table>
                     <tr>
@@ -24,7 +24,7 @@
                     {% for resource in resources %}
                     <tr class="bad_link">
                       <td><a href="{{ resource.url }}">{{ resource.url }}</a></td>
-                      <td>{{ resource.get('openness_score_reason', '') }}</td>
+                      <td>{{ resource.openness_score_reason }}</td>
                     </tr>
                     {% endfor %}
                 </table>

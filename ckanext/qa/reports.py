@@ -159,25 +159,19 @@ def organisations_with_broken_resource_links():
 
 
 def _get_broken_resource_links(organisation_id=None):
-    organisation_id = None
+    query = model.Session.query(model.Package.name, model.Package.title, model.Package.owner_org, model.Group.title.label('org_title'), model.Resource)\
+        .join(model.Group, model.Package.owner_org == model.Group.id)
 
-    query = model.Session.query(model.Package.name, model.Package.title,
-                                model.PackageExtra.value, model.Resource)\
-        .join(model.PackageExtra)
-    query = _join_package_to_resource_group_if_it_exists(query)
     query = query \
         .join(model.Resource)\
         .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
+        .filter(model.Group.type == u'organization')\
         .filter(model.TaskStatus.key == u'openness_score')\
         .filter(model.TaskStatus.value == u'0')\
-        .filter(or_(
-            and_(model.PackageExtra.key=='published_by',
-                 model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
-            and_(model.PackageExtra.key=='published_via',
-                 model.PackageExtra.value.like('%%[%s]' % (organisation_id is None and '%' or organisation_id))),
-            )\
-        )\
         .distinct()
+
+    if organisation_id:
+        query = query.filter(model.Package.owner_org == organisation_id)
 
     context = {'model': model, 'session': model.Session}
     data = []
@@ -188,7 +182,7 @@ def _get_broken_resource_links(organisation_id=None):
         resource['openness_score'] = u'0'
         resource['openness_score_reason'] = status.get('value')
 
-        data.append([row.name, row.title, row.value, resource])
+        data.append([row.name, row.title, row.owner_org, row.org_title, resource])
 
     return _collapse(data, [_extract_publisher, _extract_dataset])
 
@@ -219,22 +213,7 @@ def _collapse(data, fn):
 
 
 def _extract_publisher(row):
-    """
-    Extract publisher info from a query result row.
-    Each row should be a list of the form [name, title, value, Resource]
-
-    Returns a list of the form:
-
-        [<publisher tuple>, <other elements in row tuple>]
-    """
-    publisher = row[2]
-    parts = publisher.split('[')
-    try:
-        pub_parts = (parts[0].strip(), parts[1][:-1])
-    except:
-        raise Exception('Could not get the ID from %r' % publisher)
-    else:
-        return [pub_parts] + [row[0], row[1], row[3]]
+    return [(row[3], row[2])] + [row[0], row[1], row[4]]
 
 
 def _extract_dataset(row):
