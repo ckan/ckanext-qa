@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-qa 0.3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-03-28 18:41+0100\n"
+"POT-Creation-Date: 2015-04-03 12:17+0200\n"
 "PO-Revision-Date: 2015-03-28 18:07+0100\n"
 "Last-Translator: Krzysztof Madejski <krzysztof.madejski@epf.org.pl>\n"
 "Language-Team: pl <LL@li.org>\n"
@@ -18,34 +18,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: ckanext/qa/html.py:26
-#: ckanext/qa/templates_new/qa/snippets/stars_info.html:14
+#: ckanext/qa/html.py:26 ckanext/qa/plugin.py:182
 msgid "Available under an open license."
 msgstr "Dostępne na otwartej licencji."
 
-#: ckanext/qa/html.py:27
-#: ckanext/qa/templates_new/qa/snippets/stars_info.html:15
+#: ckanext/qa/html.py:27 ckanext/qa/plugin.py:183
 msgid "Available as structured data (eg. Excel instead of a scanned table)."
 msgstr "Dane są ustrukturyzowane (np. w Excel zamiast skanu dokumentu z tabelą)."
 
 #: ckanext/qa/html.py:28
-#: ckanext/qa/templates_new/qa/snippets/stars_info.html:16
 msgid "Uses non-proprietary formats (e.g., CSV instead of Excel)."
 msgstr "Użyty został otwarty format (np. CSV zamiast Excel)."
 
 #: ckanext/qa/html.py:29
-#: ckanext/qa/templates_new/qa/snippets/stars_info.html:17
 msgid "Uses URIs to identify things, so that people can link to it."
 msgstr "Dane posiadają identyfikatory URI, do których odbiorcy mogą linkować."
 
-#: ckanext/qa/html.py:30
-#: ckanext/qa/templates_new/qa/snippets/stars_info.html:18
+#: ckanext/qa/html.py:30 ckanext/qa/plugin.py:186
 msgid "Linked to other data to provide context."
 msgstr "Dane linkują do innych danych tworząc powiązania."
 
-#: ckanext/qa/plugin.py:159
+#: ckanext/qa/plugin.py:160
 msgid "Not Rated"
 msgstr "Brak oceny"
+
+#: ckanext/qa/plugin.py:184
+msgid ""
+"Uses non-proprietary formats (e.g., XLSX instead of XLS, or even better "
+"CSV)."
+msgstr "Użyty został otwarty format (np. CSV lub XLSX zamiast XLS)."
+
+#: ckanext/qa/plugin.py:185
+msgid "Provides schema and uses URIs to identify things."
+msgstr "Dane walidowane schemą, obiekty identyfikowane przez URI"
 
 #: ckanext/qa/templates_new/qa/base.html:3
 #: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:4
@@ -71,6 +76,10 @@ msgstr "Zasoby"
 #: ckanext/qa/templates_new/qa/broken_resource_links_for_organisation.html:36
 msgid "No results found for this organization"
 msgstr "Nie znaleziono wyyników dla tej organizacji"
+
+#: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:6
+msgid "Datasets with at least one broken resource"
+msgstr "Zbiory danych z niedziałającymi linkami"
 
 #: ckanext/qa/templates_new/qa/dataset_broken_resource_links.html:7
 msgid "Report of all broken links by dataset in CSV format"

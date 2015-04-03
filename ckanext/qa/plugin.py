@@ -181,8 +181,8 @@ class QAPlugin(p.SingletonPlugin):
         return [
           _('Available under an open license.'),
           _('Available as structured data (eg. Excel instead of a scanned table).'),
-          _('Uses non-proprietary formats (e.g., CSV instead of Excel).'),
-          _('Uses URIs to identify things, so that people can link to it.'),
+          _('Uses non-proprietary formats (e.g., XLSX instead of XLS, or even better CSV).'),
+          _('Provides schema and uses URIs to identify things.'),
           _('Linked to other data to provide context.')
         ]
 
