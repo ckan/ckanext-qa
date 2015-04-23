@@ -2,7 +2,7 @@
 
 {% block primary_content %}
   <h1>{{ _('Package Quality Assurance') }}</h1>
-  <ul>
+  <ul class="unstyled">
     <li>{{ h.link_to(_("5 stars of openness scores"),
                     h.url_for(controller='ckanext.qa.controller:QAController',
                     action='five_stars')) }}

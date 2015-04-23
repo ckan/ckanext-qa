@@ -4,7 +4,7 @@
   {% if c.organisation.packages and c.organisation.packages.items() %}
     <h1>{{ c.organisation.title }}</h1>
     <h4>Download this report.</h4>
-    <ul>
+    <ul class="unstyled">
       <li>{{ h.link_to(_('Report in CSV format'), h.url_for(controller='ckanext.qa.controller:QAController', action='broken_resource_links_by_dataset_for_organisation', id=c.id, format='csv')) }}</li>
     </ul>
     <table class="qa-table table table-striped table-bordered table-condensed">

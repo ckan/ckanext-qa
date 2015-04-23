@@ -4,7 +4,7 @@
   <h1>{% trans %}Quality Assurance{% endtrans %}</h1>
 
   <h3>{% trans %}Organizations who have published datasets with broken resource links{% endtrans %}.</h3>
-  <ul>
+  <ul class="unstyled">
     <li>{{ h.link_to(_('Report of all broken links by organisation in CSV format'), h.url_for(controller='ckanext.qa.controller:QAController', action='organisations_with_broken_resource_links', format='csv', id='all')) }}</li>
   </ul>
   <table class="qa-table table table-striped table-bordered table-condensed">
