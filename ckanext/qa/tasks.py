@@ -76,7 +76,7 @@ def update_package(ckan_ini_filepath, package_id):
             qa_result = resource_score(resource, log)
             log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
                      resource.url)
-            save_qa_result(resource.id, qa_result, log)
+            save_qa_result(resource, qa_result, log)
             log.info('CKAN updated with openness score')
         # Refresh the index for this dataset, so that it contains the latest
         # qa info
@@ -110,7 +110,7 @@ def update(ckan_ini_filepath, resource_id):
         qa_result = resource_score(resource, log)
         log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
                  resource.url)
-        save_qa_result(resource.id, qa_result, log)
+        save_qa_result(resource, qa_result, log)
         log.info('CKAN updated with openness score')
         if toolkit.check_ckan_version(max_version='2.2.99'):
             package = resource.resource_group.package
@@ -412,7 +412,7 @@ def _update_search_index(package_id, log):
     log.info('Search indexed %s', package['name'])
 
 
-def save_qa_result(resource_id, qa_result, log):
+def save_qa_result(resource, qa_result, log):
     """
     Saves the results of the QA check to the qa table.
     """
@@ -421,9 +421,9 @@ def save_qa_result(resource_id, qa_result, log):
 
     now = datetime.datetime.now()
 
-    qa = QA.get_for_resource(resource_id)
+    qa = QA.get_for_resource(resource.id)
     if not qa:
-        qa = QA.create(resource_id)
+        qa = QA.create(resource.id)
         model.Session.add(qa)
     else:
         log.info('QA from before: %r', qa)
@@ -432,6 +432,16 @@ def save_qa_result(resource_id, qa_result, log):
         setattr(qa, key, qa_result[key])
     qa.archival_timestamp == qa_result['archival_timestamp']
     qa.updated = now
+
+    # If the resource doesn't have a format, use the one we discovered in QA.
+    if not resource.format and qa.format:
+        rev = model.repo.new_revision()
+        rev.author = u'QA Task'
+        rev.message = u'Update missing resource format'
+
+        log.info("Updating format on resource to '%s' as it was not set", qa.format)
+        resource.format = qa.format
+        model.repo.commit_and_remove()
 
     model.Session.commit()
 
