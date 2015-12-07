@@ -398,7 +398,7 @@ def save_qa_result(resource, qa_result, log):
     # If the resource doesn't have a format, use the one we discovered in QA.
     if not resource.format and qa.format:
         rev = model.repo.new_revision()
-        rev.author = u'QA Task'
+        rev.author = u'script-qa'
         rev.message = u'Update missing resource format'
 
         log.info("Updating format on resource to '%s' as it was not set", qa.format)
