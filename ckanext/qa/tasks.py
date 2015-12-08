@@ -395,8 +395,11 @@ def save_qa_result(resource, qa_result, log):
     qa.archival_timestamp == qa_result['archival_timestamp']
     qa.updated = now
 
+    def has_value(s):
+        return s is not None and not s.strip() == ''
+
     # If the resource doesn't have a format, use the one we discovered in QA.
-    if not resource.format and qa.format:
+    if not resource.format.strip() and has_value(qa.format):
         rev = model.repo.new_revision()
         rev.author = u'script-qa'
         rev.message = u'Update missing resource format'
