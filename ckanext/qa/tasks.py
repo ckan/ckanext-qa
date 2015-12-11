@@ -74,7 +74,7 @@ def update_package(ckan_ini_filepath, package_id):
             qa_result = resource_score(resource, log)
             log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
                      resource.url)
-            save_qa_result(resource.id, qa_result, log)
+            save_qa_result(resource, qa_result, log)
             log.info('CKAN updated with openness score')
         update_search_index(package.id, log)
     except Exception, e:
@@ -106,7 +106,7 @@ def update(ckan_ini_filepath, resource_id):
         qa_result = resource_score(resource, log)
         log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
                  resource.url)
-        save_qa_result(resource.id, qa_result, log)
+        save_qa_result(resource, qa_result, log)
         log.info('CKAN updated with openness score')
         package = resource.resource_group.package if resource.resource_group else None
         if package:
@@ -374,7 +374,7 @@ def update_search_index(package_id, log):
     get_action('search_index_update')(context_, {'id': package_id})
 
 
-def save_qa_result(resource_id, qa_result, log):
+def save_qa_result(resource, qa_result, log):
     """
     Saves the results of the QA check to the qa table.
     """
@@ -383,9 +383,9 @@ def save_qa_result(resource_id, qa_result, log):
 
     now = datetime.datetime.now()
 
-    qa = QA.get_for_resource(resource_id)
+    qa = QA.get_for_resource(resource.id)
     if not qa:
-        qa = QA.create(resource_id)
+        qa = QA.create(resource.id)
         model.Session.add(qa)
     else:
         log.info('QA from before: %r', qa)
@@ -394,6 +394,19 @@ def save_qa_result(resource_id, qa_result, log):
         setattr(qa, key, qa_result[key])
     qa.archival_timestamp == qa_result['archival_timestamp']
     qa.updated = now
+
+    def has_value(s):
+        return s is not None and not s.strip() == ''
+
+    # If the resource doesn't have a format, use the one we discovered in QA.
+    if not resource.format.strip() and has_value(qa.format):
+        rev = model.repo.new_revision()
+        rev.author = u'script-qa'
+        rev.message = u'Update missing resource format'
+
+        log.info("Updating format on resource to '%s' as it was not set", qa.format)
+        resource.format = qa.format
+        model.repo.commit_and_remove()
 
     model.Session.commit()
 
