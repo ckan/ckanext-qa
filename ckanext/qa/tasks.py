@@ -56,39 +56,56 @@ def update_package(ckan_ini_filepath, package_id):
     Given a package, calculates an openness score for each of its resources.
     It is more efficient to call this than 'update' for each resource.
 
-    data - package dict (includes its resources)
-
     Returns None
     """
     log = update_package.get_logger()
     load_config(ckan_ini_filepath)
     register_translator()
-    from ckan import model
-    try:
-        package = model.Package.get(package_id)
-        if not package:
-            raise QAError('Package ID not found: %s' % package_id)
 
-        log.info('Openness scoring package %s (%i resources)', package.name, len(package.resources))
-        for resource in package.resources:
-            qa_result = resource_score(resource, log)
-            log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
-                     resource.url)
-            save_qa_result(resource, qa_result, log)
-            log.info('CKAN updated with openness score')
-        update_search_index(package.id, log)
+    try:
+        update_package_(package_id, log)
     except Exception, e:
-        log.error('Exception occurred during QA update: %s: %s', e.__class__.__name__,  unicode(e))
+        log.error('Exception occurred during QA update_package: %s: %s',
+                  e.__class__.__name__,  unicode(e))
         raise
+
+
+def update_package_(package_id, log):
+    from ckan import model
+    package = model.Package.get(package_id)
+    if not package:
+        raise QAError('Package ID not found: %s' % package_id)
+
+    log.info('Openness scoring package %s (%i resources)', package.name,
+             len(package.resources))
+
+    resource_format_fill_ins = []
+    for resource in package.resources:
+        qa_result = resource_score(resource, log)
+        log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
+                 resource.url)
+        qa_obj = save_qa_result(resource, qa_result, log)
+        log.info('CKAN updated with openness score')
+
+        # If the resource doesn't have a format, we'll record the one that
+        # we detected in QA.
+        if not resource.format.strip() and has_value(qa_obj.format):
+            resource_format_fill_ins.append((resource, qa_obj.format))
+
+    if resource_format_fill_ins:
+        log.info('Writing resource formats from QA - %s/%s for %s',
+                 len(resource_format_fill_ins), len(package.resources),
+                 package.name)
+        # this will update the search index as a by-product
+        write_resource_formats(resource_format_fill_ins)
+    else:
+        update_search_index(package.id, log)
 
 
 @celery_app.celery.task(name="qa.update")
 def update(ckan_ini_filepath, resource_id):
     """
     Given a resource, calculates an openness score.
-
-    data - details of the resource that is to be scored
-           is JSON dict with keys: 'package', 'position', 'id', 'format', 'url', 'is_open'
 
     Returns a JSON dict with keys:
 
@@ -98,26 +115,38 @@ def update(ckan_ini_filepath, resource_id):
     log = update.get_logger()
     load_config(ckan_ini_filepath)
     register_translator()
-    from ckan import model
     try:
-        resource = model.Resource.get(resource_id)
-        if not resource:
-            raise QAError('Resource ID not found: %s' % resource_id)
-        qa_result = resource_score(resource, log)
-        log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
-                 resource.url)
-        save_qa_result(resource, qa_result, log)
-        log.info('CKAN updated with openness score')
+        update_resource_(resource_id, log)
+    except Exception, e:
+        log.error('Exception occurred during QA update_resource: %s: %s',
+                  e.__class__.__name__,  unicode(e))
+        raise
+
+
+def update_resource_(resource_id, log):
+    from ckan import model
+    resource = model.Resource.get(resource_id)
+    if not resource:
+        raise QAError('Resource ID not found: %s' % resource_id)
+    qa_result = resource_score(resource, log)
+    log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
+             resource.url)
+    qa_obj = save_qa_result(resource, qa_result, log)
+    log.info('CKAN updated with openness score')
+
+    # write the format if it is missing
+    if not resource.format.strip() and has_value(qa_obj.format):
+        log.info('Writing resource format from QA - res %s %s',
+                 resource.format, resource.id)
+        # this will update the search index as a by-product
+        write_resource_formats([(resource, qa_obj.format)])
+    else:
         package = resource.resource_group.package if resource.resource_group else None
         if package:
             update_search_index(package.id, log)
         else:
             log.warning('Resource not connected to a package. Res: %r', resource)
-        return json.dumps(qa_result, cls=DateTimeJsonEncoder)
-    except Exception, e:
-        log.error('Exception occurred during QA update: %s: %s',
-                  e.__class__.__name__,  unicode(e))
-        raise
+    return json.dumps(qa_result, cls=DateTimeJsonEncoder)
 
 
 def get_qa_format(resource_id):
@@ -128,6 +157,9 @@ def get_qa_format(resource_id):
         return ''
     return q.format
 
+
+def has_value(s):
+    return s is not None and not s.strip() == ''
 
 def resource_score(resource, log):
     """
@@ -392,23 +424,24 @@ def save_qa_result(resource, qa_result, log):
 
     for key in ('openness_score', 'openness_score_reason', 'format'):
         setattr(qa, key, qa_result[key])
-    qa.archival_timestamp == qa_result['archival_timestamp']
+    qa.archival_timestamp = qa_result['archival_timestamp']
     qa.updated = now
-
-    def has_value(s):
-        return s is not None and not s.strip() == ''
-
-    # If the resource doesn't have a format, use the one we discovered in QA.
-    if not resource.format.strip() and has_value(qa.format):
-        rev = model.repo.new_revision()
-        rev.author = u'script-qa'
-        rev.message = u'Update missing resource format'
-
-        log.info("Updating format on resource to '%s' as it was not set", qa.format)
-        resource.format = qa.format
-        model.repo.commit_and_remove()
 
     model.Session.commit()
 
     log.info('QA results updated ok')
+    return qa
 
+
+def write_resource_formats(resources_and_formats):
+    '''Writes a resource.format specified in a list.
+    '''
+    from ckan import model
+    if not resources_and_formats:
+        return
+    rev = model.repo.new_revision()
+    rev.author = u'script-qa'
+    rev.message = u'Set missing resource format from QA'
+    for resource, format_ in resources_and_formats:
+        resource.format = format_
+    model.repo.commit_and_remove()
