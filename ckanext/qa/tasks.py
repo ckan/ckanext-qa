@@ -79,7 +79,6 @@ def update_package_(package_id, log):
     log.info('Openness scoring package %s (%i resources)', package.name,
              len(package.resources))
 
-    resource_format_fill_ins = []
     for resource in package.resources:
         qa_result = resource_score(resource, log)
         log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
@@ -87,19 +86,7 @@ def update_package_(package_id, log):
         qa_obj = save_qa_result(resource, qa_result, log)
         log.info('CKAN updated with openness score')
 
-        # If the resource doesn't have a format, we'll record the one that
-        # we detected in QA.
-        if not resource.format.strip() and has_value(qa_obj.format):
-            resource_format_fill_ins.append((resource, qa_obj.format))
-
-    if resource_format_fill_ins:
-        log.info('Writing resource formats from QA - %s/%s for %s',
-                 len(resource_format_fill_ins), len(package.resources),
-                 package.name)
-        # this will update the search index as a by-product
-        write_resource_formats(resource_format_fill_ins)
-    else:
-        update_search_index(package.id, log)
+    update_search_index(package.id, log)
 
 
 @celery_app.celery.task(name="qa.update")
@@ -431,17 +418,3 @@ def save_qa_result(resource, qa_result, log):
 
     log.info('QA results updated ok')
     return qa
-
-
-def write_resource_formats(resources_and_formats):
-    '''Writes a resource.format specified in a list.
-    '''
-    from ckan import model
-    if not resources_and_formats:
-        return
-    rev = model.repo.new_revision()
-    rev.author = u'script-qa'
-    rev.message = u'Set missing resource format from QA'
-    for resource, format_ in resources_and_formats:
-        resource.format = format_
-    model.repo.commit_and_remove()
