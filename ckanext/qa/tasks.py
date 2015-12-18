@@ -121,18 +121,11 @@ def update_resource_(resource_id, log):
     qa_obj = save_qa_result(resource, qa_result, log)
     log.info('CKAN updated with openness score')
 
-    # write the format if it is missing
-    if not resource.format.strip() and has_value(qa_obj.format):
-        log.info('Writing resource format from QA - res %s %s',
-                 resource.format, resource.id)
-        # this will update the search index as a by-product
-        write_resource_formats([(resource, qa_obj.format)])
+    package = resource.resource_group.package if resource.resource_group else None
+    if package:
+        update_search_index(package.id, log)
     else:
-        package = resource.resource_group.package if resource.resource_group else None
-        if package:
-            update_search_index(package.id, log)
-        else:
-            log.warning('Resource not connected to a package. Res: %r', resource)
+        log.warning('Resource not connected to a package. Res: %r', resource)
     return json.dumps(qa_result, cls=DateTimeJsonEncoder)
 
 
