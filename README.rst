@@ -2,8 +2,8 @@
    these badges work. The necessary Travis and Coverage config files have been
    generated for you.
 
-.. image:: https://travis-ci.org/datagovuk/ckanext-qa.svg?branch=master
-    :target: https://travis-ci.org/datagovuk/ckanext-qa
+.. image:: https://travis-ci.org/ckan/ckanext-qa.svg?branch=master
+    :target: https://travis-ci.org/ckan/ckanext-qa
 
 CKAN QA Extension (Quality Assurance)
 =====================================
