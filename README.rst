@@ -35,7 +35,7 @@ Before installing ckanext-qa, make sure that you have installed the following:
 * ckanext-archiver 2.0+ (http://github.com/okfn/ckanext-archiver)
 
 Known issues:
-* if CKAN version is earlier than 2.3 then QA and Archiver information will not display on the resource read page.
+* if the CKAN version is earlier than 2.3 then QA and Archiver information will not display on the resource read page.
 
 
 Installation
