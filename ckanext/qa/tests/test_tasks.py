@@ -325,20 +325,6 @@ class TestUpdatePackage(object):
         assert_equal(qa.openness_score, 0)
         assert_equal(qa.openness_score_reason, 'License not open')
 
-    def test_set_resource_format(self):
-        resource = {
-            'url': 'http://example.com/file.csv',
-            'title': 'Some data',
-            'format': '',
-            }
-        dataset = ckan_factories.Dataset(resources=[resource])
-        resource = model.Resource.get(dataset['resources'][0]['id'])
-
-        ckanext.qa.tasks.update_package_(dataset['id'], log)
-
-        resource = model.Resource.get(dataset['resources'][0]['id'])
-        assert_equal(resource.format, 'CSV')
-
 
 class TestUpdateResource(object):
     @classmethod
@@ -362,17 +348,3 @@ class TestUpdateResource(object):
         assert qa
         assert_equal(qa.openness_score, 0)
         assert_equal(qa.openness_score_reason, 'License not open')
-
-    def test_set_resource_format(self):
-        resource = {
-            'url': 'http://example.com/file.csv',
-            'title': 'Some data',
-            'format': '',
-            }
-        dataset = ckan_factories.Dataset(resources=[resource])
-        resource = model.Resource.get(dataset['resources'][0]['id'])
-
-        ckanext.qa.tasks.update_resource_(dataset['resources'][0]['id'], log)
-
-        resource = model.Resource.get(dataset['resources'][0]['id'])
-        assert_equal(resource.format, 'CSV')
