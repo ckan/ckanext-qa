@@ -141,6 +141,12 @@ class TestSniffFormat:
         self.check_format('wms', 'afbi_get_capabilities.wms')
     def test_wms_1_1_1(self):
         self.check_format('wms', 'oldham_get_capabilities.wms')
+    def test_wfs_1_0(self):
+        self.check_format('wfs', 'blaby_get_capabilities_1_0.wfs')
+    def test_wfs_1_1(self):
+        self.check_format('wfs', 'blaby_get_capabilities_1_1.wfs')
+    def test_wfs_2_0(self):
+        self.check_format('wfs', 'blaby_get_capabilities_2_0.wfs')
     #def test_ics(self):
     #    self.check_format('ics')
     def test_ttl1(self):
