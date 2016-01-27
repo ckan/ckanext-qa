@@ -58,41 +58,45 @@ def update_package(ckan_ini_filepath, package_id):
     Given a package, calculates an openness score for each of its resources.
     It is more efficient to call this than 'update' for each resource.
 
-    data - package dict (includes its resources)
-
     Returns None
     """
     log = update_package.get_logger()
     load_config(ckan_ini_filepath)
     register_translator()
-    from ckan import model
-    try:
-        package = model.Package.get(package_id)
-        if not package:
-            raise QAError('Package ID not found: %s' % package_id)
 
-        log.info('Openness scoring package %s (%i resources)', package.name, len(package.resources))
-        for resource in package.resources:
-            qa_result = resource_score(resource, log)
-            log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
-                     resource.url)
-            save_qa_result(resource.id, qa_result, log)
-            log.info('CKAN updated with openness score')
-        # Refresh the index for this dataset, so that it contains the latest
-        # qa info
-        _update_search_index(package.id, log)
+    try:
+        update_package_(package_id, log)
     except Exception, e:
-        log.error('Exception occurred during QA update: %s: %s', e.__class__.__name__,  unicode(e))
+        log.error('Exception occurred during QA update_package: %s: %s',
+                  e.__class__.__name__,  unicode(e))
         raise
+
+
+def update_package_(package_id, log):
+    from ckan import model
+    package = model.Package.get(package_id)
+    if not package:
+        raise QAError('Package ID not found: %s' % package_id)
+
+    log.info('Openness scoring package %s (%i resources)', package.name,
+             len(package.resources))
+
+    for resource in package.resources:
+        qa_result = resource_score(resource, log)
+        log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
+                 resource.url)
+        save_qa_result(resource, qa_result, log)
+        log.info('CKAN updated with openness score')
+
+    # Refresh the index for this dataset, so that it contains the latest
+    # qa info
+    _update_search_index(package.id, log)
 
 
 @celery_app.celery.task(name="qa.update")
 def update(ckan_ini_filepath, resource_id):
     """
     Given a resource, calculates an openness score.
-
-    data - details of the resource that is to be scored
-           is JSON dict with keys: 'package', 'position', 'id', 'format', 'url', 'is_open'
 
     Returns a JSON dict with keys:
 
@@ -102,31 +106,36 @@ def update(ckan_ini_filepath, resource_id):
     log = update.get_logger()
     load_config(ckan_ini_filepath)
     register_translator()
-    from ckan import model
     try:
-        resource = model.Resource.get(resource_id)
-        if not resource:
-            raise QAError('Resource ID not found: %s' % resource_id)
-        qa_result = resource_score(resource, log)
-        log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
-                 resource.url)
-        save_qa_result(resource.id, qa_result, log)
-        log.info('CKAN updated with openness score')
-        if toolkit.check_ckan_version(max_version='2.2.99'):
-            package = resource.resource_group.package
-        else:
-            package = resource.package
-        if package:
-            # Refresh the index for this dataset, so that it contains the latest
-            # qa info
-            _update_search_index(package.id, log)
-        else:
-            log.warning('Resource not connected to a package. Res: %r', resource)
-        return json.dumps(qa_result) #, cls=DateTimeJsonEncoder)
+        update_resource_(resource_id, log)
     except Exception, e:
-        log.error('Exception occurred during QA update: %s: %s',
+        log.error('Exception occurred during QA update_resource: %s: %s',
                   e.__class__.__name__,  unicode(e))
         raise
+
+
+def update_resource_(resource_id, log):
+    from ckan import model
+    resource = model.Resource.get(resource_id)
+    if not resource:
+        raise QAError('Resource ID not found: %s' % resource_id)
+    qa_result = resource_score(resource, log)
+    log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
+             resource.url)
+    save_qa_result(resource, qa_result, log)
+    log.info('CKAN updated with openness score')
+
+    if toolkit.check_ckan_version(max_version='2.2.99'):
+        package = resource.resource_group.package
+    else:
+        package = resource.package
+    if package:
+        # Refresh the index for this dataset, so that it contains the latest
+        # qa info
+        _update_search_index(package.id, log)
+    else:
+        log.warning('Resource not connected to a package. Res: %r', resource)
+    return json.dumps(qa_result)
 
 
 def get_qa_format(resource_id):
@@ -412,7 +421,7 @@ def _update_search_index(package_id, log):
     log.info('Search indexed %s', package['name'])
 
 
-def save_qa_result(resource_id, qa_result, log):
+def save_qa_result(resource, qa_result, log):
     """
     Saves the results of the QA check to the qa table.
     """
@@ -421,16 +430,16 @@ def save_qa_result(resource_id, qa_result, log):
 
     now = datetime.datetime.now()
 
-    qa = QA.get_for_resource(resource_id)
+    qa = QA.get_for_resource(resource.id)
     if not qa:
-        qa = QA.create(resource_id)
+        qa = QA.create(resource.id)
         model.Session.add(qa)
     else:
         log.info('QA from before: %r', qa)
 
     for key in ('openness_score', 'openness_score_reason', 'format'):
         setattr(qa, key, qa_result[key])
-    qa.archival_timestamp == qa_result['archival_timestamp']
+    qa.archival_timestamp = qa_result['archival_timestamp']
     qa.updated = now
 
     model.Session.commit()

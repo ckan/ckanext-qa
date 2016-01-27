@@ -266,3 +266,112 @@ class TestExtensionVariants:
     def test_3_none(self):
         assert_equal(extension_variants('http://dept.gov.uk/coins-data-1996'),
                      [])
+
+
+class TestSaveQaResult(object):
+    @classmethod
+    def setup_class(cls):
+        reset_db()
+        archiver_model.init_tables(model.meta.engine)
+        qa_model.init_tables(model.meta.engine)
+
+    @classmethod
+    def get_qa_result(cls, **kwargs):
+        qa_result = {
+            'openness_score': 3,
+            'openness_score_reason': 'Detected as CSV which scores 3',
+            'format': 'CSV',
+            'archival_timestamp': datetime.datetime(2015, 12, 16),
+            }
+        qa_result.update(kwargs)
+        return qa_result
+
+    def test_simple(self):
+        resource_dict = ckan_factories.Resource()
+        resource = model.Resource.get(resource_dict['id'])
+        qa_result = self.get_qa_result()
+
+        qa = ckanext.qa.tasks.save_qa_result(resource, qa_result, log)
+
+        assert_equal(qa.openness_score, qa_result['openness_score'])
+        assert_equal(qa.openness_score_reason,
+                     qa_result['openness_score_reason'])
+        assert_equal(qa.format, qa_result['format'])
+        assert_equal(qa.archival_timestamp, qa_result['archival_timestamp'])
+        assert qa.updated, qa.updated
+
+
+class TestUpdatePackage(object):
+    @classmethod
+    def setup_class(cls):
+        reset_db()
+        archiver_model.init_tables(model.meta.engine)
+        qa_model.init_tables(model.meta.engine)
+
+    def test_simple(self):
+        resource = {
+            'url': 'http://example.com/file.csv',
+            'title': 'Some data',
+            'format': '',
+            }
+        dataset = ckan_factories.Dataset(resources=[resource])
+        resource = model.Resource.get(dataset['resources'][0]['id'])
+
+        ckanext.qa.tasks.update_package_(dataset['id'], log)
+
+        qa = qa_model.QA.get_for_resource(dataset['resources'][0]['id'])
+        assert qa
+        assert_equal(qa.openness_score, 0)
+        assert_equal(qa.openness_score_reason, 'License not open')
+
+    def test_set_resource_format(self):
+        resource = {
+            'url': 'http://example.com/file.csv',
+            'title': 'Some data',
+            'format': '',
+            }
+        dataset = ckan_factories.Dataset(resources=[resource])
+        resource = model.Resource.get(dataset['resources'][0]['id'])
+
+        ckanext.qa.tasks.update_package_(dataset['id'], log)
+
+        resource = model.Resource.get(dataset['resources'][0]['id'])
+        assert_equal(resource.format, 'CSV')
+
+
+class TestUpdateResource(object):
+    @classmethod
+    def setup_class(cls):
+        reset_db()
+        archiver_model.init_tables(model.meta.engine)
+        qa_model.init_tables(model.meta.engine)
+
+    def test_simple(self):
+        resource = {
+            'url': 'http://example.com/file.csv',
+            'title': 'Some data',
+            'format': '',
+            }
+        dataset = ckan_factories.Dataset(resources=[resource])
+        resource = model.Resource.get(dataset['resources'][0]['id'])
+
+        ckanext.qa.tasks.update_resource_(dataset['resources'][0]['id'], log)
+
+        qa = qa_model.QA.get_for_resource(dataset['resources'][0]['id'])
+        assert qa
+        assert_equal(qa.openness_score, 0)
+        assert_equal(qa.openness_score_reason, 'License not open')
+
+    def test_set_resource_format(self):
+        resource = {
+            'url': 'http://example.com/file.csv',
+            'title': 'Some data',
+            'format': '',
+            }
+        dataset = ckan_factories.Dataset(resources=[resource])
+        resource = model.Resource.get(dataset['resources'][0]['id'])
+
+        ckanext.qa.tasks.update_resource_(dataset['resources'][0]['id'], log)
+
+        resource = model.Resource.get(dataset['resources'][0]['id'])
+        assert_equal(resource.format, 'CSV')

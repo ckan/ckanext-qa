@@ -44,17 +44,16 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
     # IPipe
 
     def receive_data(self, operation, queue, **params):
-        '''Receive notification from ckan-archiver that a resource has been
-        archived.
-        '''
-        if not operation == 'archived':
+        '''Receive notification from ckan-archiver that a dataset has been
+        archived.'''
+        if not operation == 'package-archived':
             return
-        resource_id = params['resource_id']
+        dataset_id = params['package_id']
 
-        resource = model.Resource.get(resource_id)
-        assert resource
+        dataset = model.Package.get(dataset_id)
+        assert dataset
 
-        lib.create_qa_update_task(resource, queue=queue)
+        lib.create_qa_update_package_task(dataset, queue=queue)
 
     # IReport
 
@@ -66,17 +65,28 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
     # IActions
 
     def get_actions(self):
-        return get_functions(action)
+        return {
+            'qa_resource_show': action.qa_resource_show,
+            'qa_package_openness_show': action.qa_package_openness_show,
+            }
 
     # IAuthFunctions
 
     def get_auth_functions(self):
-        return get_functions(auth)
+        return {
+            'qa_resource_show': auth.qa_resource_show,
+            'qa_package_openness_show': auth.qa_package_openness_show,
+            }
 
     # ITemplateHelpers
 
     def get_helpers(self):
-        return get_functions(helpers)
+        return {
+            'qa_openness_stars_resource_html':
+            helpers.qa_openness_stars_resource_html,
+            'qa_openness_stars_dataset_html':
+            helpers.qa_openness_stars_dataset_html,
+            }
 
     # IPackageController
 
@@ -103,10 +113,3 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
                 del qa_dict['package_id']
                 del qa_dict['resource_id']
                 res['qa'] = qa_dict
-
-
-def get_functions(module):
-    return dict((name, function) for name, function
-                in module.__dict__.items()
-                if isinstance(function, types.FunctionType)
-                and name[0] != '_')

@@ -48,8 +48,9 @@
       {% endfor %}
     </tbody>
   </table>
-{% endif %}
-{% if c.options['organization'] != None %}
+
+{% else %}
+
   <ul>
     <li>Average score: {{ c.data['average_stars'] }}</li>
     <li>Total stars: {{ c.data['total_stars'] }}</li>
