@@ -445,3 +445,4 @@ def save_qa_result(resource, qa_result, log):
     model.Session.commit()
 
     log.info('QA results updated ok')
+    return qa  # for tests

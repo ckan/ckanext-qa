@@ -1,31 +1,25 @@
 import logging
-import os
-import shutil
-import tempfile
-import subprocess
-import time
-import requests
-from datetime import datetime, timedelta
-from nose.tools import raises
 from functools import wraps
 import json
-from urllib import quote_plus, urlencode
-from pylons import config
-from ckan import model
-from ckan import plugins
-from ckan.lib.dictization.model_dictize import resource_dictize
-from ckan.tests import BaseCase, url_for, CreateTestData
-from ckan.tests import TestController as ControllerTestCase
+from urllib import urlencode
+try:
+    from ckan.tests.helpers import reset_db, assert_in
+    from ckan.tests import factories as ckan_factories
+    from ckan.tests.legacy import BaseCase, url_for, CreateTestData
+    from ckan.tests.legacy import TestController as ControllerTestCase
+except ImportError:
+    from ckan.new_tests.helpers import reset_db
+    from ckan.new_tests import factories as ckan_factories
+    from ckan.tests import BaseCase, url_for, CreateTestData, assert_in
+    from ckan.tests import TestController as ControllerTestCase
 from nose.tools import assert_raises, assert_equal
-from ckan.tests import assert_in
 
-from ckanext.archiver.tasks import (link_checker, 
-                                    update_package,
+from ckanext.archiver.tasks import (update_package,
                                     download,
                                     ArchiverError,
                                     DownloadError,
                                     ChooseNotToDownload,
-                                    LinkCheckerError, 
+                                    LinkCheckerError,
                                     CkanError,
                                    )
 

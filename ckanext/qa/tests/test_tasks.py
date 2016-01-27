@@ -5,15 +5,16 @@ import datetime
 
 from nose.tools import assert_equal
 from ckan import model
-from ckan.tests import BaseCase
 from ckan.logic import get_action
 import ckan.lib.helpers as ckan_helpers
 try:
     from ckan.tests.helpers import reset_db
     from ckan.tests import factories as ckan_factories
+    from ckan.tests.legacy import BaseCase
 except ImportError:
     from ckan.new_tests.helpers import reset_db
     from ckan.new_tests import factories as ckan_factories
+    from ckan.tests import BaseCase
 
 import ckanext.qa.tasks
 from ckanext.qa.tasks import resource_score, extension_variants
