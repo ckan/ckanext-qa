@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2012 rel. 2 sp1 (x64) (http://www.altova.com) by  -->
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:opensearchextensions="http://example.com/opensearchextensions/1.0/" xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0" xsi:schemaLocation="http://www.w3.org/2005/Atom http://inspire-geoportal.ec.europa.eu/schemas/inspire/atom/1.0/atom.xsd" xml:lang="en" xml:base="https://www.spatialni.gov.uk/">
+	<!--Change xml:base when migrating to live server-->
+	<!--Response language is the value of xml:lang-->
+	<!-- feed title -->
+	<title>Scottish Government - Human Health and Safety (INSPIRE pre-defined download service)</title>
+	<!-- feed subtitle -->
+	<subtitle>This Atom feed provides access to a file download through an INSPIRE Pre-defined Download Service for the Scottish Government - Human Health and Safety spatial datasets published by the Scottish Government.</subtitle>
+	<!-- link to this feed -->
+	<link href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/SG_HumanHealthSafety.atom.en.xml" rel="self" type="application/atom+xml" hreflang="en" title="This document"/>
+	<!-- links to this feed in other languages -->
+	<!--<link href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/SG_HumanHealthSafety.atom.en.xml" rel="alternate" type="application/atom+xml" hreflang="gle" title="An feed seo as gaeilge" xml:lang="gle"/>-->
+	<!-- links to Download Service Gemini 2.1 metadata-->
+	<link href="http://scotgovsdi.edina.ac.uk/srv/en/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=2e0c8f4d-f607-40e6-b269-27b87215ef77&amp;OUTPUTSCHEMA=http://www.isotc211.org/2005/gmd&amp;ELEMENTSETNAME=full" rel="describedby" type="application/xml"/>
+	<!-- links to Open Search definition file-->
+	<link rel="search" href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/opensearchdescription.xml" type="application/opensearchdescription+xml" title="Open Search Description"/>
+	<!-- identifier -->
+	<id>http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/SG_HumanHealthSafety.atom.en.xml</id>
+	<!--we might want to include this
+   <opensearch:totalResults>3</opensearch:totalResults>
+   <opensearch:startIndex>1</opensearch:startIndex>
+   <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+   -->
+	<!-- rights, access restrictions -->
+	<rights>(e) intellectual property rights;</rights>
+	<!-- date/time of last update of feed-->
+	<updated>2014-03-24T00:00:00Z</updated>
+	<!-- descriptive summary -->
+	<!--	<summary xml:lang="en">More text about the data sets offered by this
+        service</summary>-->
+	<!-- author info -->
+	<author>
+		<name>Scottish Government</name>
+		<email>GI-SAT@scotland.gsi.gov.uk</email>
+	</author>
+	<!--INSPIRE Human Health and Safety -->
+	<entry>
+		<!-- Click on the gutter to collapse this node-->
+		<!--Spatial Data Set Unique Resource Identifier-->
+		<inspire_dls:spatial_dataset_identifier_code>www.gov.scot/SG_NHS_HealthBoards_2014</inspire_dls:spatial_dataset_identifier_code>
+		<!--<inspire_dls:spatial_dataset_identifier_namespace>http://data.spatialni.gov.uk/dataset/</inspire_dls:spatial_dataset_identifier_namespace>-->
+		<!--List of available CRS-->
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/4258" label="ETRS89"/>
+		<!-- INSPIRE Spatial Object Types contained in the pre-defined dataset are specified in the subfeed-->
+		<author>
+			<name>Scottish Government</name>
+			<email>GI-SAT@scotland.gsi.gov.uk</email>
+		</author>
+		<id>http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/subfeed_NHSHealthBoards2014.atom.en.xml</id>
+		<!-- link to ISO MD of the dataset -->
+		<!--<link rel="describedby" href="csw getrecordbyID requestl" type="application/xml" hreflang="en" title="Metadata"/>-->
+		<link rel="describedby" href="http://scotgovsdi.edina.ac.uk/srv/en/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=f12c3826-4b4b-40e6-bf4f-77b9ed01dc14&amp;OUTPUTSCHEMA=http://www.isotc211.org/2005/gmd&amp;ELEMENTSETNAME=full" type="application/xml" hreflang="en" title="Metadata"/>
+		<!-- pre-defined dataset link to subfeed-->
+		<link rel="alternate" href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/subfeed_NHSHealthBoards2014.atom.en.xml" type="application/atom+xml" hreflang="en" title="Feed containing the dataset in GML and ESRI Geodatabase formats in IG and ETRS89 coordinate reference systems"/>
+		<published>2014-04-01T00:00:00Z</published>
+		<!-- human readable summary of the pre-defined dataset -->
+		<summary type="html"><![CDATA[
+    <div>
+	        Delivery of frontline healthcare services in Scotland are the responsibility of 14 regional National Health Service (NHS) Boards that report to the Scottish Government. The boundaries of NHS Health Boards in Scotland are defined by National Health Service (Variation of Areas of Health Boards) (Scotland) Order 2013 (SSI 2013/347), which came into force on April 1st 2014, and replaces the previous definition based upon the former Regions and Districts of the Local Government (Scotland) Act 1973. This change was made in order to re-align Health Boards with the combined area of each Local Authority that they serve. It is expected that future changes to Local Authorities will result in a subsequent change in Health Boards.
+
+			<!--    </div><br/><div>
+        GML file download: (media type <a href="http://inspire.jrc.ec.europa.eu/media-types/" target="_blank"><em>application/x-gml</em></a>): Click to download: <span><a href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/ProtectedSites_SAC_GML_ETRS89.zip">
+            ETRS89</a> </span> <span><a href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/ZippedShapefiles/SG_NHS_HealthBoards_2014.zip">
+           IG</a> </span> 
+    </div> -->
+    <div><br/><div>
+        Shapefile file download: (media type <a href="http://inspire.jrc.ec.europa.eu/media-types/" target="_blank"><em>application/x-shapefile</em></a>): Click to download: <span><a href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/ZippedShapefiles/SG_NHS_HealthBoards_2014.zip">
+            British National Grid</a> 
+    </div>
+	
+	<div>
+        Dataset metadata: <span><a href="http://scotgovsdi.edina.ac.uk/srv/en/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&ID=f12c3826-4b4b-40e6-bf4f-77b9ed01dc14&OUTPUTSCHEMA=http://www.isotc211.org/2005/gmd&ELEMENTSETNAME=full">
+			UK GEMINI</a> </span>
+	</div><br/> 
+    <img width="300px" vspace="0" hspace="0" border="1" alt="SG Logo"
+        src="http://www.gov.scot/Resource/Img/923/0058958.gif" usemap="#Sel"></img>
+		]]></summary>
+		<!-- title for pre-defined dataset -->
+		<title>Scottish Government - NHS Health Boards (INSPIRE pre-defined download service)</title>
+		<!-- last date/time pre-defined dataset was updated -->
+		<updated>2014-04-01T00:00:00Z</updated>
+		<!-- optional GeoRSS bounding box of the pre-defined dataset. Must be lat lon -->
+		<georss:polygon>51.25 -10.75 51.25 -5.5 55.5 -5.5 55.5 -10.75 51.25 -10.75</georss:polygon>
+	</entry>
+		<entry>
+		<!-- Click on the gutter to collapse this node-->
+		<!--Spatial Data Set Unique Resource Identifier-->
+		<inspire_dls:spatial_dataset_identifier_code>www.gov.scot/SG_ScottishPoliceDivisions_2013</inspire_dls:spatial_dataset_identifier_code>
+		<!--<inspire_dls:spatial_dataset_identifier_namespace>http://data.spatialni.gov.uk/dataset/</inspire_dls:spatial_dataset_identifier_namespace>-->
+		<!--List of available CRS-->
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/4258" label="ETRS89"/>
+		<!-- INSPIRE Spatial Object Types contained in the pre-defined dataset are specified in the subfeed-->
+		<author>
+			<name>Scottish Government</name>
+			<email>GI-SAT@scotland.gsi.gov.uk</email>
+		</author>
+		<id>http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/subfeed_ScottishPoliceDivisions2013.atom.en.xml</id>
+		<!-- link to ISO MD of the dataset -->
+		<!--<link rel="describedby" href="csw getrecordbyID requestl" type="application/xml" hreflang="en" title="Metadata"/>-->
+		<link rel="describedby" href="http://scotgovsdi.edina.ac.uk/srv/en/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=4364af71-167a-4236-b5a0-bd4109913231&amp;OUTPUTSCHEMA=http://www.isotc211.org/2005/gmd&amp;ELEMENTSETNAME=full" type="application/xml" hreflang="en" title="Metadata"/>
+		<!-- pre-defined dataset link to subfeed-->
+		<link rel="alternate" href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/HumanHealthSafety/subfeed_ScottishPoliceDivisions2013.atom.en.xml" type="application/atom+xml" hreflang="en" title="Feed containing the dataset in GML and ESRI Geodatabase formats in IG and ETRS89 coordinate reference systems"/>
+		<published>2015-07-15T00:00:00Z</published>
+		<!-- human readable summary of the pre-defined dataset -->
+		<summary type="html"><![CDATA[
+    <div>
+	        The Police and Fire Reform (Scotland) Act 2012 dissolved the eight former police and fire areas in to a single service for all of Scotland. Royal assent for the bill was received on August 7th, 2012 and came into effect on April 1st, 2013. Following from this, fourteen police divisions were created to enable policing at the local level. The fourteen divisions were created from aggregations of Local Authorities (Ordnance Survey BoundaryLine), and it is expected that Police Divisions will remain coterminous with Local Authorities as boundaries change. 
+<!--    </div><br/><div>
+        GML file download: (media type <a href="http://inspire.jrc.ec.europa.eu/media-types/" target="_blank"><em>application/x-gml</em></a>): Click to download: <span><a href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/ZippedShapefiles/SG_ScottishPoliceDivisions_2013.zip">
+            ETRS89</a> </span> <span><a href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/ZippedShapefiles/SG_ScottishPoliceDivisions_2013.zip">
+           IG</a> </span> 
+    </div> -->
+    <div><br/><div>
+        Shapefile file download: (media type <a href="http://inspire.jrc.ec.europa.eu/media-types/" target="_blank"><em>application/x-shapefile</em></a>): Click to download: <span><a href="http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/ZippedShapefiles/SG_ScottishPoliceDivisions_2013.zip">
+            British National Grid</a> </span>
+    </div>
+	<div>
+        Dataset metadata: <span><a href="http://scotgovsdi.edina.ac.uk/srv/en/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&ID=4364af71-167a-4236-b5a0-bd4109913231&OUTPUTSCHEMA=http://www.isotc211.org/2005/gmd&ELEMENTSETNAME=full">
+			UK GEMINI</a> </span>
+	</div><br/> 
+    <img width="300px" vspace="0" hspace="0" border="1" alt="SG Logo"
+        src="http://www.gov.scot/Resource/Img/923/0058958.gif" usemap="#Sel"></img>
+		]]></summary>
+		<!-- title for pre-defined dataset -->
+		<title>Scottish Government - Scottish Police Divisions (INSPIRE pre-defined download service)</title>
+		<!-- last date/time pre-defined dataset was updated -->
+		<updated>2015-07-15T00:00:00Z</updated>
+		<!-- optional GeoRSS bounding box of the pre-defined dataset. Must be lat lon -->
+		<georss:polygon>51.25 -10.75 51.25 -5.5 55.5 -5.5 55.5 -10.75 51.25 -10.75</georss:polygon>
+	</entry>
+</feed>

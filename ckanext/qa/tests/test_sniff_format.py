@@ -157,6 +157,8 @@ class TestSniffFormat:
         self.check_format('ttl', 'turtle-homelessness-acceptances-per-1000.ttl')
     def test_atom(self):
         self.check_format('atom feed', 'os_products.atom_feed')
+    def test_atom1(self):
+        self.check_format('atom feed', 'SG_HumanHealthSafety.atom_feed')
 
 def test_is_json():
     assert is_json('5', log)

@@ -285,34 +285,45 @@ def is_xml_but_without_declaration(buf, log):
 def get_xml_variant_including_xml_declaration(buf, log):
     '''If this buffer is in a format based on XML and has the <xml>
     declaration, return the format type.'''
-    xml_re = '.{0,3}\s*<\?xml[^>]*>\s*(<!doctype[^>]*>\s*)?(<[^>]+>)'
-    match = re.match(xml_re, buf, re.IGNORECASE)
-    if match:
-        top_level_tag_name = match.groups()[-1].lower()
-        return get_xml_variant_without_xml_declaration(match.groups()[-1], log)
+    return get_xml_variant_without_xml_declaration(buf, log)
     log.debug('XML declaration not found: %s', buf)
 
 def get_xml_variant_without_xml_declaration(buf, log):
     '''If this buffer is in a format based on XML, without any XML declaration
     or other boilerplate, return the format type.'''
-    xml_re = '.{0,3}\s*<([^>\s]*)'
-    match = re.match(xml_re, buf)
-    if match:
-        top_level_tag_name = match.groups()[-1].lower()
-        top_level_tag_name = top_level_tag_name.replace('rdf:rdf', 'rdf')
-        top_level_tag_name = top_level_tag_name.replace('wms_capabilities', 'wms')  # WMS 1.3
-        top_level_tag_name = top_level_tag_name.replace('wmt_ms_capabilities', 'wms')  # WMS 1.1.1
-        top_level_tag_name = re.sub('wfs:.*', 'wfs', top_level_tag_name)  # WFS 2.0
-        top_level_tag_name = top_level_tag_name.replace('wfs_capabilities', 'wfs')  # WFS 1.0/1.1
-        top_level_tag_name = top_level_tag_name.replace('feed', 'atom feed')
-        format_tuple = ckan_helpers.resource_formats().get(top_level_tag_name)
-        if format_tuple:
-            format_ = {'format': format_tuple[1]}
-            log.info('XML variant detected: %s', format_tuple[2])
-            return format_
-        log.warning('Did not recognise XML format: %s', top_level_tag_name)
+    # Parse the XML to find the first tag name.
+    # Using expat directly, rather than go through xml.sax, since using I
+    # couldn't see how to give it a string, so used StringIO which failed
+    # for some files curiously.
+    import xml.parsers.expat
+    class GotFirstTag(Exception):
+        pass
+    def start_element(name, attrs):
+        raise GotFirstTag(name)
+    p = xml.parsers.expat.ParserCreate()
+    p.StartElementHandler = start_element
+    try:
+        p.Parse(buf)
+    except GotFirstTag, e:
+        top_level_tag_name = str(e).lower()
+    except xml.sax.SAXException, e:
+        log.info('Sax parse error: %s %s', e, buf)
         return {'format': 'XML'}
-    log.debug('XML tags not found: %s', buf)
+
+    log.info('Top level tag detected as: %s', top_level_tag_name)
+    top_level_tag_name = top_level_tag_name.replace('rdf:rdf', 'rdf')
+    top_level_tag_name = top_level_tag_name.replace('wms_capabilities', 'wms')  # WMS 1.3
+    top_level_tag_name = top_level_tag_name.replace('wmt_ms_capabilities', 'wms')  # WMS 1.1.1
+    top_level_tag_name = re.sub('wfs:.*', 'wfs', top_level_tag_name)  # WFS 2.0
+    top_level_tag_name = top_level_tag_name.replace('wfs_capabilities', 'wfs')  # WFS 1.0/1.1
+    top_level_tag_name = top_level_tag_name.replace('feed', 'atom feed')
+    format_tuple = ckan_helpers.resource_formats().get(top_level_tag_name)
+    if format_tuple:
+        format_ = {'format': format_tuple[1]}
+        log.info('XML variant detected: %s', format_tuple[2])
+        return format_
+    log.warning('Did not recognise XML format: %s', top_level_tag_name)
+    return {'format': 'XML'}
 
 def has_rdfa(buf, log):
     '''If the buffer HTML contains RDFa then this returns True'''
