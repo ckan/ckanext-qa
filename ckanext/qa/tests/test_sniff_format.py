@@ -18,7 +18,7 @@ class TestSniffFormat:
         cls.fixture_files = [] # (format_extension, filepath)
         fixture_data_dir = os.path.join(os.path.dirname(__file__), 'data')
         for filename in os.listdir(fixture_data_dir):
-            format_extension = '.'.join(filename.split('.')[1:])
+            format_extension = '.'.join(filename.split('.')[1:]).replace('_', ' ')
             filepath = os.path.join(fixture_data_dir, filename)
             cls.fixture_files.append((format_extension, filepath))
 
@@ -155,6 +155,8 @@ class TestSniffFormat:
         self.check_format('ttl', 'turtle-imd-education-score-2010.ttl')
     def test_ttl3(self):
         self.check_format('ttl', 'turtle-homelessness-acceptances-per-1000.ttl')
+    def test_atom(self):
+        self.check_format('atom feed', 'os_products.atom_feed')
 
 def test_is_json():
     assert is_json('5', log)
