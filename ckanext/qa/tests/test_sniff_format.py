@@ -153,6 +153,8 @@ class TestSniffFormat:
         self.check_format('wmts', 'ukho_bathymetry.wmts')
     def test_wcs(self):
         self.check_format('wcs', 'ukho_bathymetry.wcs')
+    def test_wcs2(self):
+        self.check_format('wcs', 'ukho_bathymetry2.wcs')
     #def test_ics(self):
     #    self.check_format('ics')
     def test_ttl1(self):

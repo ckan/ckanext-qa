@@ -320,7 +320,7 @@ def get_xml_variant_without_xml_declaration(buf, log):
     if top_level_tag_name.lower() == 'capabilities' and \
             'xmlns="http://www.opengis.net/wmts/' in buf:
         top_level_tag_name = 'wmts'
-    if top_level_tag_name.lower() == 'coveragedescriptions' and \
+    if top_level_tag_name.lower() in ('coveragedescriptions', 'capabilities') and \
             'xmlns="http://www.opengis.net/wcs/' in buf:
         top_level_tag_name = 'wcs'
     format_tuple = ckan_helpers.resource_formats().get(top_level_tag_name)
