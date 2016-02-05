@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Capabilities version="1.0.0"
+    xsi:schemaLocation="http://www.opengis.net/wmts/1.0 http://aws2.caris.com/sfs/schemas/wmts/1.0.0/wmtsGetCapabilities_response.xsd"
+    xmlns="http://www.opengis.net/wmts/1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:ows="http://www.opengis.net/ows/1.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ows:ServiceIdentification>
+        <ows:Title xml:lang="en">Bathymetry Web Map Tile Service</ows:Title>
+        <ows:Abstract xml:lang="en">This Web Map Tile Service displays bathymetry that is part of the MEDIN Bathymetry Data Archiving Service.</ows:Abstract>
+        <ows:Keywords>
+            <ows:Keyword xml:lang="en">Elevation</ows:Keyword>
+        </ows:Keywords>
+        <ows:ServiceType>WMTS</ows:ServiceType>
+        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>Not applicable</ows:Fees>
+        <ows:AccessConstraints>These data are not suitable for use in marine navigation. Acknowledgement of Originator/Owner as source is required.</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <ows:ServiceProvider>
+        <ows:ProviderName>United Kingdom Hydrographic Office</ows:ProviderName>
+        <ows:ProviderSite xlink:href="www.ukho.gov.uk"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>External Relations Manager (Technical)</ows:IndividualName>
+            <ows:PositionName>Point of Contact</ows:PositionName>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice>+44 (0)1823 337900</ows:Voice>
+                    <ows:Facsimile>+44 (0)1823 284077</ows:Facsimile>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint>Admiralty Way</ows:DeliveryPoint>
+                    <ows:City>Taunton</ows:City>
+                    <ows:AdministrativeArea>Somerset</ows:AdministrativeArea>
+                    <ows:PostalCode>TA1 2DN</ows:PostalCode>
+                    <ows:Country>United Kingdom</ows:Country>
+                    <ows:ElectronicMailAddress>nationalrelations@ukho.gov.uk</ows:ElectronicMailAddress>
+                </ows:Address>
+                <ows:OnlineResource xlink:href="www.ukho.gov.uk"/>
+                <ows:HoursOfService>0900 - 1700 GMT</ows:HoursOfService>
+                <ows:ContactInstructions>e-mail</ows:ContactInstructions>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetTile">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="GetFeatureInfo">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+    </ows:OperationsMetadata>
+    <Contents>
+        <Layer>
+            <ows:Title>Survey_Coverage</ows:Title>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-12.6026287 45.9070913</ows:LowerCorner>
+                <ows:UpperCorner>3.2137292 61.0855783</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <ows:Identifier>Survey_Coverage</ows:Identifier>
+            <ows:Metadata xlink:href="http://aws2.caris.com/sfs/services/ows/csw?request=GetRecordByID&amp;service=CSW&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;id=a86e39e7-72d2-3cc1-927d-51d6e3f6b794"/>
+            <Style isDefault="true">
+                <ows:Identifier>default</ows:Identifier>
+            </Style>
+            <Format>image/png</Format>
+            <InfoFormat>application/gml+xml; version=3.1</InfoFormat>
+            <TileMatrixSetLink>
+                <TileMatrixSet>GoogleMapsCompatible</TileMatrixSet>
+            </TileMatrixSetLink>
+            <ResourceURL format="image/png" resourceType="tile" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/Survey_Coverage/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}.png"/>
+            <ResourceURL format="application/gml+xml; version=3.1"
+                resourceType="FeatureInfo" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/Survey_Coverage/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}/{j}/{i}.xml"/>
+        </Layer>
+        <Layer>
+            <ows:Title>Bathymetry_Mosaic_Depth</ows:Title>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-20.00007225 39.999963625</ows:LowerCorner>
+                <ows:UpperCorner>20.00007225 70.000072</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <ows:Identifier>Bathymetry_Mosaic_Depth</ows:Identifier>
+            <ows:Metadata xlink:href="http://aws2.caris.com/sfs/services/ows/csw?request=GetRecordByID&amp;service=CSW&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;id=1b18a924-0b35-3662-8145-b6a1fd18c9e9"/>
+            <Style isDefault="true">
+                <ows:Identifier>default</ows:Identifier>
+            </Style>
+            <Format>image/png</Format>
+            <InfoFormat>application/gml+xml; version=3.1</InfoFormat>
+            <TileMatrixSetLink>
+                <TileMatrixSet>GoogleMapsCompatible</TileMatrixSet>
+            </TileMatrixSetLink>
+            <ResourceURL format="image/png" resourceType="tile" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/Bathymetry_Mosaic_Depth/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}.png"/>
+            <ResourceURL format="application/gml+xml; version=3.1"
+                resourceType="FeatureInfo" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/Bathymetry_Mosaic_Depth/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}/{j}/{i}.xml"/>
+        </Layer>
+        <Layer>
+            <ows:Title>Bathymetry_Mosaic_Elevation</ows:Title>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-20.00007225 39.999963625</ows:LowerCorner>
+                <ows:UpperCorner>20.00007225 70.000072</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <ows:Identifier>Bathymetry_Mosaic_Elevation</ows:Identifier>
+            <ows:Metadata xlink:href="http://aws2.caris.com/sfs/services/ows/csw?request=GetRecordByID&amp;service=CSW&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;id=2f0ad3e6-68c5-3a4d-afae-f5534078ba47"/>
+            <Style isDefault="true">
+                <ows:Identifier>default</ows:Identifier>
+            </Style>
+            <Format>image/png</Format>
+            <InfoFormat>application/gml+xml; version=3.1</InfoFormat>
+            <TileMatrixSetLink>
+                <TileMatrixSet>GoogleMapsCompatible</TileMatrixSet>
+            </TileMatrixSetLink>
+            <ResourceURL format="image/png" resourceType="tile" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/Bathymetry_Mosaic_Elevation/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}.png"/>
+            <ResourceURL format="application/gml+xml; version=3.1"
+                resourceType="FeatureInfo" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/Bathymetry_Mosaic_Elevation/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}/{j}/{i}.xml"/>
+        </Layer>
+        <Layer>
+            <ows:Title>GEBCO</ows:Title>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-180.0 -76.21422969153359</ows:LowerCorner>
+                <ows:UpperCorner>179.36375596314934 90.0</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <ows:Identifier>GEBCO</ows:Identifier>
+            <ows:Metadata xlink:href="http://aws2.caris.com/sfs/services/ows/csw?request=GetRecordByID&amp;service=CSW&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;id=5ee7c40a-1255-326f-a6cd-aa993193b3c3"/>
+            <Style isDefault="true">
+                <ows:Identifier>default</ows:Identifier>
+            </Style>
+            <Format>image/png</Format>
+            <InfoFormat>application/gml+xml; version=3.1</InfoFormat>
+            <TileMatrixSetLink>
+                <TileMatrixSet>GoogleMapsCompatible</TileMatrixSet>
+            </TileMatrixSetLink>
+            <ResourceURL format="image/png" resourceType="tile" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/GEBCO/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}.png"/>
+            <ResourceURL format="application/gml+xml; version=3.1"
+                resourceType="FeatureInfo" template="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/GEBCO/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}/{j}/{i}.xml"/>
+        </Layer>
+        <TileMatrixSet>
+            <ows:Identifier>GoogleMapsCompatible</ows:Identifier>
+            <ows:SupportedCRS>urn:ogc:def:crs:EPSG:6.18.3:3857</ows:SupportedCRS>
+            <WellKnownScaleSet>urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible</WellKnownScaleSet>
+            <TileMatrix>
+                <ows:Identifier>0</ows:Identifier>
+                <ScaleDenominator>5.590822640287178E8</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>1</MatrixWidth>
+                <MatrixHeight>1</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>1</ows:Identifier>
+                <ScaleDenominator>2.795411320143589E8</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>2</MatrixWidth>
+                <MatrixHeight>2</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>2</ows:Identifier>
+                <ScaleDenominator>1.397705660071794E8</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>4</MatrixWidth>
+                <MatrixHeight>4</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>3</ows:Identifier>
+                <ScaleDenominator>6.988528300358972E7</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>8</MatrixWidth>
+                <MatrixHeight>8</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>4</ows:Identifier>
+                <ScaleDenominator>3.494264150179486E7</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>16</MatrixWidth>
+                <MatrixHeight>16</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>5</ows:Identifier>
+                <ScaleDenominator>1.747132075089743E7</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>32</MatrixWidth>
+                <MatrixHeight>32</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>6</ows:Identifier>
+                <ScaleDenominator>8735660.375448715</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>64</MatrixWidth>
+                <MatrixHeight>64</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>7</ows:Identifier>
+                <ScaleDenominator>4367830.187724357</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>128</MatrixWidth>
+                <MatrixHeight>128</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>8</ows:Identifier>
+                <ScaleDenominator>2183915.093862179</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>256</MatrixWidth>
+                <MatrixHeight>256</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>9</ows:Identifier>
+                <ScaleDenominator>1091957.546931089</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>512</MatrixWidth>
+                <MatrixHeight>512</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>10</ows:Identifier>
+                <ScaleDenominator>545978.7734655447</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>1024</MatrixWidth>
+                <MatrixHeight>1024</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>11</ows:Identifier>
+                <ScaleDenominator>272989.3867327723</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>2048</MatrixWidth>
+                <MatrixHeight>2048</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>12</ows:Identifier>
+                <ScaleDenominator>136494.6933663862</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>4096</MatrixWidth>
+                <MatrixHeight>4096</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>13</ows:Identifier>
+                <ScaleDenominator>68247.34668319309</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>8192</MatrixWidth>
+                <MatrixHeight>8192</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>14</ows:Identifier>
+                <ScaleDenominator>34123.67334159654</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>16384</MatrixWidth>
+                <MatrixHeight>16384</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>15</ows:Identifier>
+                <ScaleDenominator>17061.83667079827</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>32768</MatrixWidth>
+                <MatrixHeight>32768</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>16</ows:Identifier>
+                <ScaleDenominator>8530.918335399136</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>65536</MatrixWidth>
+                <MatrixHeight>65536</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>17</ows:Identifier>
+                <ScaleDenominator>4265.459167699568</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>131072</MatrixWidth>
+                <MatrixHeight>131072</MatrixHeight>
+            </TileMatrix>
+            <TileMatrix>
+                <ows:Identifier>18</ows:Identifier>
+                <ScaleDenominator>2132.729583849784</ScaleDenominator>
+                <TopLeftCorner>-2.0037508342789244E7 2.0037508342789244E7</TopLeftCorner>
+                <TileWidth>256</TileWidth>
+                <TileHeight>256</TileHeight>
+                <MatrixWidth>262144</MatrixWidth>
+                <MatrixHeight>262144</MatrixHeight>
+            </TileMatrix>
+        </TileMatrixSet>
+    </Contents>
+    <Themes>
+        <Theme>
+            <ows:Title>Bathymetry</ows:Title>
+            <ows:Identifier>Bathymetry</ows:Identifier>
+            <LayerRef>Bathymetry_Mosaic_Depth</LayerRef>
+            <LayerRef>Bathymetry_Mosaic_Elevation</LayerRef>
+        </Theme>
+    </Themes>
+    <ServiceMetadataURL
+        xlink:href="http://aws2.caris.com/sfs/services/ows/wmts/UKHO_WMTS/1.0.0/WMTSCapabilities.xml" xlink:type="simple"/>
+</Capabilities>

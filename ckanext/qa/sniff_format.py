@@ -317,6 +317,12 @@ def get_xml_variant_without_xml_declaration(buf, log):
     top_level_tag_name = re.sub('wfs:.*', 'wfs', top_level_tag_name)  # WFS 2.0
     top_level_tag_name = top_level_tag_name.replace('wfs_capabilities', 'wfs')  # WFS 1.0/1.1
     top_level_tag_name = top_level_tag_name.replace('feed', 'atom feed')
+    if top_level_tag_name.lower() == 'capabilities' and \
+            'xmlns="http://www.opengis.net/wmts/' in buf:
+        top_level_tag_name = 'wmts'
+    if top_level_tag_name.lower() == 'coveragedescriptions' and \
+            'xmlns="http://www.opengis.net/wcs/' in buf:
+        top_level_tag_name = 'wcs'
     format_tuple = ckan_helpers.resource_formats().get(top_level_tag_name)
     if format_tuple:
         format_ = {'format': format_tuple[1]}

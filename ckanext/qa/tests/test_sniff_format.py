@@ -149,6 +149,10 @@ class TestSniffFormat:
         self.check_format('wfs', 'blaby_get_capabilities_1_1.wfs')
     def test_wfs_2_0(self):
         self.check_format('wfs', 'blaby_get_capabilities_2_0.wfs')
+    def test_wmts(self):
+        self.check_format('wmts', 'ukho_bathymetry.wmts')
+    def test_wcs(self):
+        self.check_format('wcs', 'ukho_bathymetry.wcs')
     #def test_ics(self):
     #    self.check_format('ics')
     def test_ttl1(self):
