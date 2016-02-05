@@ -1,6 +1,8 @@
 import logging
 import sys
 
+from sqlalchemy import or_
+
 import ckan.plugins as p
 
 REQUESTS_HEADER = {'content-type': 'application/json',
@@ -105,7 +107,20 @@ class QACommand(p.toolkit.CkanCommand):
             for arg in self.args[1:]:
                 # try arg as a group id/name
                 group = model.Group.get(arg)
-                if group:
+                if group and group.is_organization:
+                    # group.packages() is unreliable for an organization -
+                    # member objects are not definitive whereas owner_org, so
+                    # get packages using owner_org
+                    query = model.Session.query(model.Package)\
+                        .filter(
+                            or_(model.Package.state == 'active',
+                                model.Package.state == 'pending'))\
+                        .filter_by(owner_org=group.id)
+                    packages.extend(query.all())
+                    if not self.options.queue:
+                        self.options.queue = 'bulk'
+                    continue
+                elif group:
                     packages.extend(group.packages())
                     if not self.options.queue:
                         self.options.queue = 'bulk'
