@@ -346,6 +346,7 @@ def has_rdfa(buf, log):
     log.info('RDFA tags found in HTML')
     return True
 
+
 def get_zipped_format(filepath, log):
     '''For a given zip file, return the format of file inside.
     For multiple files, choose by the most open, and then by the most
@@ -361,14 +362,22 @@ def get_zipped_format(filepath, log):
             zip.close()
     except zipfile.BadZipfile, e:
         log.info('Zip file open raised error %s: %s',
-                    e, e.args)
+                 e, e.args)
         return
     except Exception, e:
         log.warning('Zip file open raised exception %s: %s',
                     e, e.args)
         return
+
+    # Check first to see if it is a Shapefile, which is a zip containing a
+    # .shp, .dbf and .shx file amongst others
+    extensions = set([f.split('.')[-1].lower() for f in filenames])
+    if extensions & set(('shp', 'dbf', 'shx')):
+        log.info('Shapefile detected')
+        return {'format': 'SHP'}
+
     top_score = 0
-    top_scoring_extension_counts = defaultdict(int) # extension: number_of_files
+    top_scoring_extension_counts = defaultdict(int)  # extension: number_of_files
     for filename in filenames:
         extension = os.path.splitext(filename)[-1][1:].lower()
         format_tuple = ckan_helpers.resource_formats().get(extension)
@@ -380,7 +389,8 @@ def get_zipped_format(filepath, log):
             if score == top_score:
                 top_scoring_extension_counts[extension] += 1
         else:
-            log.info('Zipped file of unknown extension: "%s" (%s)', extension, filepath)
+            log.info('Zipped file of unknown extension: "%s" (%s)',
+                     extension, filepath)
     if not top_scoring_extension_counts:
         log.info('Zip has no known extensions: %s', filepath)
         return {'format': 'ZIP'}

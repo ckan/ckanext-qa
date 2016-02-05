@@ -104,7 +104,9 @@ class TestSniffFormat:
     def test_csv6(self):
         self.check_format('csv', 'Inpatients_MHA_Machine_readable_dataset_1011.csv')
     def test_shp(self):
-        self.check_format('shp')
+        self.check_format('shp', 'HS2-ARP-00-GI-RW-00434_RCL_V4.shp')
+    def test_shp2(self):
+        self.check_format('shp', 'jncc_shapefile.shp')
     def test_html(self):
         self.check_format('html', 'index.html')
     def test_html1(self):
