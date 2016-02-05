@@ -378,7 +378,7 @@ def get_zipped_format(filepath, log):
     # Check first to see if it is a Shapefile, which is a zip containing a
     # .shp, .dbf and .shx file amongst others
     extensions = set([f.split('.')[-1].lower() for f in filenames])
-    if extensions & set(('shp', 'dbf', 'shx')):
+    if len(extensions & set(('shp', 'dbf', 'shx'))) == 3:
         log.info('Shapefile detected')
         return {'format': 'SHP'}
 

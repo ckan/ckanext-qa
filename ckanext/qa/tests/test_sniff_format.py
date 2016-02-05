@@ -134,7 +134,7 @@ class TestSniffFormat:
     def test_txt_zip(self):
         self.check_format('txt.zip')
     def test_xml_zip(self):
-        self.check_format('xml.zip')
+        self.check_format('xml.zip', 'FHRS501en-GB.xml.zip')
     #def test_torrent(self):
     #    self.check_format('torrent')
     def test_psv(self):
