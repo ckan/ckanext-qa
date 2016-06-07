@@ -363,7 +363,7 @@ def get_zipped_format(filepath, log):
         #       so we have to close it manually.
         zip = zipfile.ZipFile(filepath, 'r')
         try:
-            filenames = zip.namelist()
+            filepaths = zip.namelist()
         finally:
             zip.close()
     except zipfile.BadZipfile, e:
@@ -375,17 +375,24 @@ def get_zipped_format(filepath, log):
                     e, e.args)
         return
 
-    # Check first to see if it is a Shapefile, which is a zip containing a
-    # .shp, .dbf and .shx file amongst others
-    extensions = set([f.split('.')[-1].lower() for f in filenames])
+    # Shapefile check - a Shapefile is a zip containing specific files:
+    # .shp, .dbf and .shx amongst others
+    extensions = set([f.split('.')[-1].lower() for f in filepaths])
     if len(extensions & set(('shp', 'dbf', 'shx'))) == 3:
         log.info('Shapefile detected')
         return {'format': 'SHP'}
 
+    # GTFS check - a GTFS is a zip which containing specific filenames
+    filenames = set((os.path.basename(f) for f in filepaths))
+    if not (set(('agency.txt', 'stops.txt', 'routes.txt', 'trips.txt',
+                 'stop_times.txt', 'calendar.txt')) - set(filenames)):
+        log.info('GTFS detected')
+        return {'format': 'GTFS'}
+
     top_score = 0
     top_scoring_extension_counts = defaultdict(int)  # extension: number_of_files
-    for filename in filenames:
-        extension = os.path.splitext(filename)[-1][1:].lower()
+    for filepath in filepaths:
+        extension = os.path.splitext(filepath)[-1][1:].lower()
         format_tuple = ckan_helpers.resource_formats().get(extension)
         if format_tuple:
             score = lib.resource_format_scores().get(format_tuple[1])
