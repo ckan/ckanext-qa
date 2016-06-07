@@ -107,6 +107,8 @@ class TestSniffFormat:
         self.check_format('shp', 'HS2-ARP-00-GI-RW-00434_RCL_V4.shp')
     def test_shp2(self):
         self.check_format('shp', 'jncc_shapefile.shp')
+    def test_gtfs(self):
+        self.check_format('gtfs', 'manchester.gtfs')
     def test_html(self):
         self.check_format('html', 'index.html')
     def test_html1(self):
