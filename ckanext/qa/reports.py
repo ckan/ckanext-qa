@@ -1,9 +1,12 @@
 from collections import Counter
 import copy
+try:
+    from collections import OrderedDict  # from python 2.7
+except ImportError:
+    from sqlalchemy.util import OrderedDict
 
 import ckan.model as model
 import ckan.plugins as p
-from ckan.lib.helpers import OrderedDict
 from ckanext.report import lib
 
 import logging
