@@ -79,7 +79,7 @@ class TestTask(BaseCase):
 
         # create a send_data from ckanext-archiver, that gets picked up by
         # ckanext-qa to put a task on the queue
-        ckanext.archiver.tasks.notify_package(pkg, 'priority', cache_filepath)
+        ckanext.archiver.tasks.notify_package(pkg, 'priority')
         # this is useful on its own (without any asserts) because it checks
         # there are no exceptions when running it
 
