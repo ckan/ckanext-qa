@@ -28,9 +28,9 @@ def openness_index(include_sub_organizations=False):
     total_score_counts = Counter()
     counts = {}
     # Get all the scores and build up the results by org
-    for org in model.Session.query(model.Group)\
-                          .filter(model.Group.type == 'organization')\
-                          .filter(model.Group.state == 'active').all():
+    for org in add_progress_bar(model.Session.query(model.Group)
+            .filter(model.Group.type == 'organization')
+            .filter(model.Group.state == 'active').all()):
         scores = []
         # NB org.packages() misses out many - see:
         # http://redmine.dguteam.org.uk/issues/1844
@@ -69,7 +69,7 @@ def openness_index(include_sub_organizations=False):
         results = counts
 
     table = []
-    for org_name, org_counts in sorted(results.iteritems(), key=lambda r: r[0]):
+    for org_name, org_counts in results.iteritems():
         total_stars = sum([k*v for k, v in org_counts['score_counts'].items() if k])
         num_pkgs_scored = sum([v for k, v in org_counts['score_counts'].items()
                               if k is not None])
@@ -83,6 +83,9 @@ def openness_index(include_sub_organizations=False):
             ))
         row.update(jsonify_counter(org_counts['score_counts']))
         table.append(row)
+
+    table.sort(key=lambda x: (-x['total_stars'],
+                              -x['average_stars']))
 
     # Get total number of packages & resources
     num_packages = model.Session.query(model.Package)\
@@ -175,3 +178,14 @@ def jsonify_counter(counter):
     return dict((str(k) if k is not None else k, v) for k, v in counter.items())
 
 
+def add_progress_bar(iterable, caption=None):
+    try:
+        # Add a progress bar, if it is installed
+        import progressbar
+        bar = progressbar.ProgressBar(widgets=[
+            (caption + ' ') if caption else '',
+            progressbar.Percentage(), ' ',
+            progressbar.Bar(), ' ', progressbar.ETA()])
+        return bar(iterable)
+    except ImportError:
+        return iterable
