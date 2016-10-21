@@ -32,9 +32,14 @@ Requirements
 Before installing ckanext-qa, make sure that you have installed the following:
 
 * CKAN 2.1+
-* ckanext-archiver 2.0+ (http://github.com/okfn/ckanext-archiver)
+* ckanext-archiver 2.0+ (https://github.com/ckan/ckanext-archiver)
+
+Optional:
+
+* ckanext-report (https://github.com/datagovuk/ckanext-report) for reporting
 
 Known issues:
+
 * if the CKAN version is earlier than 2.3 then QA and Archiver information will not display on the resource read page.
 
 
@@ -113,12 +118,14 @@ Optionally you can configure a different set of scores to award each resource fo
 The default value is `resource_format_openness_scores.json`)
 
 
-Using The QA Extension
-----------------------
+Running
+--------
 
-**QA**: score every dataset and resource against the 5 stars of openness.
+First, make sure that Celery is running for the priority and bulk queues. This is explained in the ckanext-archiver README:
 
-The QA runs when a dataset/resource is archived, or you can run it manually using a paster command::
+[Using Archiver](https://github.com/ckan/ckanext-archiver#using-archiver)
+
+QA is performed when a dataset/resource is archived, or you can run it manually using a paster command::
 
     paster --plugin=ckanext-qa qa update [dataset] --config=production.ini
 
@@ -128,7 +135,9 @@ For a full list of manual commands run::
 
     paster --plugin=ckanext-qa qa --help
 
-Once you've done some archiving you can generate an Openness report::
+Once the QA has run for a dataset, you will see the stars displayed on the dataset's web page, and the detected file format available when you call `package_show` for it, in the `qa` for the dataset and each resource.
+
+You can get an overall picture by generating an Openness report::
 
     paster --plugin=ckanext-report report generate openness --config=production.ini
 
