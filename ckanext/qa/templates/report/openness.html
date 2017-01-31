@@ -37,7 +37,7 @@
     <tbody>
       {% for row in c.data['table'] %}
         <tr>
-          <td>{{ h.link_to(row['organization_title'], h.relative_url_for(organization=row['organization_name'])) }}</td>
+          <td>{{ h.link_to(row['organization_title'], h.report__relative_url_for(organization=row['organization_name'])) }}</td>
           <td>{{ row.get('null', 0) }}</td>
           {% for n in range(6) %}
             <td>{{ row.get(n|string, 0) }}</td>
@@ -94,7 +94,7 @@
           <td>{{h.link_to(row['dataset_title'], '/dataset/%s' % row['dataset_name']) }}</td>
           <td>{{row['dataset_notes'] }}</td>
           {% if c.options['include_sub_organizations'] %}
-            <td>{{ h.link_to(row['organization_title'], h.relative_url_for(organization=row['organization_name'])) }}</td>
+            <td>{{ h.link_to(row['organization_title'], h.report__relative_url_for(organization=row['organization_name'])) }}</td>
           {% endif %}
           <td>{{ row['openness_score'] }}</td>
           <td class="js-tooltip" title="{{ row['openness_score_reason'] }}">{{ h.truncate(row['openness_score_reason'], 150) }}</td>
