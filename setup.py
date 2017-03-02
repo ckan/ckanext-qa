@@ -17,7 +17,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        # Requirements defined in requirements.txt
+        'ckanext-archiver',
+
     ],
     tests_require=[
         'nose',
