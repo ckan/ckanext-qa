@@ -1,0 +1,776 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+	xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
+	xmlns:georss="http://www.georss.org/georss"
+	xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+	<link rel="search" type="application/opensearchdescription+xml"
+		href="http://os.uk/xml/atom/opensearchdescription.xml" title="Content Search"/>
+	<link rel="describedby" type="application/vnd.iso.19139+xml"
+		href="http://os.uk/xml/products/OrdnanceSurveyAtomFeed.xml"/>
+	<link rel="self" type="application/atom+xml" href="http://os.uk/xml/atom/LiveProductFeed.xml"/>
+	<title>Product Service Feed</title>
+	<subtitle>An atom feed listing all OS products.</subtitle>
+	<id>http://os.uk/xml/atom/LiveProductFeed.xml</id>
+	<rights>No limitations</rights>
+	<updated>2015-03-12T15:25:02Z</updated>
+	<author>
+		<name>Ordnance Survey</name>
+		<email>customerservices@os.uk</email>
+	</author>
+	<entry>
+		<title>OS Open Map - Local</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://os.uk/xml/atom/OSOpenMapLocal.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://os.uk/xml/products/OSOpenMapLocal.xml"/>
+		<id>http://os.uk/xml/atom/OSOpenMapLocal.xml</id>
+		<rights>No limitations</rights>
+		<updated>2015-03-12T13:20:00Z</updated>
+		<summary>OS Open Map - Local launched 23 March 2015. Our most detailed open data
+			map.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86 -8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS Open Map - Local</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>os.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+	<entry>
+		<title>OS Open Map Names</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://os.uk/xml/atom/OSOpenNames.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://os.uk/xml/products/OSOpenNames.xml"/>
+		<id>http://os.uk/xml/atom/OSOpenNames.xml</id>
+		<rights>No limitations</rights>
+		<updated>2015-03-24T09:39:00Z</updated>
+		<summary>OS Open Names launched 23 March 2015. Open data gazetteer of settlements, roads, and post codes.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86 -8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS Open Names</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>os.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+	<entry>
+		<title>OS Open Roads</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://os.uk/xml/atom/OSOpenRoads.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://os.uk/xml/products/OSOpenRoads.xml"/>
+		<id>http://os.uk/xml/atom/OSOpenRoads.xml</id>
+		<rights>No limitations</rights>
+		<updated>2015-03-24T09:40:00Z</updated>
+		<summary>OS Open Roads launched 23 March 2015. Open data national road network.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86 -8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS Open Map Roads</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>os.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+	<entry>
+		<title>OS Open Rivers</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://os.uk/xml/atom/OSOpenRivers.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://os.uk/xml/products/OSOpenRivers.xml"/>
+		<id>http://os.uk/xml/atom/OSOpenRivers.xml</id>
+		<rights>No limitations</rights>
+		<updated>2015-03-24T09:40:30Z</updated>
+		<summary>OS Open Water launched 23 March 2015. Open data national water network.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86 -8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS Open Rivers</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>os.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>	
+	<entry>
+		<title>1:10 000 Scale Black and White Raster</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/10kBlackandWhiteRaster.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/10kBlackandWhiteRaster.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/10kBlackandWhiteRaster.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>As one of our range of backdrop mapping products, Ordnance Survey's 1:10 000 Scale
+			Raster map data is the most detailed product in our raster portfolio, providing
+			large-scale background mapping upon which you can add or overlay information. It can be
+			combined with other data in a geographical information system (GIS), enabling you to
+			visualise a wide range of information within a geographical context. Its level of
+			feature detail makes 1:10 000 Scale Raster particularly useful for analysing data within
+			urban and rural areas. For example, overlaying your own database onto a backdrop of 1:10
+			000 Scale Raster map data gives you a visual interpretation of areas where your
+			customers or assets are concentrated, providing a powerful planning and marketing
+			tool</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS 1:10 000 Scale Black and White
+			Raster</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+
+	<entry>
+		<title>1:10 000 Scale Colour Raster</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/10kcolRas.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/10kcolRas.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/10kcolRas.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>As one of our range of backdrop mapping products, Ordnance Survey's 1:10 000 Scale
+			Raster map data is the most detailed product in our raster portfolio, providing
+			large-scale background mapping upon which you can add or overlay information. It can be
+			combined with other data in a geographical information system (GIS), enabling you to
+			visualise a wide range of information within a geographical context. Its level of
+			feature detail makes 1:10 000 Scale Raster particularly useful for analysing data within
+			urban and rural areas. For example, overlaying your own database onto a backdrop of 1:10
+			000 Scale Raster map data gives you a visual interpretation of areas where your
+			customers or assets are concentrated, providing a powerful planning and marketing
+			tool.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS 1:10 000 Scale Colour
+			Raster</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>1:250 000 Scale Colour Raster</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/250colRas.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/250colRas.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/250colRas.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>1:250 000 Scale Colour Raster map base combines roads, railways and other key
+			features to make this the ideal cartographic backdrop for overlaying business
+			information</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS OpenData 1:250 000 Scale Colour
+			Raster</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>1:25 000 Scale Colour Raster</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/25kColRas.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/25kColRas.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/25kColRas.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>As one of our range of backdrop mapping products, Ordnance Survey's 1:25 000 Scale
+			Colour Raster is backdrop map data of our popular OS Explorer Map series for outdoor
+			activities. It provides a scanned image of OS Explorer Map that can be used with other
+			data in a geographical information system (GIS) to visualise your own information within
+			a geographical context.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS 1:25 000 Scale Colour
+			Raster</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+
+	<entry>
+		<title>1:50 000 Scale Colour Raster</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/50colRas.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/50colRas.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/50colRas.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>1:50 000 Scale Colour Raster is Ordnance Survey’s definitive raster product,
+			providing a complete digital view of the popular Landranger® paper map series. It
+			comprises 815 tiles, each 20 km by 20 km, and offers clear detail on roads, footpaths,
+			woods, water features, important buildings and height contours. All topographic features
+			are joined across sheet edges, providing seamless coverage of the entire
+			country.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS 1:50 000 Scale Colour
+			Raster</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>1:50 000 Scale Gazetteer</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/50kGaz.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/50kGaz.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/50kGaz.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>1:50 000 Scale Gazetteer provides an excellent reference tool or location finder,
+			allowing you to locate your area of interest immediately. The gazetteer can also be used
+			to navigate around the map, geocode your data or create lists of places within a
+			specified area. 1:50 000 Scale Gazetteer contains entries for airports, farms, hills,
+			woodlands, commons and other places, including over 42 000 towns and settlements with
+			coordinates to 1 km resolution.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>1:50 000 Scale
+			Gazetteer</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Address Layer 2</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressLayer2.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/AddressLayer2.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressLayer2.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-06-28T12:00:00Z</updated>
+		<summary>OS MasterMap Address Layer 2 builds on the success of Ordnance Survey's current
+			addressing products by offering significant enhancements such as: Alternative geographic
+			addresses – for example, 12 Old Town, London, SW4 0JY is also available as 12 Old Town,
+			Clapham, London, SW4 0JY. It now includes the locality or district name where this is
+			not normally included. This is provided in BS7666 part 3 format. Classifications – each
+			address is classified as either residential or commercial. These are then further
+			analysed where the trading or brand name provides clear details of their function, for
+			example, Barclays Bank – Bank, and W H Smith – Retail. Each address has up to four
+			classifications. Building name aliases – buildings that may be known by a name as well
+			as a house number. For example, Railway Cottage may also be known as 61 Station Road.
+			Objects without a postal address (OWPA) – buildings and other features that do not have
+			a postal address such as churches, community centres, depots, masts and so on.
+			Multi-occupancies without a postal addresses (MOWPA) – details of individual households
+			that currently do not have mail delivered to their own letter box, such as flats,
+			together with details of subdivided business premises. Welsh alternatives – for example,
+			13 Mill Street, Aberystwyth, SY23 1HZ could also be 13 Dan Dre, Aberystwyth, SY23 1HZ.
+			Cross-reference table - provides a direct link between the themes within OS MasterMap's
+			Address Layer 2 and external datasets, currently, Royal Mail's Postal Delivery Points
+			and the Valuation Office Agency's unique address reference number from their Non
+			Domestic Rates file. The cross-reference table is available to order free of charge.
+			Please phone 02380 305520 for further information. Like ADDRESS-POINT® and Address
+			Layer, Address Layer 2 is based on the Royal Mail® Postcode Address File (PAF®) and
+			provides a spatial coordinate to a resolution of 0.1 m for each address. OS MasterMap
+			Address Layer will continue to run alongside Address Layer 2. For more information on
+			Address Layer please visit the Address Layer product pages.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS MasterMap Address Layer
+			2</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Address Layer</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressLayer.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/AddressLayer.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressLayer.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-06-28T12:00:00Z</updated>
+		<summary>The OS MasterMap Address Layer provides precise coordinates for more than 27
+			million residential and commercial properties in Great Britain – the most accurate and
+			up-to-date link between any property address and its location on the map. The Address
+			Layer originates from the Royal Mail's postcode address file (PAF®). Ordnance Survey
+			uses on-the-ground GPS survey, aerial imagery and various other techniques to establish
+			precise coordinates for each address and match this to the property on the map –
+			effectively joining up postal and topographic geography, creating a fixed link between
+			the property and its address. Addresses are subject to a high level of change from: *
+			the creation of a new property; * property redevelopment; and * house or street name
+			changes. OS MasterMap Address Layer provides a robust mechanism for professional users
+			to track and manage these address changes relating to the actual property on the ground,
+			and a continuity between a physical property (essentially unchanging) and the dynamics
+			describing that property (changeable)</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS Mastermap® Address
+			Layer</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>AddressBase</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressBase.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/AddressBase.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressBase.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>AddressBase™ contains Royal Mail PAF addresses (for England and Wales), both
+			commercial and residential matched to the local authority Unique Property Reference
+			Number (UPRN).</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>AddressBase™</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>AddressBase Plus</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressBasePlus.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/AddressBasePlus.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressBasePlus.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>AddressBase Plus™ contains current properties and addresses sourced from local
+			authorities, Ordnance Survey and Royal Mail matched to the Unique Property Reference
+			Number. It has more records than AddressBase as it includes objects without postal
+			addresses, such as subdivided properties, places of worship and community
+			centres</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>AddressBase™
+			Plus</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>AddressBase Premium</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressBasePremium.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/AddressBasePremium.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/AddressBasePremium.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>AddressBase™ Premium provides the most detailed view of an address and its
+			lifecycle. It contains all the AddressBase Plus information and functionalities. But the
+			real benefit is that it includes a range of information relating to an address or
+			property from creation to retirement or demolition.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>AddressBase™
+			Premium</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Boundary-Line</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/BoundaryLine.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/BoundaryLine.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/BoundaryLine.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>Boundary-Line is a specialist 1:10 000 scale boundaries dataset. It contains all
+			levels of electoral and administrative boundaries, from district, wards and civil
+			parishes (or communities) up to parliamentary, assembly and European constituencies. The
+			information is represented as vector digital data. The boundary information is updated
+			twice a year, in May and October. The May release contains the boundaries that have
+			become live in the first week of May, in the year of release. The October release
+			contains the May boundaries plus additional information. Customers can choose either May
+			or October releases. * County - The named county, district, district ward, civil parish,
+			county electoral division (ED). * European constituencies - The named European region. *
+			Greater London Authority - The Greater London Authority, Greater London Authority
+			Assembly constituency, London borough, London borough ward. * Metropolitan districts -
+			The named metropolitan district, metropolitan district ward, civil parish where
+			appropriate. * Scottish parliamentary electoral region - The named Scottish
+			Parliamentary electoral region, Scottish parliamentary constituency. * Unitary
+			authorities- The named unitary authority, unitary authority ward or unitary authority ED
+			as appropriate, civil parish where appropriate, together with community in Wales. *
+			Welsh Assembly Electoral Region - The named Welsh Assembly electoral region, Welsh
+			assembly constituency. * Westminster constituencies - The named Westminster
+			constituency. * Extent of the realm - Low water mark or seaward boundary extension. *
+			High water mark * Unique identifiers - For administrative areas, polygons and links. *
+			Area measurements * Definitive names * Census codes</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Boundary-Line™</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Code-Point</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/CodePoint.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/CodePoint.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/CodePoint.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>Code-Point provides a precise geographical location for each postcode unit in the
+			United Kingdom. It also contains additional information, for example, PO boxes and the
+			total number of addresses, both domestic and non-domestic, in each postcode unit.
+			Code-Point includes Gridlink® data. Gridlink is a consortium initiative involving a
+			number of government agencies that have cooperated to improve the consistency and
+			quality of spatially referenced, postcode-based data.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Code-Point®</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Code-Point Open</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/CodePointOpen.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/CodePointOpen.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/CodePointOpen.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>Code-Point Open is a dataset that contains postcode units, each of which have a
+			precise geographical location. There are approximately 1.7 million postcode units in
+			England, Scotland and Wales. Each postcode unit, such as KY12 8UP or PO14 2RS, contains
+			an average of fifteen adjoining addresses. Northern Ireland postcodes are not available
+			with Code-Point Open.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Code-Point®
+			Open</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Code-Point with Polygons</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/CodePointwithPolygons.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/CodePointwithPolygons.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/CodePointwithPolygons.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>Code-Point® with polygons contains postcode boundaries for Great Britain. These
+			show the extent of each postcode unit, enabling you to analyse information by postcode.
+			Ideal for activities such as sales targeting or market profiling, as well as any
+			statistical work</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.9553 -8.17167, 49.9553 1.74944, 60.8433 1.74944, 60.8433 -8.17167,
+			49.9553 -8.17167 </georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Code-Point® with
+			polygons</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>OS MasterMap Imagery Layer</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ImageryLayer.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/Imagery.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ImageryLayer.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>The OS MasterMap Imagery Layer is a maintained seamless digital dataset of
+			high-quality 24-bit colour orthorectified aerial photography of Great Britain. It
+			provides vital information that cannot be gained from mapping alone, allowing
+			identification and monitoring of features such as road markings, trees, pipe networks,
+			paths and land surface. The imagery is colour balanced and fully orthorectified, meaning
+			that it accurately reflects the position of features at ground level without distortion.
+			This also ensures accurate alignment with all the other layers in the OS MasterMap
+			family and customer data.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS MasterMap® Imagery
+			Layer</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>OS MasterMap Integrated Transport Network Layer</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ITN.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/ITN.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ITN.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>The ITN Layer provides a detailed overview of Great Britain transport
+			infrastructures. The first themes to be released are the Roads Network, Road Routing
+			Information (RRI) and Urban Paths . The Roads Network provides a network for those who
+			require increasingly sophisticated geographical data to support their applications. RRI
+			extends the functionality of the data by giving details of height and vehicle
+			restrictions, traffic calming, one-way roads and other information along any given
+			route. Paths complements ITN’s road information by adding path networks in all urban
+			areas larger than 5 Km2.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS MasterMap® Integrated Transport Network
+			Layer</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Meridian 2</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/Meridian2.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/Meridian2.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/Meridian2.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>MeridianTM 2 is a mid-scale digital representation of Great Britain that allows
+			considerable customisation of its Communication and Topographic themes, which means that
+			the user can create functional geographic solutions for their business needs. All of the
+			geographical features are extracted from existing Ordnance Survey databases and are
+			fully maintained in order to deliver an 6 monthly product update. When used in
+			conjunction with users own compatible data the resulting application is a truly useful
+			GIS asset. The product is typically viewed at 1:50,000 and at this scale the
+			generalisation of its features maintain geometric integrity and accuracy.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Meridian™
+			2</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>OS Locator</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/OSLocator.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/OSLocator.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/OSLocator.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>OS Locator is a fully searchable national gazetteer of road names. It enables users
+			to identify and find specific locations by a number of criteria including locality,
+			settlement, local authority and county. It has been created to complement Ordnance
+			Survey's range of mid-scales raster map data products, such as OS Street View®. As a
+			point-based gazetteer of road names OS Locator does not contain any road geometry
+			although it does contain coordinates to create a minimum bounding rectangle encompassing
+			the extent of the road referenced in the gazetteer.Results of searches can be easily
+			visualised using the gazetteer in conjunction with other products available in the OS
+			OpenData Catalogue such as OS VectorMap™ District and OS Street View.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS
+			Locator™</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>OS StreetView</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/OSSVras.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/OSSVras.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/OSSVras.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>As one of our range of backdrop mapping products, Ordnance Survey's OS Street View
+			is street-level, backdrop map data that is specifically designed for online
+			applications, as it can be downloaded quickly from both the Internet and Intranet. It
+			provides a scanned image of street-level mapping that can be combined with other data in
+			a geographical information system (GIS), enabling you to clearly visualise a wide range
+			of information in a geographical context. The street-level detail of OS Street View
+			makes it particularly useful for displaying specific localities.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS OpenData OS Street
+			View®</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Land-form PANORAMA Contours</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/PanoramaContours.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/PanoramaContours.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/PanoramaContours.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>Land-Form PANORAMA is a mid-scale product representing the physical
+			three-dimensional shape of the surface of the ground. The contours dataset consists of a
+			set of contours, spot heights, breaklines, coastlines, lakes, ridges and formlines in
+			vector form.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Land-Form PANORAMA®
+			Contours</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Land-Form PANORAMA DTM</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/PanoramaDTM.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/PanoramaDTM.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/PanoramaDTM.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>Land-Form PANORAMA is a mid-scale product representing the physical
+			three-dimensional shape of the surface of the ground. The DTM dataset consists of a
+			gridded digital terrain model with a 50 metre post spacing.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Land-Form PANORAMA®
+			DTM</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Land-Form Profile Contours</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ProfileContours.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/ProfileContours.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ProfileContours.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>Ordnance Survey’s Land-Form PROFILE Contours is a dataset representing the physical
+			shape of the real world. The dataset includes contours, air heights, spot heights, and
+			high and low water marks. The contour data and selected air heights are captured from
+			Ordnance Survey’s 1:10 000 scale mapping; this is supplemented by spot heights, and high
+			and low water marks from Ordnance Survey large-scales digital data.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Land-Form PROFILE®
+			Contours</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Land-Form Profile DTM</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ProfileDTM.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/ProfileDTM.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/ProfileDTM.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-07-28T16:19:00Z</updated>
+		<summary>Ordnance Survey’s Land-Form PROFILE DTM is a dataset representing the physical
+			shape of the real world. The dataset consists of a 10 metre spaced grid of heighted
+			points derived from the Land-Form PROFILE® Contours product.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Land-Form PROFILE®
+			DTM</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>Strategi</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/Strategi.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/Strategi.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/Strategi.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>Strategi is detailed digital map data, ideal for applications requiring an overview
+			of geographical information on England, Scotland and Wales. It is derived from the
+			Ordnance Survey 1:250 000 scale topographic database and provides mapping for
+			applications requiring a regional overview. Geographical features within Strategi are
+			represented as vector (point and line) data, enabling you to link your business
+			information to relevant features on the map for planning purposes and statistical
+			analysis.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>Strategi®</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>OS MasterMap Topography Layer</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/Topo.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/Topo.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/Topo.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>The OS MasterMap Topography Layer is a large-scale digital database of the detailed
+			surface features on the landscape, with relative positions and elevations of every town,
+			manor, parish, or tract of land mapped to minute detail. This highly accurate, flexible
+			resource covers some 400 million man-made and natural features, from fields to pillar
+			boxes, each with its own unique identifier or TOID for easy reference. It is broken down
+			into nine themes to make it easier to access the data; roads, tracks and paths; land;
+			buildings; water; rail; height; heritage; structures; and administrative boundaries.
+			There is the choice of a single theme, a combination of themes or all of the above. When
+			overlaid with other OS MasterMap layers or the customer's own data, it will provide a
+			clear picture of what's on the ground. The Topography Layer helps in the planning and
+			management of land and property by enabling users to visualise the context of any
+			feature or site, to pinpoint individual properties and precise sites when a high level
+			of detail is required, and to assess the impact of a proposed development effectively
+			and efficiently. It is data association that makes OS MasterMap intelligent. It enables
+			organisations to link their own data to that of the digital map. By associating their
+			data to the OS MasterMap features, organisations are then able to analyse a richer
+			database, and can search and query using their own data fields as well as the attributes
+			provided by OS MasterMap.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS MasterMap® Topography
+			Layer</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>OS VectorMap District</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/VMD.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/VMD.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/VMD.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>OS VectorMap District is a simple vector dataset with a nominal scale of 1:25000
+			covering the whole of Great Britain that has been designed for creating graphical
+			mapping. The product can be used as mapping in its own right or can be used to provide a
+			flexible geographic context reference for customers’ overlay information. As well as the
+			vector dataset, a number of output styles are suggested. The main characteristics of the
+			dataset is represention of real world features (e.g. roads, railways, buildings blocks,
+			vegetation and boundaries) as points, lines, polygons, and text.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS VectorMap
+			District</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+	<entry>
+		<title>OS VectorMap Local</title>
+		<link rel="alternate" type="application/atom+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/VectorMapLocal.xml"/>
+		<link rel="describedby" type="application/vnd.iso.19139+xml"
+			href="http://www.ordnancesurvey.co.uk/oswebsite/xml/products/VML.xml"/>
+		<id>http://www.ordnancesurvey.co.uk/oswebsite/xml/atom/VectorMapLocal.xml</id>
+		<rights>Use limitation please see OS licence</rights>
+		<updated>2012-01-28T12:00:00Z</updated>
+		<summary>OS VectorMap Local is a simple vector dataset at a nominal scale of 1:10000
+			covering the whole of Great Britain that has been designed for creating graphical
+			mapping. The product can be used as mapping in its own right or can be used to provide a
+			flexible geographic context reference for customers’ overlay information. As well as the
+			vector dataset, a number of output styles are suggested. The main characteristics of the
+			dataset is representation of real world features (e.g. roads, railways, buildings,
+			vegetation, boundaries and urban extents) as points, lines, polygons, and
+			text.</summary>
+		<category term="http://www.opengis.net/def/crs/EPSG/0/27700" label="British National Grid"/>
+		<georss:polygon>49.86 -8.45, 49.86 1.78, 60.86 1.78, 60.86 -8.45, 49.86
+			-8.45</georss:polygon>
+		<inspire_dls:spatial_dataset_identifier_code>OS VectorMap
+			Local</inspire_dls:spatial_dataset_identifier_code>
+		<inspire_dls:spatial_dataset_identifier_namespace>ordnancesurvey.co.uk</inspire_dls:spatial_dataset_identifier_namespace>
+	</entry>
+
+</feed>

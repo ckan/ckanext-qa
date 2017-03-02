@@ -8,16 +8,16 @@ setup(
     long_description='',
     classifiers=[],
     keywords='',
-    author='Open Knowledge Foundation',
+    author='Open Knowledge Foundation, Cabinet Office & contributors',
     author_email='info@okfn.org',
     url='http://ckan.org/wiki/Extensions',
     license='mit',
     packages=find_packages(exclude=['tests']),
-    namespace_packages=['ckanext', 'ckanext.qa'],
+    namespace_packages=['ckanext'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        # requirements defined in pip-requirements.txt
+        # Requirements defined in requirements.txt
     ],
     tests_require=[
         'nose',

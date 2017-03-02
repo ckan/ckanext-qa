@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CoverageDescriptions
+    xsi:schemaLocation="http://www.opengis.net/wcs/1.1 http://aws2.caris.com/sfs/schemas/wcs/1.1/wcsDescribeCoverage.xsd"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.opengis.net/wcs/1.1"
+    xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <CoverageDescription>
+        <ows:Title>2009 HI1257 The Isles of Eigg and Muck Blk4 8m SB</ows:Title>
+        <ows:Abstract>MV Seabeam was used to collect the survey data.&#xd;
+The Primary Reference Position was provided by a Applanix POS MV system, supplied with GPS data from a C&amp;C Technologies C-Nav 2050M system.</ows:Abstract>
+        <Identifier>dac.02002926</Identifier>
+        <Domain>
+            <SpatialDomain>
+                <ows:WGS84BoundingBox>
+                    <ows:LowerCorner>-6.481534197037303 56.762691595929375</ows:LowerCorner>
+                    <ows:UpperCorner>-6.2877479017068225 56.8433204509721</ows:UpperCorner>
+                </ows:WGS84BoundingBox>
+                <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::32629">
+                    <ows:LowerCorner>653927.9999957525 6294239.999932948</ows:LowerCorner>
+                    <ows:UpperCorner>665447.9999953448 6302783.9999329625</ows:UpperCorner>
+                </ows:BoundingBox>
+                <ows:BoundingBox crs="urn:ogc:def:crs:OGC::imageCRS">
+                    <ows:LowerCorner>0.0 0.0</ows:LowerCorner>
+                    <ows:UpperCorner>1441.0 1069.0</ows:UpperCorner>
+                </ows:BoundingBox>
+                <GridCRS>
+                    <GridBaseCRS>urn:ogc:def:crs:EPSG::32629</GridBaseCRS>
+                    <GridType>urn:ogc:def:method:WCS:1.1:2dSimpleGrid</GridType>
+                    <GridOrigin>653927.9999957525 6302783.9999329625</GridOrigin>
+                    <GridOffsets>8.0 -8.0</GridOffsets>
+                </GridCRS>
+            </SpatialDomain>
+        </Domain>
+        <Range>
+            <Field>
+                <Identifier>Elevation</Identifier>
+                <Definition>
+                    <ows:AnyValue/>
+                </Definition>
+                <InterpolationMethods>
+                    <InterpolationMethod>nearest</InterpolationMethod>
+                    <InterpolationMethod>linear</InterpolationMethod>
+                    <InterpolationMethod>cubic</InterpolationMethod>
+                    <Default>nearest</Default>
+                </InterpolationMethods>
+            </Field>
+            <Field>
+                <Identifier>Uncertainty</Identifier>
+                <Definition>
+                    <ows:AnyValue/>
+                </Definition>
+                <InterpolationMethods>
+                    <InterpolationMethod>nearest</InterpolationMethod>
+                    <InterpolationMethod>linear</InterpolationMethod>
+                    <InterpolationMethod>cubic</InterpolationMethod>
+                    <Default>nearest</Default>
+                </InterpolationMethods>
+            </Field>
+        </Range>
+        <SupportedCRS>urn:ogc:def:crs:EPSG::32629</SupportedCRS>
+        <SupportedCRS>urn:ogc:def:crs:EPSG::4258</SupportedCRS>
+        <SupportedCRS>urn:ogc:def:crs:EPSG::4326</SupportedCRS>
+        <SupportedFormat>image/tiff; subtype=geotiff</SupportedFormat>
+        <SupportedFormat>application/x-bag</SupportedFormat>
+        <SupportedFormat>image/png</SupportedFormat>
+        <SupportedFormat>image/jpeg</SupportedFormat>
+        <SupportedFormat>text/csv</SupportedFormat>
+    </CoverageDescription>
+</CoverageDescriptions>

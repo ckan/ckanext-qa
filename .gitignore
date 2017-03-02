@@ -1,6 +1,15 @@
-*.pyc
-*.swp
+# archiver settings should not be checked in - only its template
+ckanext/archiver/settings.py
+
 .DS_Store
+# vim
+*.sw?
+# emacs
+*~
+
+.ropeproject
+node_modules
+bower_components
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -11,17 +20,11 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-/env/
-/build/
-/develop-eggs/
-/dist/
-/downloads/
-/eggs/
-/lib/
-/lib64/
-/parts/
-/sdist/
-/var/
+env/
+build/
+develop-eggs/
+dist/
+sdist/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -44,20 +47,6 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-
 # Sphinx documentation
 docs/_build/
 
-# PyBuilder
-target/
-
-# IDE
-.project
-.pydevproject
-.idea

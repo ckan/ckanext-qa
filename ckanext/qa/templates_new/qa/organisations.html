@@ -1,8 +1,0 @@
-{% extends "qa/base.html" %}
-
-{% block primary_content %}
-  <h1>{% trans %}Organisation Quality Assurance{% endtrans %}</h1>
-  <ul class="unstyled">
-    <li>{{ h.link_to(_("Broken resource links"), h.url_for(controller='ckanext.qa.controller:QAController', action='broken_resource_links')) }}</li>
-  </ul>
-{% endblock %}
