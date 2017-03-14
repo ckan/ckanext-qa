@@ -18,6 +18,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'ckanext-archiver~=2.0',
+        'ckanext-report==0.1',
         'SQLAlchemy~=0.9.6',
         'requests~=2.3.0',
         'xlrd~=1.0.0',

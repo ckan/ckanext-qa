@@ -1,3 +1,4 @@
 -e git+git@github.com:ckan/ckanext-archiver#egg=ckanext-archiver
+-e git+git@github.com:datagovuk/ckanext-report#egg=ckanext-report
 
 -e .
