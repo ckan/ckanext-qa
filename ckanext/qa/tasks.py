@@ -6,6 +6,8 @@ import datetime
 import json
 import os
 import traceback
+import urlparse
+import routes
 
 import ckan.lib.celery_app as celery_app
 from ckan.plugins import toolkit
@@ -36,6 +38,12 @@ def load_config(ckan_ini_filepath):
     import ckan
     ckan.config.environment.load_environment(conf.global_conf,
                                              conf.local_conf)
+
+    ## give routes enough information to run url_for
+    parsed = urlparse.urlparse(conf.get('ckan.site_url', 'http://0.0.0.0'))
+    request_config = routes.request_config()
+    request_config.host = parsed.netloc + parsed.path
+    request_config.protocol = parsed.scheme
 
 
 def register_translator():
