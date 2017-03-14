@@ -17,7 +17,14 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        # Requirements defined in requirements.txt
+        'ckanext-archiver~=2.0',
+        'ckanext-report==0.1',
+        'SQLAlchemy~=0.9.6',
+        'requests~=2.3.0',
+        'xlrd~=1.0.0',
+        'python-magic~=0.4.12', # check with `pip check` - it's a messytable dependency
+        'messytables~=0.15.2',
+        'progressbar~=2.3'
     ],
     tests_require=[
         'nose',
