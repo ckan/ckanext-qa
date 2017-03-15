@@ -21,7 +21,7 @@ reason - A reason why the dataset doesn't have a rating.
       {%- endfor -%}
       {%- if stars == 0 -%}
         {# 0 stars looks awfully like 5 stars, so be explicit #}
-        (0 out of 5)
+        {{ _("{0} out of {1}").format(stars, 5) }}
       {%- endif -%}
     </span>
   {%- endif -%}

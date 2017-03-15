@@ -4,13 +4,13 @@ Pass in:
   openness_score - number of stars (or None if you don't want to highlight a particular one)
 #}
 
-<div class="star-openness_score-entry {% if openness_score != None and openness_score < 5 %}fail{% endif %}">&#9733&#9733&#9733&#9733&#9733&nbsp; Linked data - data URIs and linked to other data (e.g. RDF)</div>
+<div class="star-openness_score-entry {% if openness_score != None and openness_score < 5 %}fail{% endif %}">&#9733&#9733&#9733&#9733&#9733&nbsp; {% trans %}Linked data - data URIs and linked to other data (e.g. RDF){% endtrans %}</div>
 
-<div class="star-openness_score-entry {% if openness_score != None and openness_score < 4 %}fail{% endif %}">&#9733&#9733&#9733&#9733&#9734&nbsp; Linkable data - served at URIs (e.g. RDF)</div>
+<div class="star-openness_score-entry {% if openness_score != None and openness_score < 4 %}fail{% endif %}">&#9733&#9733&#9733&#9733&#9734&nbsp; {% trans %}Linkable data - served at URIs (e.g. RDF){% endtrans %}</div>
 
-<div class="star-openness_score-entry {% if openness_score != None and openness_score < 3 %}fail{% endif %}">&#9733&#9733&#9733&#9734&#9734&nbsp; Structured data in open format (e.g. CSV)</div>
+<div class="star-openness_score-entry {% if openness_score != None and openness_score < 3 %}fail{% endif %}">&#9733&#9733&#9733&#9734&#9734&nbsp; {% trans %}Structured data in open format (e.g. CSV){% endtrans %}</div>
 
-<div class="star-openness_score-entry {% if openness_score != None and openness_score < 2 %}fail{% endif %}fail">&#9733&#9733&#9734&#9734&#9734&nbsp; Structured data but proprietry format (e.g. Excel)</div>
+<div class="star-openness_score-entry {% if openness_score != None and openness_score < 2 %}fail{% endif %}fail">&#9733&#9733&#9734&#9734&#9734&nbsp; {% trans %}Structured data but proprietry format (e.g. Excel){% endtrans %}</div>
 
-<div class="star-openness_score-entry {% if openness_score != None and openness_score < 1 %}fail{% endif %}">&#9733&#9734&#9734&#9734&#9734&nbsp; Unstructured data (e.g. PDF)</div>
+<div class="star-openness_score-entry {% if openness_score != None and openness_score < 1 %}fail{% endif %}">&#9733&#9734&#9734&#9734&#9734&nbsp; {% trans %}Unstructured data (e.g. PDF){% endtrans %}</div>
 
