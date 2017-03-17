@@ -223,7 +223,7 @@ class TestResourceScore(BaseCase):
         assert result['openness_score'] == 0, result
         assert_equal(result['format'], None)
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], 'File could not be downloaded. Reason: Download error. Error details: Server returned 500 error. Attempted on 10/10/2008. Tried 16 times since 01/10/2008. This URL has not worked in the history of this tool.')
+        assert_equal(result['openness_score_reason'], u'File could not be downloaded. Reason: Download error. Error details: Server returned 500 error. Attempted on 10/10/2008. Tried 16 times since 01/10/2008. This URL has not worked in the history of this tool.')
 
     def test_not_available_any_more(self):
         # A cache of the data still exists from the previous run, but this
@@ -248,7 +248,7 @@ class TestResourceScore(BaseCase):
         assert result['openness_score'] == 0, result
         assert_equal(result['format'], 'CSV')
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], 'File could not be downloaded. Reason: Download error. Error details: Server returned 404 error. Attempted on 10/10/2008. This URL worked the previous time: 01/10/2008.')
+        assert_equal(result['openness_score_reason'], 'File could not be downloaded. Reason: Download error. Error details: Server returned 404 error. Attempted on 10/10/2008. This URL last worked on: 01/10/2008.')
 
 
 class TestExtensionVariants:

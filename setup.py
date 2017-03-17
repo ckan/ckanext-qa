@@ -29,6 +29,7 @@ setup(
     tests_require=[
         'nose',
         'mock',
+        'flask'
     ],
     entry_points='''
     [paste.paster_command]

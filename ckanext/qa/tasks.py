@@ -265,7 +265,7 @@ def broken_link_error_message(archival):
         else:
             return ''
     messages = [_('File could not be downloaded.'),
-                _('Reason'), ':', unicode(archival.status), '.',
+                _('Reason') + ':', unicode(archival.status) + '.',
                 _('Error details: %s.') % archival.reason,
                 _('Attempted on %s.') % format_date(archival.updated)]
     last_success = format_date(archival.last_success)

@@ -64,7 +64,7 @@ class TestSniffFormat:
     def test_xls2(self):
         self.check_format('xls', 'ukti-admin-spend-nov-2011.xls')
     def test_xls3(self):
-        self.check_format('xls', 'decc_local_authority_data_xlsx.xls')
+        self.check_format('xlsx', 'decc_local_authority_data_xlsx.xls')
     def test_xls_zip(self):
         self.check_format('xls.zip', 'telephone-network-data.xls.zip')
     def test_rdf(self):
