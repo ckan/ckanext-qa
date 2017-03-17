@@ -9,7 +9,9 @@ import traceback
 import urlparse
 import routes
 
-import ckan.lib.celery_app as celery_app
+from ckan.common import _
+from ckan.lib import celery_app
+from ckan.lib import i18n
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
 from ckanext.qa.sniff_format import sniff_file_format
@@ -45,20 +47,30 @@ def load_config(ckan_ini_filepath):
     request_config.host = parsed.netloc + parsed.path
     request_config.protocol = parsed.scheme
 
+    load_translations(conf.get('ckan.locale_default', 'en'))
 
-def register_translator():
+def load_translations(lang):
     # Register a translator in this thread so that
     # the _() functions in logic layer can work
     from paste.registry import Registry
     from pylons import translator
-    from ckan.lib.cli import MockTranslator
-    global registry
+    from pylons import request
     registry = Registry()
     registry.prepare()
-    global translator_obj
-    translator_obj = MockTranslator()
-    registry.register(translator, translator_obj)
 
+    class FakePylons:
+            translator = None
+    fakepylons = FakePylons()
+    class FakeRequest:
+        # Stores details of the translator
+        environ = {'pylons.pylons': fakepylons}
+    registry.register(request, FakeRequest())
+
+    # create translator
+    i18n.set_lang(lang)
+
+    # pull out translator and register it
+    registry.register(translator, fakepylons.translator)
 
 @celery_app.celery.task(name="qa.update_package")
 def update_package(ckan_ini_filepath, package_id):
@@ -70,7 +82,6 @@ def update_package(ckan_ini_filepath, package_id):
     """
     log = update_package.get_logger()
     load_config(ckan_ini_filepath)
-    register_translator()
 
     try:
         update_package_(package_id, log)
@@ -113,7 +124,6 @@ def update(ckan_ini_filepath, resource_id):
     """
     log = update.get_logger()
     load_config(ckan_ini_filepath)
-    register_translator()
     try:
         update_resource_(resource_id, log)
     except Exception, e:
@@ -206,7 +216,7 @@ def resource_score(resource, log):
                     if score == None:
                         log.warning('Could not score resource: "%s" with url: "%s"',
                                     resource.id, resource.url)
-                        score_reasons.append('Could not understand the file format, therefore score is 1.')
+                        score_reasons.append(_('Could not understand the file format, therefore score is 1.'))
                         score = 1
                         if format_ == None:
                             # use any previously stored format value for this resource
@@ -215,7 +225,7 @@ def resource_score(resource, log):
         format_ = format_ or None
     except Exception, e:
         log.error('Unexpected error while calculating openness score %s: %s\nException: %s', e.__class__.__name__,  unicode(e), traceback.format_exc())
-        score_reason = "Unknown error: %s" % str(e)
+        score_reason = _("Unknown error: %s") % str(e)
         raise
 
     # Even if we can get the link, we should still treat the resource
@@ -229,7 +239,7 @@ def resource_score(resource, log):
     else:
         package = resource.package
     if score > 0 and not package.isopen():
-        score_reason = 'License not open'
+        score_reason = _('License not open')
         score = 0
 
     log.info('Score: %s Reason: %s', score, score_reason)
@@ -254,24 +264,24 @@ def broken_link_error_message(archival):
             return date.strftime('%d/%m/%Y')
         else:
             return ''
-    messages = ['File could not be downloaded.',
-                'Reason: %s.' % archival.status,
-                'Error details: %s.' % archival.reason,
-                'Attempted on %s.' % format_date(archival.updated)]
+    messages = [_('File could not be downloaded.'),
+                _('Reason'), ':', unicode(archival.status), '.',
+                _('Error details: %s.') % archival.reason,
+                _('Attempted on %s.') % format_date(archival.updated)]
     last_success = format_date(archival.last_success)
     if archival.failure_count == 1:
         if last_success:
-            messages.append('This URL worked the previous time: %s.' % last_success)
+            messages.append(_('This URL last worked on: %s.') % last_success)
         else:
-            messages.append('This was the first attempt.')
+            messages.append(_('This was the first attempt.'))
     else:
-        messages.append('Tried %s times since %s.' % \
+        messages.append(_('Tried %s times since %s.') % \
                         (archival.failure_count,
                          format_date(archival.first_failure)))
         if last_success:
-            messages.append('This URL last worked on: %s.' % last_success)
+            messages.append(_('This URL last worked on: %s.') % last_success)
         else:
-            messages.append('This URL has not worked in the history of this tool.')
+            messages.append(_('This URL has not worked in the history of this tool.'))
     return ' '.join(messages)
 
 
@@ -306,12 +316,12 @@ def score_by_sniffing_data(archival, resource, score_reasons, log):
       * If it cannot score it, then score is None
     '''
     if not archival or not archival.cache_filepath:
-        score_reasons.append('This file had not been downloaded at the time of scoring it.')
+        score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
         return (None, None)
     # Analyse the cached file
     filepath = archival.cache_filepath
     if not os.path.exists(filepath):
-        score_reasons.append('Cache filepath does not exist: "%s".' % filepath)
+        score_reasons.append(_('Cache filepath does not exist: "%s".') % filepath)
         return (None, None)
     else:
         if filepath:
@@ -319,24 +329,24 @@ def score_by_sniffing_data(archival, resource, score_reasons, log):
             score = lib.resource_format_scores().get(sniffed_format['format']) \
                 if sniffed_format else None
             if sniffed_format:
-                score_reasons.append('Content of file appeared to be format "%s" which receives openness score: %s.' % (sniffed_format['format'], score))
+                score_reasons.append(_('Content of file appeared to be format "%s" which receives openness score: %s.') % (sniffed_format['format'], score))
                 return score, sniffed_format['format']
             else:
-                score_reasons.append('The format of the file was not recognized from its contents.')
+                score_reasons.append(_('The format of the file was not recognized from its contents.'))
                 return (None, None)
         else:
             # No cache_url
             if archival.status_id == Status.by_text('Chose not to download'):
-                score_reasons.append('File was not downloaded deliberately. Reason: %s. Using other methods to determine file openness.' % \
-                                     archival.reason)
+                score_reasons.append(_('File was not downloaded deliberately') + '. '
+                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
                 return (None, None)
             elif archival.is_broken is None and archival.status_id:
                 # i.e. 'Download failure' or 'System error during archival'
-                score_reasons.append('A system error occurred during downloading this file. Reason: %s. Using other methods to determine file openness.' % \
-                                     archival.reason)
+                score_reasons.append(_('A system error occurred during downloading this file') + '. '
+                                       + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
                 return (None, None)
             else:
-                score_reasons.append('This file had not been downloaded at the time of scoring it.')
+                score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
                 return (None, None)
 
 
@@ -353,20 +363,20 @@ def score_by_url_extension(resource, score_reasons, log):
     '''
     extension_variants_ = extension_variants(resource.url.strip())
     if not extension_variants_:
-        score_reasons.append('Could not determine a file extension in the URL.')
+        score_reasons.append(_('Could not determine a file extension in the URL.'))
         return (None, None)
     for extension in extension_variants_:
         format_ = format_get(extension)
         if format_:
             score = lib.resource_format_scores().get(format_)
             if score:
-                score_reasons.append('URL extension "%s" relates to format "%s" and receives score: %s.' % (extension, format_, score))
+                score_reasons.append(_('URL extension "%s" relates to format "%s" and receives score: %s.') % (extension, format_, score))
                 return score, format_
             else:
                 score = 1
-                score_reasons.append('URL extension "%s" relates to format "%s" but a score for that format is not configured, so giving it default score %s.' % (extension, format_, score))
+                score_reasons.append(_('URL extension "%s" relates to format "%s" but a score for that format is not configured, so giving it default score %s.') % (extension, format_, score))
                 return score, format_
-        score_reasons.append('URL extension "%s" is an unknown format.' % extension)
+        score_reasons.append(_('URL extension "%s" is an unknown format.') % extension)
     return (None, None)
 
 def extension_variants(url):
@@ -402,15 +412,15 @@ def score_by_format_field(resource, score_reasons, log):
     '''
     format_field = resource.format or ''
     if not format_field:
-        score_reasons.append('Format field is blank.')
+        score_reasons.append(_('Format field is blank.'))
         return (None, None)
     format_tuple = ckan_helpers.resource_formats().get(format_field.lower()) or \
         ckan_helpers.resource_formats().get(lib.munge_format_to_be_canonical(format_field))
     if not format_tuple:
-        score_reasons.append('Format field "%s" does not correspond to a known format.' % format_field)
+        score_reasons.append(_('Format field "%s" does not correspond to a known format.') % format_field)
         return (None, None)
     score = lib.resource_format_scores().get(format_tuple[1])
-    score_reasons.append('Format field "%s" receives score: %s.' %
+    score_reasons.append(_('Format field "%s" receives score: %s.') %
                          (format_field, score))
     return (score, format_tuple[1])
 
@@ -443,7 +453,7 @@ def save_qa_result(resource, qa_result, log):
         qa = QA.create(resource.id)
         model.Session.add(qa)
     else:
-        log.info('QA from before: %r', qa)
+        log.info(u'QA from before: %r', qa)
 
     for key in ('openness_score', 'openness_score_reason', 'format'):
         setattr(qa, key, qa_result[key])

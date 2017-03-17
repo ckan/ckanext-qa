@@ -1,13 +1,13 @@
 {% if c.options['organization'] == None %}
   <ul>
-    <li>Datasets given a score: {{ c.data['num_packages_scored'] }} / {{ c.data['num_packages'] }}</li>
-    <li>Totals
+    <li>{% trans %}Datasets given a score{% endtrans %}: {{ c.data['num_packages_scored'] }} / {{ c.data['num_packages'] }}</li>
+    <li>{% trans %}Totals{% endtrans %}
       <table class="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
-            <th>Score TBC</th>
+            <th>{% trans %}Score TBC{% endtrans %}</th>
             {% for n in range(6) %}
-              <th>Score {{n}}</th>
+              <th>{% trans %}Score{% endtrans %} {{n}}</th>
             {% endfor %}
           </tr>
         </thead>
@@ -25,13 +25,13 @@
   <table class="table table-striped table-bordered table-condensed tablesorter" id="report-table">
     <thead>
       <tr>
-        <th>Publisher</th>
-        <th>Score TBC</th>
+        <th>{% trans %}Publisher{% endtrans %}</th>
+        <th>{% trans %}Score TBC{% endtrans %}</th>
         {% for n in range(6) %}
-          <th>Score {{n}}</th>
+          <th>{% trans %}Score{% endtrans %} {{n}}</th>
         {% endfor %}
-        <th>Total stars</th>
-        <th>Average stars</th>
+        <th>{% trans %}Total stars{% endtrans %}</th>
+        <th>{% trans %}Average stars{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>
@@ -52,16 +52,16 @@
 {% else %}
 
   <ul>
-    <li>Average score: {{ c.data['average_stars'] }}</li>
-    <li>Total stars: {{ c.data['total_stars'] }}</li>
-    <li>Datasets given a score: {{ c.data['num_packages_scored'] }} / {{ c.data['num_packages'] }}</li>
-    <li>Score frequencies:
+    <li>{% trans %}Average score{% endtrans %}: {{ c.data['average_stars'] }}</li>
+    <li>{% trans %}Total stars{% endtrans %}: {{ c.data['total_stars'] }}</li>
+    <li>{% trans %}Datasets given a score{% endtrans %}: {{ c.data['num_packages_scored'] }} / {{ c.data['num_packages'] }}</li>
+    <li>{% trans %}Score frequencies{% endtrans %}:
       <table class="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
-            <th>Score TBC</th>
+            <th>{% trans %}Score TBC{% endtrans %}</th>
             {% for n in range(6) %}
-              <th>Score {{n}}</th>
+              <th>{% trans %}Score {{n}}{% endtrans %}</th>
             {% endfor %}
           </tr>
         </thead>
@@ -79,13 +79,13 @@
   <table class="table table-striped table-bordered table-condensed tablesorter" id="report-table">
     <thead>
       <tr>
-        <th>Dataset</th>
-        <th>Notes</th>
+        <th>{% trans %}Dataset{% endtrans %}</th>
+        <th>{% trans %}Notes{% endtrans %}</th>
         {% if c.options['include_sub_organizations'] %}
-          <th>Publisher</th>
+          <th>{% trans %}Publisher{% endtrans %}</th>
         {% endif %}
-        <th>Score</th>
-        <th>Score reason</th>
+        <th>{% trans %}Score{% endtrans %}</th>
+        <th>{% trans %}Score reason{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>

@@ -20,10 +20,10 @@ OR the package_show's package['qa'] e.g.
 #}
 <div class="qa openness-{{ openness_score }}">
   {% if openness_score != None %}
-    <span title="Reason: {{ openness_score_reason }} Checked: {{ h.render_datetime(updated) }}">
+    <span title="{% trans %}Reason{% endtrans %}: {{ openness_score_reason }} {% trans %}Checked{% endtrans %}: {{ h.render_datetime(updated) }}">
     {% snippet "qa/stars.html", stars=openness_score %} <br>
   {% else %}
-    No openness information yet
+    {% trans %}No openness information yet.{% endtrans %}
   {% endif %}
 </div>
 

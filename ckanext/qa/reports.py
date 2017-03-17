@@ -5,6 +5,7 @@ try:
 except ImportError:
     from sqlalchemy.util import OrderedDict
 
+from ckan.common import _
 import ckan.model as model
 import ckan.plugins as p
 from ckanext.report import lib
@@ -160,8 +161,8 @@ def openness_report_combinations():
 
 openness_report_info = {
     'name': 'openness',
-    'title': 'Openness (Five Stars)',
-    'description': 'Datasets graded on Tim Berners Lees\' Five Stars of Openness - openly licensed, openly accessible, structured, open format, URIs for entities, linked.',
+    'title': _('Openness (Five Stars)'),
+    'description': _('Datasets graded on Tim Berners Lees\' Five Stars of Openness - openly licensed, openly accessible, structured, open format, URIs for entities, linked.'),
     'option_defaults': OrderedDict((('organization', None),
                                     ('include_sub_organizations', False),
                                     )),
