@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-qa 0.3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-03-16 12:41+0100\n"
+"POT-Creation-Date: 2017-03-17 13:32+0100\n"
 "PO-Revision-Date: 2015-03-28 18:07+0100\n"
 "Last-Translator: Krzysztof Madejski <krzysztof.madejski@epf.org.pl>\n"
 "Language: pl\n"
@@ -32,67 +32,68 @@ msgstr ""
 "otwarta licencja, dostępność online, ustrukturyzowanie, otwarty format, URIs "
 "identyfikujące obiekty, referencje między zbiorami."
 
-#: ckanext/qa/tasks.py:210
+#: ckanext/qa/tasks.py:219
 msgid "Could not understand the file format, therefore score is 1."
 msgstr "Nieznany format. Przyznano ocenę 1."
 
-#: ckanext/qa/tasks.py:219
+#: ckanext/qa/tasks.py:228
 #, python-format
 msgid "Unknown error: %s"
 msgstr "Nieznany błąd: %s"
 
-#: ckanext/qa/tasks.py:233
+#: ckanext/qa/tasks.py:242
 msgid "License not open"
 msgstr "Brak otwartej licencji"
 
-#: ckanext/qa/tasks.py:258
+#: ckanext/qa/tasks.py:267
 msgid "File could not be downloaded."
 msgstr "Nie udało się pobrać pliku."
 
-#: ckanext/qa/tasks.py:259 ckanext/qa/tasks.py:332 ckanext/qa/tasks.py:337
+#: ckanext/qa/tasks.py:268 ckanext/qa/tasks.py:341 ckanext/qa/tasks.py:346
 #: ckanext/qa/templates/qa/openness_stars.html:24
 #: ckanext/qa/templates/qa/openness_stars_brief.html:23
+#: ckanext/qa/templates/report/openness.html:88
 msgid "Reason"
-msgstr "Przyczyna"
+msgstr "Wytłumaczenie"
 
-#: ckanext/qa/tasks.py:260
+#: ckanext/qa/tasks.py:269
 #, python-format
 msgid "Error details: %s."
 msgstr "Szczegóły błędu: %s."
 
-#: ckanext/qa/tasks.py:261
+#: ckanext/qa/tasks.py:270
 #, python-format
 msgid "Attempted on %s."
 msgstr "Próbę podjęto %s."
 
-#: ckanext/qa/tasks.py:267
-msgid "This was the first attempt."
-msgstr "To była pierwsza próba pobrania pliku."
-
-#: ckanext/qa/tasks.py:269
-#, python-format
-msgid "Tried %s times since %s."
-msgstr "Próbowano %s razy od %s."
-
-#: ckanext/qa/tasks.py:265 ckanext/qa/tasks.py:273
+#: ckanext/qa/tasks.py:274 ckanext/qa/tasks.py:282
 #, python-format
 msgid "This URL last worked on: %s."
 msgstr "URL zadziałał ostatnim razem: %s."
 
-#: ckanext/qa/tasks.py:275
+#: ckanext/qa/tasks.py:276
+msgid "This was the first attempt."
+msgstr "To była pierwsza próba pobrania pliku."
+
+#: ckanext/qa/tasks.py:278
+#, python-format
+msgid "Tried %s times since %s."
+msgstr "Próbowano %s razy od %s."
+
+#: ckanext/qa/tasks.py:284
 msgid "This URL has not worked in the history of this tool."
 msgstr "URL nie zadziałał nigdy od kiedy badane są linki zewnętrzne."
 
-#: ckanext/qa/tasks.py:310 ckanext/qa/tasks.py:340
+#: ckanext/qa/tasks.py:319 ckanext/qa/tasks.py:349
 msgid "This file had not been downloaded at the time of scoring it."
 msgstr "Plik nie był pobrany, podczas gdy ostatnio badano otwartość."
 
-#: ckanext/qa/tasks.py:315
+#: ckanext/qa/tasks.py:324
 #, python-format
 msgid "Cache filepath does not exist: \"%s\"."
 msgstr "Plik nie istnieje lokalnie: \"%s\"."
 
-#: ckanext/qa/tasks.py:323
+#: ckanext/qa/tasks.py:332
 #, python-format
 msgid ""
 "Content of file appeared to be format \"%s\" which receives openness score: "
@@ -100,34 +101,34 @@ msgid ""
 msgstr ""
 "Zawartość pliku wskazuje na format \"%s\", który jest otwarty w stopniu: %s."
 
-#: ckanext/qa/tasks.py:326
+#: ckanext/qa/tasks.py:335
 msgid "The format of the file was not recognized from its contents."
 msgstr "Format pliku nie mógł zostać ustalony na podstawie jego zawartości."
 
-#: ckanext/qa/tasks.py:331
+#: ckanext/qa/tasks.py:340
 msgid "File was not downloaded deliberately"
 msgstr "Plik został automatycznie wykluczony z analizy."
 
-#: ckanext/qa/tasks.py:332 ckanext/qa/tasks.py:337
+#: ckanext/qa/tasks.py:341 ckanext/qa/tasks.py:346
 msgid "Using other methods to determine file openness."
 msgstr "Używam innych metod, aby sprawdzić otwartość."
 
-#: ckanext/qa/tasks.py:336
+#: ckanext/qa/tasks.py:345
 msgid "A system error occurred during downloading this file"
 msgstr "Błąd systemowy wystąpił podczas tworzenia kopii pliku na serwerze"
 
-#: ckanext/qa/tasks.py:357
+#: ckanext/qa/tasks.py:366
 msgid "Could not determine a file extension in the URL."
 msgstr "Nie znaleziono rozszerzenia pliku w tym URL."
 
-#: ckanext/qa/tasks.py:364
+#: ckanext/qa/tasks.py:373
 #, python-format
 msgid "URL extension \"%s\" relates to format \"%s\" and receives score: %s."
 msgstr ""
-"Rozszerzenie \"%s\" wskazuje na format \"%s\", który jest otwarty "
-"w stopniu %s."
+"Rozszerzenie \"%s\" wskazuje na format \"%s\", który jest otwarty w stopniu "
+"%s."
 
-#: ckanext/qa/tasks.py:368
+#: ckanext/qa/tasks.py:377
 #, python-format
 msgid ""
 "URL extension \"%s\" relates to format \"%s\" but a score for that format is "
@@ -136,21 +137,21 @@ msgstr ""
 "Rozszerzenie \"%s\" wskazuje na format \"%s\", ale nie mamy jeszcze "
 "zdefiniowanej oceny dla tego zbioru. Przyznaję domyślną ocenę %s."
 
-#: ckanext/qa/tasks.py:370
+#: ckanext/qa/tasks.py:379
 #, python-format
 msgid "URL extension \"%s\" is an unknown format."
 msgstr "Brak definicji formatu dla rozszerzenia \"%s\"."
 
-#: ckanext/qa/tasks.py:406
+#: ckanext/qa/tasks.py:415
 msgid "Format field is blank."
 msgstr "Pole Format jest puste."
 
-#: ckanext/qa/tasks.py:411
+#: ckanext/qa/tasks.py:420
 #, python-format
 msgid "Format field \"%s\" does not correspond to a known format."
 msgstr "Brak definicji formatu dla wartości pola Format \"%s\"."
 
-#: ckanext/qa/tasks.py:414
+#: ckanext/qa/tasks.py:423
 #, python-format
 msgid "Format field \"%s\" receives score: %s."
 msgstr "Format \"%s\" otrzymuje ocenę %s."
@@ -194,140 +195,48 @@ msgstr "Dane ustrukturyzowane, ale zamknięty format (np. XLS)"
 msgid "Unstructured data (e.g. PDF)"
 msgstr "Nieustrukturyzowane dane (np. PDF)"
 
-#~ msgid "Available under an open license."
-#~ msgstr "Dostępne na otwartej licencji."
+#: ckanext/qa/templates/report/openness.html:3
+#: ckanext/qa/templates/report/openness.html:57
+msgid "Datasets given a score"
+msgstr "Zbiory, które zostały ocenione"
 
-#~ msgid "Available as structured data (eg. Excel instead of a scanned table)."
-#~ msgstr ""
-#~ "Dane są ustrukturyzowane (np. w Excel zamiast skanu dokumentu z tabelą)."
+#: ckanext/qa/templates/report/openness.html:4
+#: ckanext/qa/templates/report/openness.html:58
+msgid "Score frequencies"
+msgstr "Ilość zbiorów wg. stopni otwartości"
 
-#~ msgid "Uses non-proprietary formats (e.g., CSV instead of Excel)."
-#~ msgstr "Użyty został otwarty format (np. CSV zamiast Excel)."
+#: ckanext/qa/templates/report/openness.html:8
+#: ckanext/qa/templates/report/openness.html:29
+#: ckanext/qa/templates/report/openness.html:62
+msgid "Score TBC"
+msgstr "Do oceny"
 
-#~ msgid "Uses URIs to identify things, so that people can link to it."
-#~ msgstr ""
-#~ "Dane posiadają identyfikatory URI, do których odbiorcy mogą linkować."
+#: ckanext/qa/templates/report/openness.html:10
+#: ckanext/qa/templates/report/openness.html:31
+#: ckanext/qa/templates/report/openness.html:64
+#: ckanext/qa/templates/report/openness.html:87
+msgid "Score"
+msgstr "Ocena"
 
-#~ msgid "Linked to other data to provide context."
-#~ msgstr "Dane linkują do innych danych tworząc powiązania."
+#: ckanext/qa/templates/report/openness.html:28
+#: ckanext/qa/templates/report/openness.html:85
+msgid "Organization"
+msgstr ""
 
-#~ msgid "Not Rated"
-#~ msgstr "Brak oceny"
+#: ckanext/qa/templates/report/openness.html:33
+#: ckanext/qa/templates/report/openness.html:56
+msgid "Total stars"
+msgstr "W sumie gwiazdek"
 
-#~ msgid ""
-#~ "Uses non-proprietary formats (e.g., XLSX instead of XLS, or even better "
-#~ "CSV)."
-#~ msgstr "Użyty został otwarty format (np. CSV lub XLSX zamiast XLS)."
+#: ckanext/qa/templates/report/openness.html:34
+#: ckanext/qa/templates/report/openness.html:55
+msgid "Average score"
+msgstr "Średnia ocena"
 
-#~ msgid "Provides schema and uses URIs to identify things."
-#~ msgstr "Dane walidowane schemą, obiekty identyfikowane przez URI"
+#: ckanext/qa/templates/report/openness.html:82
+msgid "Dataset"
+msgstr ""
 
-#~ msgid "Quality Assurance"
-#~ msgstr "Raporty jakości danych"
-
-#~ msgid "Report in CSV format"
-#~ msgstr "Raport w formacie CSV"
-
-#~ msgid "Dataset"
-#~ msgstr "Zbiór danych"
-
-#~ msgid "Resources"
-#~ msgstr "Zasoby"
-
-#~ msgid "No results found for this organization"
-#~ msgstr "Nie znaleziono wyyników dla tej organizacji"
-
-#~ msgid "Datasets with at least one broken resource"
-#~ msgstr "Zbiory danych z niedziałającymi linkami"
-
-#~ msgid "Report of all broken links by dataset in CSV format"
-#~ msgstr ""
-#~ "Raport zawierający niedziałające linki dla zbioru danych [format CSV]"
-
-#~ msgid "Resource URL"
-#~ msgstr "Adres URL zasobu"
-
-#~ msgid "No datasets with at least one broken resource found"
-#~ msgstr "Nie znaleziono zbiorów danych z niedziałającymi linkami"
-
-#~ msgid "Package Quality Assurance"
-#~ msgstr "Analiza Jakości Zbioru Danych"
-
-#~ msgid "5 stars of openness scores"
-#~ msgstr "5 gwiazdek opisujących otwartość"
-
-#~ msgid "Broken resource links"
-#~ msgstr "Niedziałające linki zasobów"
-
-#~ msgid "Dataset openness scores"
-#~ msgstr "Raport podsumowujący otwartość wszystkich zbiorów danych"
-
-#~ msgid ""
-#~ "A list of all datasets in CKAN, together with their\n"
-#~ "  <a href=\"http://www.w3.org/DesignIssues/LinkedData.html\" target="
-#~ "\"_blank\">5 stars of openness rating</a>."
-#~ msgstr ""
-#~ "Lista wszsytkich zbiorów danych w serwisie, razem z ich\n"
-#~ "  <a href=\"http://www.w3.org/DesignIssues/LinkedData.html\" target="
-#~ "\"_blank\">oceną otwartości</a>."
-
-#~ msgid ""
-#~ "The rating is calculated by looking at the reported mime-type of\n"
-#~ "  each of the datasets resources and calculating the 5 stars of openness "
-#~ "score\n"
-#~ "  for each. The overall dataset score is taken to be the highest score of "
-#~ "any of\n"
-#~ "  the resources."
-#~ msgstr ""
-#~ "Ocena tworzona jest na podstawie zwróconych nagłówków mime-type \n"
-#~ "  każdego z zasobów danego zbioru danych. Zagregowana ocena dla zbioru to "
-#~ "najwyższa z ocen  dla poszczególnych zasobów."
-
-#~ msgid "Dataset name"
-#~ msgstr "Nazwa zbioru danych"
-
-#~ msgid "5 Stars of Openness"
-#~ msgstr "Stopień otwartości"
-
-#~ msgid "No QA results found"
-#~ msgstr "Brak raportów jakości danych"
-
-#~ msgid "Datasets with broken resource links"
-#~ msgstr "Zbiory danych z niedziałającymi linkami"
-
-#~ msgid "Organisations whose datasets contain broken resource links"
-#~ msgstr "Organizacje, których zbiory danych zawierają niedziałające linki"
-
-#~ msgid "Organizations who have published datasets with broken resource links"
-#~ msgstr ""
-#~ "Organizacje, które opublikowały zbiory danych z niedziałającymi linkami"
-
-#~ msgid "Report of all broken links by organisation in CSV format"
-#~ msgstr ""
-#~ "Raport zawierający wszystkie niedziałające linki dla organizacji w "
-#~ "formacie CSV"
-
-#~ msgid "Organization name"
-#~ msgstr "Nazwa organizacji"
-
-#~ msgid ""
-#~ "No organizations that have published datasets with broken resource links "
-#~ "found"
-#~ msgstr ""
-#~ "Nie znaleziono organizacji, które posiadają zasoby z nie działającymi "
-#~ "linkami"
-
-#~ msgid "Organisation Quality Assurance"
-#~ msgstr "Analiza jakości zbiorów organizacji"
-
-#~ msgid "Resource Quality"
-#~ msgstr "Jakość zasobu danych"
-
-#~ msgid "Rating"
-#~ msgstr "Ocena"
-
-#~ msgid "Hide rating info"
-#~ msgstr "Schowaj opis"
-
-#~ msgid "About these ratings"
-#~ msgstr "Co znaczy ta skala"
+#: ckanext/qa/templates/report/openness.html:83
+msgid "Notes"
+msgstr "Notatki"

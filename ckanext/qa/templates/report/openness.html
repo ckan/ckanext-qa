@@ -1,7 +1,7 @@
 {% if c.options['organization'] == None %}
   <ul>
     <li>{% trans %}Datasets given a score{% endtrans %}: {{ c.data['num_packages_scored'] }} / {{ c.data['num_packages'] }}</li>
-    <li>{% trans %}Totals{% endtrans %}
+    <li>{% trans %}Score frequencies{% endtrans %}
       <table class="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
@@ -25,13 +25,13 @@
   <table class="table table-striped table-bordered table-condensed tablesorter" id="report-table">
     <thead>
       <tr>
-        <th>{% trans %}Publisher{% endtrans %}</th>
+        <th>{% trans %}Organization{% endtrans %}</th>
         <th>{% trans %}Score TBC{% endtrans %}</th>
         {% for n in range(6) %}
           <th>{% trans %}Score{% endtrans %} {{n}}</th>
         {% endfor %}
         <th>{% trans %}Total stars{% endtrans %}</th>
-        <th>{% trans %}Average stars{% endtrans %}</th>
+        <th>{% trans %}Average score{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>
@@ -61,7 +61,7 @@
           <tr>
             <th>{% trans %}Score TBC{% endtrans %}</th>
             {% for n in range(6) %}
-              <th>{% trans %}Score {{n}}{% endtrans %}</th>
+              <th>{% trans %}Score{% endtrans %} {{n}}</th>
             {% endfor %}
           </tr>
         </thead>
@@ -82,10 +82,10 @@
         <th>{% trans %}Dataset{% endtrans %}</th>
         <th>{% trans %}Notes{% endtrans %}</th>
         {% if c.options['include_sub_organizations'] %}
-          <th>{% trans %}Publisher{% endtrans %}</th>
+          <th>{% trans %}Organization{% endtrans %}</th>
         {% endif %}
         <th>{% trans %}Score{% endtrans %}</th>
-        <th>{% trans %}Score reason{% endtrans %}</th>
+        <th>{% trans %}Reason{% endtrans %}</th>
       </tr>
     </thead>
     <tbody>

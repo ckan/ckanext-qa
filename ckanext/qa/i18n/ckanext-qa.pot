@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-qa 2.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-03-17 13:06+0100\n"
+"POT-Creation-Date: 2017-03-17 13:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,120 +28,121 @@ msgid ""
 "linked."
 msgstr ""
 
-#: ckanext/qa/tasks.py:221
+#: ckanext/qa/tasks.py:219
 msgid "Could not understand the file format, therefore score is 1."
 msgstr ""
 
-#: ckanext/qa/tasks.py:230
+#: ckanext/qa/tasks.py:228
 #, python-format
 msgid "Unknown error: %s"
 msgstr ""
 
-#: ckanext/qa/tasks.py:244
+#: ckanext/qa/tasks.py:242
 msgid "License not open"
 msgstr ""
 
-#: ckanext/qa/tasks.py:269
+#: ckanext/qa/tasks.py:267
 msgid "File could not be downloaded."
 msgstr ""
 
-#: ckanext/qa/tasks.py:270 ckanext/qa/tasks.py:343 ckanext/qa/tasks.py:348
+#: ckanext/qa/tasks.py:268 ckanext/qa/tasks.py:341 ckanext/qa/tasks.py:346
 #: ckanext/qa/templates/qa/openness_stars.html:24
 #: ckanext/qa/templates/qa/openness_stars_brief.html:23
+#: ckanext/qa/templates/report/openness.html:88
 msgid "Reason"
 msgstr ""
 
-#: ckanext/qa/tasks.py:271
+#: ckanext/qa/tasks.py:269
 #, python-format
 msgid "Error details: %s."
 msgstr ""
 
-#: ckanext/qa/tasks.py:272
+#: ckanext/qa/tasks.py:270
 #, python-format
 msgid "Attempted on %s."
 msgstr ""
 
-#: ckanext/qa/tasks.py:276 ckanext/qa/tasks.py:284
+#: ckanext/qa/tasks.py:274 ckanext/qa/tasks.py:282
 #, python-format
 msgid "This URL last worked on: %s."
 msgstr ""
 
-#: ckanext/qa/tasks.py:278
+#: ckanext/qa/tasks.py:276
 msgid "This was the first attempt."
 msgstr ""
 
-#: ckanext/qa/tasks.py:280
+#: ckanext/qa/tasks.py:278
 #, python-format
 msgid "Tried %s times since %s."
 msgstr ""
 
-#: ckanext/qa/tasks.py:286
+#: ckanext/qa/tasks.py:284
 msgid "This URL has not worked in the history of this tool."
 msgstr ""
 
-#: ckanext/qa/tasks.py:321 ckanext/qa/tasks.py:351
+#: ckanext/qa/tasks.py:319 ckanext/qa/tasks.py:349
 msgid "This file had not been downloaded at the time of scoring it."
 msgstr ""
 
-#: ckanext/qa/tasks.py:326
+#: ckanext/qa/tasks.py:324
 #, python-format
 msgid "Cache filepath does not exist: \"%s\"."
 msgstr ""
 
-#: ckanext/qa/tasks.py:334
+#: ckanext/qa/tasks.py:332
 #, python-format
 msgid ""
 "Content of file appeared to be format \"%s\" which receives openness score: "
 "%s."
 msgstr ""
 
-#: ckanext/qa/tasks.py:337
+#: ckanext/qa/tasks.py:335
 msgid "The format of the file was not recognized from its contents."
 msgstr ""
 
-#: ckanext/qa/tasks.py:342
+#: ckanext/qa/tasks.py:340
 msgid "File was not downloaded deliberately"
 msgstr ""
 
-#: ckanext/qa/tasks.py:343 ckanext/qa/tasks.py:348
+#: ckanext/qa/tasks.py:341 ckanext/qa/tasks.py:346
 msgid "Using other methods to determine file openness."
 msgstr ""
 
-#: ckanext/qa/tasks.py:347
+#: ckanext/qa/tasks.py:345
 msgid "A system error occurred during downloading this file"
 msgstr ""
 
-#: ckanext/qa/tasks.py:368
+#: ckanext/qa/tasks.py:366
 msgid "Could not determine a file extension in the URL."
 msgstr ""
 
-#: ckanext/qa/tasks.py:375
+#: ckanext/qa/tasks.py:373
 #, python-format
 msgid "URL extension \"%s\" relates to format \"%s\" and receives score: %s."
 msgstr ""
 
-#: ckanext/qa/tasks.py:379
+#: ckanext/qa/tasks.py:377
 #, python-format
 msgid ""
 "URL extension \"%s\" relates to format \"%s\" but a score for that format is "
 "not configured, so giving it default score %s."
 msgstr ""
 
-#: ckanext/qa/tasks.py:381
+#: ckanext/qa/tasks.py:379
 #, python-format
 msgid "URL extension \"%s\" is an unknown format."
 msgstr ""
 
-#: ckanext/qa/tasks.py:417
+#: ckanext/qa/tasks.py:415
 msgid "Format field is blank."
 msgstr ""
 
-#: ckanext/qa/tasks.py:422
+#: ckanext/qa/tasks.py:420
 #, python-format
 msgid "Format field \"%s\" does not correspond to a known format."
 msgstr ""
 
-#: ckanext/qa/tasks.py:425
+#: ckanext/qa/tasks.py:423
 #, python-format
 msgid "Format field \"%s\" receives score: %s."
 msgstr ""
@@ -191,7 +192,8 @@ msgid "Datasets given a score"
 msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:4
-msgid "Totals"
+#: ckanext/qa/templates/report/openness.html:58
+msgid "Score frequencies"
 msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:8
@@ -202,13 +204,14 @@ msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:10
 #: ckanext/qa/templates/report/openness.html:31
+#: ckanext/qa/templates/report/openness.html:64
 #: ckanext/qa/templates/report/openness.html:87
 msgid "Score"
 msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:28
 #: ckanext/qa/templates/report/openness.html:85
-msgid "Publisher"
+msgid "Organization"
 msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:33
@@ -217,20 +220,8 @@ msgid "Total stars"
 msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:34
-msgid "Average stars"
-msgstr ""
-
 #: ckanext/qa/templates/report/openness.html:55
 msgid "Average score"
-msgstr ""
-
-#: ckanext/qa/templates/report/openness.html:58
-msgid "Score frequencies"
-msgstr ""
-
-#: ckanext/qa/templates/report/openness.html:64
-#, python-format
-msgid "Score %(n)s"
 msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:82
@@ -239,9 +230,5 @@ msgstr ""
 
 #: ckanext/qa/templates/report/openness.html:83
 msgid "Notes"
-msgstr ""
-
-#: ckanext/qa/templates/report/openness.html:88
-msgid "Score reason"
 msgstr ""
 
