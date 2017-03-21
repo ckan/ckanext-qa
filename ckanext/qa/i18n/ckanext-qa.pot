@@ -45,13 +45,6 @@ msgstr ""
 msgid "File could not be downloaded."
 msgstr ""
 
-#: ckanext/qa/tasks.py:268 ckanext/qa/tasks.py:341 ckanext/qa/tasks.py:346
-#: ckanext/qa/templates/qa/openness_stars.html:24
-#: ckanext/qa/templates/qa/openness_stars_brief.html:23
-#: ckanext/qa/templates/report/openness.html:88
-msgid "Reason"
-msgstr ""
-
 #: ckanext/qa/tasks.py:269
 #, python-format
 msgid "Error details: %s."
@@ -209,11 +202,6 @@ msgstr ""
 msgid "Score"
 msgstr ""
 
-#: ckanext/qa/templates/report/openness.html:28
-#: ckanext/qa/templates/report/openness.html:85
-msgid "Organization"
-msgstr ""
-
 #: ckanext/qa/templates/report/openness.html:33
 #: ckanext/qa/templates/report/openness.html:56
 msgid "Total stars"
@@ -223,12 +211,3 @@ msgstr ""
 #: ckanext/qa/templates/report/openness.html:55
 msgid "Average score"
 msgstr ""
-
-#: ckanext/qa/templates/report/openness.html:82
-msgid "Dataset"
-msgstr ""
-
-#: ckanext/qa/templates/report/openness.html:83
-msgid "Notes"
-msgstr ""
-
