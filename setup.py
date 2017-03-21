@@ -18,13 +18,13 @@ setup(
     zip_safe=False,
     install_requires=[
         'ckanext-archiver>=2.0',
-        'ckanext-report>=0.1',
-        'SQLAlchemy>=0.9',
-        'requests>=2.3',
-        'xlrd>=1.0',
-        'messytables>=0.15',
+        'ckanext-report',
+        'SQLAlchemy>=0.6.6',
+        'requests',
+        'xlrd>=0.8.0',
+        'messytables>=0.8',
         'python-magic>=0.4',
-        'progressbar>=2.3'
+        'progressbar'
     ],
     tests_require=[
         'nose',
