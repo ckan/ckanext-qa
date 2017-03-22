@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-qa 0.3\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRES\n"
 "POT-Creation-Date: 2017-03-17 13:32+0100\n"
 "PO-Revision-Date: 2015-03-28 18:07+0100\n"
 "Last-Translator: Krzysztof Madejski <krzysztof.madejski@epf.org.pl>\n"
@@ -48,13 +48,6 @@ msgstr "Brak otwartej licencji"
 #: ckanext/qa/tasks.py:267
 msgid "File could not be downloaded."
 msgstr "Nie udało się pobrać pliku."
-
-#: ckanext/qa/tasks.py:268 ckanext/qa/tasks.py:341 ckanext/qa/tasks.py:346
-#: ckanext/qa/templates/qa/openness_stars.html:24
-#: ckanext/qa/templates/qa/openness_stars_brief.html:23
-#: ckanext/qa/templates/report/openness.html:88
-msgid "Reason"
-msgstr "Wytłumaczenie"
 
 #: ckanext/qa/tasks.py:269
 #, python-format
@@ -218,11 +211,6 @@ msgstr "Do oceny"
 msgid "Score"
 msgstr "Ocena"
 
-#: ckanext/qa/templates/report/openness.html:28
-#: ckanext/qa/templates/report/openness.html:85
-msgid "Organization"
-msgstr ""
-
 #: ckanext/qa/templates/report/openness.html:33
 #: ckanext/qa/templates/report/openness.html:56
 msgid "Total stars"
@@ -232,11 +220,3 @@ msgstr "W sumie gwiazdek"
 #: ckanext/qa/templates/report/openness.html:55
 msgid "Average score"
 msgstr "Średnia ocena"
-
-#: ckanext/qa/templates/report/openness.html:82
-msgid "Dataset"
-msgstr ""
-
-#: ckanext/qa/templates/report/openness.html:83
-msgid "Notes"
-msgstr "Notatki"

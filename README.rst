@@ -33,9 +33,6 @@ Before installing ckanext-qa, make sure that you have installed the following:
 
 * CKAN 2.1+
 * ckanext-archiver 2.0+ (https://github.com/ckan/ckanext-archiver)
-
-Optional:
-
 * ckanext-report (https://github.com/datagovuk/ckanext-report) for reporting
 
 Known issues:
@@ -169,14 +166,13 @@ If you get error "MagicException: None" then it may be due to libmagic needing a
 Translations
 ------
 
-To translate plugin to a new language copy `ckanext/qa/i18n/ckanext-qa.pot`,
-into language-specific directory and translate it.
+To translate plugin to a new language (ie. "pl") run `python setup.py init_catalog -l pl`.
 
 To update template file with new translation added in the code or templates
-run `python setup.py extract_messages` in the root plugin directory.
+run `python setup.py extract_messages` in the root plugin directory. Then run
+`./ckanext/qa/i18n/unique_pot.sh -v` to strip other plugin's translations.
 
-To update translation files with new template run
-`msgmerge ckanext/qa/i18n/$LANG/LC_MESSAGES/ckanext-qa.po ckanext/qa/i18n/ckanext-qa.pot -U`
+To update translation files for locale "pl" with new template run `python setup.py update_catalog -l pl`.
 
 
 Questions
