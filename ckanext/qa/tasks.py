@@ -321,7 +321,8 @@ def score_by_sniffing_data(archival, resource, score_reasons, log):
     # Analyse the cached file
     filepath = archival.cache_filepath
     if not os.path.exists(filepath):
-        score_reasons.append(_('Cache filepath does not exist: "%s".') % filepath)
+	#since we never saved the resource, filepath will never exist. We can bypass the message below
+        #score_reasons.append(_('Cache filepath does not exist: "%s".') % filepath)
         return (None, None)
     else:
         if filepath:
