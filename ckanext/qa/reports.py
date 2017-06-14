@@ -14,6 +14,92 @@ import logging
 
 log = logging.getLogger(__name__)
 
+def five_stars(id=None):
+    """
+    Return a list of dicts: 1 for each dataset that has an openness score.
+    Each dict is of the form:
+        {'name': <string>, 'title': <string>, 'openness_score': <int>}
+    """
+    if id:
+        pkg = model.Package.get(id)
+        if not pkg:
+            return "Not found"
+
+    # take the maximum openness score among dataset resources to be the
+    # overall dataset openness core
+    query = model.Session.query(model.Package.name, model.Package.title,
+                                model.Resource.id,
+                                model.TaskStatus.value.label('value'))
+    query = _join_package_to_resource_group_if_it_exists(query)
+    query = query \
+        .join(model.Resource)\
+        .join(model.TaskStatus, model.TaskStatus.entity_id == model.Resource.id)\
+        .filter(model.TaskStatus.key==u'openness_score')\
+        .group_by(model.Package.name, model.Package.title, model.Resource.id, model.TaskStatus.value)\
+        .distinct()
+
+    if id:
+        query = query.filter(model.Package.id == pkg.id)
+
+    results = []
+    for row in query:
+        results.append({
+            'name': row.name,
+            'title': row.title + u' ' + row.id,
+            'openness_score': row.value
+        })
+
+    return results
+
+
+def resource_five_stars(id):
+    """
+    Return a dict containing the QA results for a given resource
+    Each dict is of the form:
+        {'openness_score': <int>, 'openness_score_reason': <string>, 'failure_count': <int>}
+    """
+    if id:
+        r = model.Resource.get(id)
+        if not r:
+            return {}  # Not found
+
+    context = {'model': model, 'session': model.Session}
+    data = {'entity_id': r.id, 'task_type': 'qa'}
+
+    try:
+        data['key'] = 'openness_score'
+        status = p.toolkit.get_action('task_status_show')(context, data)
+        openness_score = int(status.get('value'))
+        openness_score_updated = status.get('last_updated')
+
+        data['key'] = 'openness_score_reason'
+        status = p.toolkit.get_action('task_status_show')(context, data)
+        openness_score_reason = status.get('value')
+        openness_score_reason_updated = status.get('last_updated')
+
+        data['key'] = 'openness_score_failure_count'
+        status = p.toolkit.get_action('task_status_show')(context, data)
+        openness_score_failure_count = int(status.get('value'))
+        openness_score_failure_count_updated = status.get('last_updated')
+
+        last_updated = max( 
+            openness_score_updated,
+            openness_score_reason_updated,
+            openness_score_failure_count_updated )
+
+        result = {
+            'openness_score': openness_score,
+            'openness_score_reason': openness_score_reason,
+            'openness_score_failure_count': openness_score_failure_count,
+            'openness_score_updated': openness_score_updated,
+            'openness_score_reason_updated': openness_score_reason_updated,
+            'openness_score_failure_count_updated': openness_score_failure_count_updated,
+            'openness_updated': last_updated
+        }
+    except p.toolkit.ObjectNotFound:
+        result = {}
+
+    return result
 
 def openness_report(organization, include_sub_organizations=False):
     if organization is None:
