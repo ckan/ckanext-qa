@@ -93,20 +93,38 @@ def update_package(ckan_ini_filepath, package_id):
 
 def update_package_(package_id, log):
     from ckan import model
+    #import threading, time, Queue, thread
+
+    #queue = Queue.Queue()
+    #scoring_success = False
+    
+    #def score_timeout():
+	##time.sleep(.5)
+	#thread.interrupt_main()
+
+    #timeout_thread = threading.Thread(target=score_timeout)
+    #timeout_thread.start()
+
     package = model.Package.get(package_id)
     if not package:
         raise QAError('Package ID not found: %s' % package_id)
 
     log.info('Openness scoring package %s (%i resources)', package.name,
              len(package.resources))
-
+    
     for resource in package.resources:
-        qa_result = resource_score(resource, log)
+	#def resource_score_thread(resource, log, queue):
+        #    qa_result = resource_score(resource, log)
+        #    queue.put(qa_result)
+        #resource_score_thread = threading.Thread(target=resource_score_thread, args=(resource, log, queue))
+	#resource_score_thread.setDaemon(True)
+	#resource_score_thread.start()
+        #qa_result = queue.get()
+	qa_result = resource_score(resource, log)
         log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
                  resource.url)
         save_qa_result(resource, qa_result, log)
         log.info('CKAN updated with openness score')
-
     # Refresh the index for this dataset, so that it contains the latest
     # qa info
     _update_search_index(package.id, log)
@@ -133,10 +151,13 @@ def update(ckan_ini_filepath, resource_id):
 
 
 def update_resource_(resource_id, log):
-    from ckan import model
+    from ckan import mode
+
     resource = model.Resource.get(resource_id)
+
     if not resource:
         raise QAError('Resource ID not found: %s' % resource_id)
+
     qa_result = resource_score(resource, log)
     log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
              resource.url)
@@ -153,6 +174,7 @@ def update_resource_(resource_id, log):
         _update_search_index(package.id, log)
     else:
         log.warning('Resource not connected to a package. Res: %r', resource)
+
     return json.dumps(qa_result)
 
 
@@ -192,6 +214,21 @@ def resource_score(resource, log):
 
     Raises QAError for reasonable errors
     """
+    import threading, time, Queue, thread
+
+    #queue = Queue.Queue()
+    scoring_success = False
+
+    def score_timeout():
+	time.sleep(.1)
+	if scoring_success:
+	    pass
+        else:
+            thread.interrupt_main()
+
+    timeout_thread = threading.Thread(target=score_timeout)
+    timeout_thread.start()
+
     score = 0
     score_reason = ''
     format_ = None
@@ -206,8 +243,8 @@ def resource_score(resource, log):
         if score == None:
             # we don't want to take the publisher's word for it, in case the link
             # is only to a landing page, so highest priority is the sniffed type
-            score, format_ = score_by_sniffing_data(archival, resource,
-                                                    score_reasons, log)
+            #score, format_ = score_by_sniffing_data(archival, resource,
+            #                                        score_reasons, log)
             if score == None:
                 # Fall-backs are user-given data
                 score, format_ = score_by_url_extension(resource, score_reasons, log)
@@ -252,7 +289,8 @@ def resource_score(resource, log):
         'format': format_,
         'archival_timestamp': archival_updated
     }
-
+    if score_reason:
+        scoring_success = True
     return result
 
 
