@@ -93,17 +93,6 @@ def update_package(ckan_ini_filepath, package_id):
 
 def update_package_(package_id, log):
     from ckan import model
-    #import threading, time, Queue, thread
-
-    #queue = Queue.Queue()
-    #scoring_success = False
-    
-    #def score_timeout():
-	##time.sleep(.5)
-	#thread.interrupt_main()
-
-    #timeout_thread = threading.Thread(target=score_timeout)
-    #timeout_thread.start()
 
     package = model.Package.get(package_id)
     if not package:
@@ -113,13 +102,6 @@ def update_package_(package_id, log):
              len(package.resources))
     
     for resource in package.resources:
-	#def resource_score_thread(resource, log, queue):
-        #    qa_result = resource_score(resource, log)
-        #    queue.put(qa_result)
-        #resource_score_thread = threading.Thread(target=resource_score_thread, args=(resource, log, queue))
-	#resource_score_thread.setDaemon(True)
-	#resource_score_thread.start()
-        #qa_result = queue.get()
 	qa_result = resource_score(resource, log)
         log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
                  resource.url)
@@ -214,21 +196,6 @@ def resource_score(resource, log):
 
     Raises QAError for reasonable errors
     """
-    import threading, time, Queue, thread
-
-    #queue = Queue.Queue()
-    scoring_success = False
-
-    def score_timeout():
-	time.sleep(.1)
-	if scoring_success:
-	    pass
-        else:
-            thread.interrupt_main()
-
-    timeout_thread = threading.Thread(target=score_timeout)
-    timeout_thread.start()
-
     score = 0
     score_reason = ''
     format_ = None
@@ -289,8 +256,6 @@ def resource_score(resource, log):
         'format': format_,
         'archival_timestamp': archival_updated
     }
-    if score_reason:
-        scoring_success = True
     return result
 
 
