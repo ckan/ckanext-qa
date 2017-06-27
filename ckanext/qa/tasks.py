@@ -133,7 +133,7 @@ def update(ckan_ini_filepath, resource_id):
 
 
 def update_resource_(resource_id, log):
-    from ckan import mode
+    from ckan import model
 
     resource = model.Resource.get(resource_id)
 
