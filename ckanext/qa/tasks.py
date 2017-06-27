@@ -242,7 +242,8 @@ def resource_score(resource, log):
         package = resource.resource_group.package
     else:
         package = resource.package
-    if score > 0 and not package.isopen():
+    #if score > 0 and not package.isopen():
+    if score > 0 and not package.license_id:
         score_reason = _('License not open')
         score = 0
 
