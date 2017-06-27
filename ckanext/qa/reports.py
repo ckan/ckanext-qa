@@ -65,7 +65,7 @@ def resource_five_stars(id):
 
     context = {'model': model, 'session': model.Session}
     data = {'entity_id': r.id, 'task_type': 'qa'}
-
+    
     try:
         data['key'] = 'openness_score'
         status = p.toolkit.get_action('task_status_show')(context, data)
@@ -98,7 +98,7 @@ def resource_five_stars(id):
         }
     except p.toolkit.ObjectNotFound:
         result = {}
-
+    
     return result
 
 def openness_report(organization, include_sub_organizations=False):

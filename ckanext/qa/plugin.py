@@ -89,7 +89,18 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
         extra_vars = {'stars': stars, 'reason': reason}
         return p.toolkit.literal(p.toolkit.render('qa/snippets/stars_module.html',
                                  extra_vars=extra_vars))
+    
+    @classmethod
+    def get_star_info_html(cls, stars):
+        extra_vars = {'stars': stars}
+        return p.toolkit.literal(p.toolkit.render('qa/snippets/stars_info.html',
+                                 extra_vars=extra_vars))
 
+    @classmethod
+    def get_star_rating_html(cls, stars, reason):
+        extra_vars = {'stars': stars, 'reason': reason}
+        return p.toolkit.literal(p.toolkit.render('qa/snippets/stars.html',
+                                 extra_vars=extra_vars))
     # ITemplateHelpers
 
     def get_helpers(self):
@@ -98,7 +109,11 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
             helpers.qa_openness_stars_resource_html,
             'qa_openness_stars_dataset_html':
             helpers.qa_openness_stars_dataset_html,
-	    'qa_stars': self.new_get_star_html
+	    'qa_stars': self.new_get_star_html,
+	    'qa_stars_rating': self.get_star_rating_html,
+            'qa_stars_info': self.get_star_info_html,
+	    'qa_openness_stars_resource_line': helpers.qa_openness_stars_resource_line,
+	    'qa_openness_stars_resource_table': helpers.qa_openness_stars_resource_table,
             }
 
     # IPackageController

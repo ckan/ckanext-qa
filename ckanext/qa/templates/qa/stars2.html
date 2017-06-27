@@ -13,7 +13,7 @@ reason - A reason why the dataset doesn't have a rating.
   {%- if stars == None -%}
     {{ reason }}
   {%- else -%}
-    <span class="star-rating-stars" data-toggle="qa_tooltip" data-placement="top" data-html="true" >
+    <span class="star-rating-stars" data-toggle="qa_tooltip2" data-placement="top" data-html="true" >
       {%- for index in range(stars) -%}
         <span class="icon icon-star" style="color:rgb(255, 204, 0);"></span>
       {%- endfor -%}
