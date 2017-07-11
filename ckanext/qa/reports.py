@@ -6,6 +6,7 @@ except ImportError:
     from sqlalchemy.util import OrderedDict
 
 from ckan.common import _
+_ = lambda value: value
 import ckan.model as model
 import ckan.plugins as p
 from ckanext.report import lib

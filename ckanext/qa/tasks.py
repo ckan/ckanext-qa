@@ -10,6 +10,7 @@ import urlparse
 import routes
 
 from ckan.common import _
+_ = lambda value: value
 from ckan.lib import celery_app
 from ckan.lib import i18n
 from ckan.plugins import toolkit
