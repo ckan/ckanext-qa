@@ -1,0 +1,45 @@
+{#
+Displays 5 starts of openness for a resource or dataset with explanation
+
+Variable passed-in include all the QA.as_dict() info from the package_show's resource['qa'] e.g.
+
+"format": "CSV",
+"openness_score": 3,
+"openness_score_reason": "Content of file appeared to be format \"CSV\" which receives openness score: 3."
+"archival_timestamp": null,
+"resource_timestamp": null,
+"created": "2015-11-19T11:01:48.112153",
+"updated": "2015-11-19T16:54:49.436434",
+
+OR the package_show's package['qa'] e.g.
+
+"openness_score": 3
+"openness_score_reason": "Content of file appeared to be format \"CSV\" which receives openness score: 3.",
+"updated": "2015-11-19T16:54:49.480393",
+
+#}
+<div class="qa openness-{{ openness_score }}" style="margin:2%;">
+  <table class="table table-bordered table-striped">
+    <tbody>
+      <tr>
+	<td style="width:30%;"><strong>Openness Score</strong></td>
+	{% if openness_score != None %}
+	<td>{% trans %}Openness{% endtrans %}: {% snippet "qa/stars2.html", stars=openness_score %}</td>
+	{% else %}
+	<td>{% trans %}No openness information yet.{% endtrans %}</td>
+	{% endif %}
+     </tr>
+     {% if openness_score != None %} 
+     <tr>
+	<td><strong>Reason</strong></td>
+	<td>{{ openness_score_reason }}</td>
+     </tr>
+     <tr>
+	<td><strong>Last Updated</strong></td>
+	<td>{{ h.render_datetime(updated) }} </td>
+     </tr>     
+     {% endif %}
+    </tbody>
+  </table>
+</div>
+
