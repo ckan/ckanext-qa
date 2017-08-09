@@ -17,6 +17,9 @@ import ckan.lib.helpers as ckan_helpers
 from ckanext.qa.sniff_format import sniff_file_format
 from ckanext.qa import lib
 from ckanext.archiver.model import Archival, Status
+from celery.utils.log import get_task_logger
+
+log = get_task_logger(__name__)
 
 
 class QAError(Exception):
@@ -32,6 +35,19 @@ OPENNESS_SCORE_DESCRIPTION = {
     5: 'Fully Linked Open Data as appropriate',
 }
 
+
+def register_translator():
+    # Register a translator in this thread so that
+    # the _() functions in logic layer can work
+    from paste.registry import Registry
+    from pylons import translator
+    from ckan.lib.cli import MockTranslator
+    global registry
+    registry = Registry()
+    registry.prepare()
+    global translator_obj
+    translator_obj = MockTranslator()
+    registry.register(translator, translator_obj)
 
 def load_config(ckan_ini_filepath):
     import paste.deploy
@@ -80,7 +96,7 @@ def update_package(ckan_ini_filepath, package_id):
 
     Returns None
     """
-    log = update_package.get_logger()
+
     load_config(ckan_ini_filepath)
 
     try:
@@ -122,7 +138,6 @@ def update(ckan_ini_filepath, resource_id):
         'openness_score': score (int)
         'openness_score_reason': the reason for the score (string)
     """
-    log = update.get_logger()
     load_config(ckan_ini_filepath)
     try:
         update_resource_(resource_id, log)
@@ -195,6 +210,8 @@ def resource_score(resource, log):
     score = 0
     score_reason = ''
     format_ = None
+
+    register_translator()
 
     try:
         score_reasons = []  # a list of strings detailing how we scored it
