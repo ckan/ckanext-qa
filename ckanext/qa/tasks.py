@@ -103,7 +103,7 @@ def update_package_(package_id, log):
              len(package.resources))
     
     for resource in package.resources:
-	qa_result = resource_score(resource, log)
+        qa_result = resource_score(resource, log)
         log.info('Openness scoring: \n%r\n%r\n%r\n\n', qa_result, resource,
                  resource.url)
         save_qa_result(resource, qa_result, log)
@@ -326,7 +326,7 @@ def score_by_sniffing_data(archival, resource, score_reasons, log):
     # Analyse the cached file
     filepath = archival.cache_filepath
     if not os.path.exists(filepath):
-	#since we never saved the resource, filepath will never exist. We can bypass the message below
+        #since we never saved the resource, filepath will never exist. We can bypass the message below
         #score_reasons.append(_('Cache filepath does not exist: "%s".') % filepath)
         return (None, None)
     else:
