@@ -29,3 +29,25 @@ def qa_openness_stars_dataset_html(dataset):
     return tk.literal(
         tk.render('qa/openness_stars_brief.html',
                   extra_vars=extra_vars))
+
+def qa_openness_stars_resource_line(resource):
+    qa = resource.get('qa')
+    if not qa:
+        return tk.literal('<!-- No qa info for this resource -->')
+    if not isinstance(qa, dict):
+        return tk.literal('<!-- QA info was of the wrong type -->')
+    extra_vars = copy.deepcopy(qa)
+    return tk.literal(
+        tk.render('qa/openness_stars_line.html',
+                  extra_vars=extra_vars))
+
+def qa_openness_stars_resource_table(resource):
+    qa = resource.get('qa')
+    if not qa:
+        return tk.literal('<!-- No qa info for this resource -->')
+    if not isinstance(qa, dict):
+        return tk.literal('<!-- QA info was of the wrong type -->')
+    extra_vars = copy.deepcopy(qa)
+    return tk.literal(
+        tk.render('qa/openness_stars_table.html',
+                  extra_vars=extra_vars))

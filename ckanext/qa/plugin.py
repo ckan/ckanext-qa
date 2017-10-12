@@ -1,5 +1,6 @@
 import logging
 import types
+import reports
 
 import ckan.model as model
 import ckan.plugins as p
@@ -78,6 +79,28 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
             'qa_package_openness_show': auth.qa_package_openness_show,
             }
 
+    @classmethod
+    def new_get_star_html(cls, resource_id):
+        report = reports.resource_five_stars(resource_id)
+        stars  = report.get('openness_score', -1)
+        reason = p.toolkit._('Not Rated')
+        if stars >= 0:
+            reason = report.get('openness_score_reason')
+        extra_vars = {'stars': stars, 'reason': reason}
+        return p.toolkit.literal(p.toolkit.render('qa/snippets/stars_module.html',
+                                 extra_vars=extra_vars))
+    
+    @classmethod
+    def get_star_info_html(cls, stars):
+        extra_vars = {'stars': stars}
+        return p.toolkit.literal(p.toolkit.render('qa/snippets/stars_info.html',
+                                 extra_vars=extra_vars))
+
+    @classmethod
+    def get_star_rating_html(cls, stars, reason):
+        extra_vars = {'stars': stars, 'reason': reason}
+        return p.toolkit.literal(p.toolkit.render('qa/snippets/stars.html',
+                                 extra_vars=extra_vars))
     # ITemplateHelpers
 
     def get_helpers(self):
@@ -86,6 +109,11 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
             helpers.qa_openness_stars_resource_html,
             'qa_openness_stars_dataset_html':
             helpers.qa_openness_stars_dataset_html,
+            'qa_stars': self.new_get_star_html,
+            'qa_stars_rating': self.get_star_rating_html,
+            'qa_stars_info': self.get_star_info_html,
+            'qa_openness_stars_resource_line': helpers.qa_openness_stars_resource_line,
+            'qa_openness_stars_resource_table': helpers.qa_openness_stars_resource_table,
             }
 
     # IPackageController
