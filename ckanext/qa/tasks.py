@@ -4,11 +4,11 @@ Berners-Lee\'s five stars of openness
 '''
 import datetime
 import json
+import logging
 import os
 import traceback
 import urlparse
 import routes
-import logging
 
 from ckan.common import _
 from ckan.lib import celery_app
