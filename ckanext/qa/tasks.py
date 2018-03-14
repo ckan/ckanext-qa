@@ -4,6 +4,7 @@ Berners-Lee\'s five stars of openness
 '''
 import datetime
 import json
+import logging
 import os
 import traceback
 import urlparse
@@ -18,6 +19,7 @@ from ckanext.qa.sniff_format import sniff_file_format
 from ckanext.qa import lib
 from ckanext.archiver.model import Archival, Status
 
+logger = logging.getLogger(__name__)
 
 class QAError(Exception):
     pass
@@ -80,7 +82,7 @@ def update_package(ckan_ini_filepath, package_id):
 
     Returns None
     """
-    log = update_package.get_logger()
+    log = logger
     load_config(ckan_ini_filepath)
 
     try:
