@@ -130,6 +130,7 @@ def sniff_file_format(filepath, log):
         log.warning('Could not detect format of file: %s', filepath)
     return format_
 
+
 def is_json(buf, log):
     '''Returns whether this text buffer (potentially truncated) is in
     JSON format.'''
@@ -148,7 +149,7 @@ def is_json(buf, log):
     # simplified state machine - just looks at stack of object/array and
     # ignores contents of them, beyond just being simple JSON bits
     pos = 0
-    state_stack = [] # stack of 'object', 'array'
+    state_stack = []  # stack of 'object', 'array'
     number_of_matches = 0
     while pos < len(buf):
         part_of_buf = buf[pos:]
@@ -173,7 +174,7 @@ def is_json(buf, log):
                     state_stack.append('array')
                 elif matcher in (object_end_re, array_end_re):
                     try:
-                        state = state_stack.pop()
+                        state_stack.pop()
                     except IndexError:
                         # nothing to pop
                         log.info('Not JSON - %i matches', number_of_matches)
@@ -184,7 +185,7 @@ def is_json(buf, log):
             log.info('Not JSON - %i matches', number_of_matches)
             return False
         match_length = matcher.match(part_of_buf).end()
-        #print "MATCHED %r %r %s" % (matcher.match(part_of_buf).string[:match_length], matcher.pattern, state_stack)
+        # print "MATCHED %r %r %s" % (matcher.match(part_of_buf).string[:match_length], matcher.pattern, state_stack)
         pos += match_length
         number_of_matches += 1
         if number_of_matches > 5:
@@ -194,17 +195,20 @@ def is_json(buf, log):
     log.info('JSON detected: %i matches', number_of_matches)
     return True
 
+
 def is_csv(buf, log):
     '''If the buffer is a CSV file then return True.'''
     buf_rows = StringIO.StringIO(buf)
     table_set = messytables.CSVTableSet(buf_rows)
     return _is_spreadsheet(table_set, 'CSV', log)
 
+
 def is_psv(buf, log):
     '''If the buffer is a PSV file then return True.'''
     buf_rows = StringIO.StringIO(buf)
     table_set = messytables.CSVTableSet(buf_rows, delimiter='|')
     return _is_spreadsheet(table_set, 'PSV', log)
+
 
 def _is_spreadsheet(table_set, format, log):
     def get_cells_per_row(num_cells, num_rows):
@@ -225,7 +229,7 @@ def _is_spreadsheet(table_set, format, log):
                     cells_per_row = get_cells_per_row(num_cells, num_rows)
                     # over the long term, 2 columns is the minimum
                     if cells_per_row > 1.9:
-                        log.info('Is %s because %.1f cells per row (%i cells, %i rows)', \
+                        log.info('Is %s because %.1f cells per row (%i cells, %i rows)',
                                  format,
                                  get_cells_per_row(num_cells, num_rows),
                                  num_cells, num_rows)
@@ -236,15 +240,16 @@ def _is_spreadsheet(table_set, format, log):
     if num_cells > 3 or num_rows > 1:
         cells_per_row = get_cells_per_row(num_cells, num_rows)
         if cells_per_row > 1.5:
-            log.info('Is %s because %.1f cells per row (%i cells, %i rows)', \
+            log.info('Is %s because %.1f cells per row (%i cells, %i rows)',
                      format,
                      get_cells_per_row(num_cells, num_rows),
                      num_cells, num_rows)
             return True
     log.info('Not %s - not enough valid cells per row '
-             '(%i cells, %i rows, %.1f cells per row)', \
+             '(%i cells, %i rows, %.1f cells per row)',
              format, num_cells, num_rows, get_cells_per_row(num_cells, num_rows))
     return False
+
 
 def is_html(buf, log):
     '''If this buffer is HTML, return that format type, else None.'''
@@ -255,6 +260,7 @@ def is_html(buf, log):
         return {'format': 'HTML'}
     log.debug('Not HTML')
 
+
 def is_iati(buf, log):
     '''If this buffer is IATI format, return that format type, else None.'''
     xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<iati-(activities|organisations)[^>]*>'
@@ -264,6 +270,7 @@ def is_iati(buf, log):
         return {'format': 'IATI'}
     log.debug('Not IATI')
 
+
 def is_xml_but_without_declaration(buf, log):
     '''Decides if this is a buffer of XML, but missing the usual <?xml ...?>
     tag.'''
@@ -272,21 +279,23 @@ def is_xml_but_without_declaration(buf, log):
     if match:
         top_level_tag_name, top_level_tag_attributes = match.groups()[-2:]
         if 'xmlns:' not in top_level_tag_attributes and \
-               (len(top_level_tag_name) > 20 or
-                len(top_level_tag_attributes) > 200):
+            (len(top_level_tag_name) > 20 or
+             len(top_level_tag_attributes) > 200):
             log.debug('Not XML (without declaration) - unlikely length first tag: <%s %s>',
-                        top_level_tag_name, top_level_tag_attributes)
+                      top_level_tag_name, top_level_tag_attributes)
             return False
         log.info('XML detected - first tag name: <%s>', top_level_tag_name)
         return True
     log.debug('Not XML (without declaration) - tag not detected')
     return False
 
+
 def get_xml_variant_including_xml_declaration(buf, log):
     '''If this buffer is in a format based on XML and has the <xml>
     declaration, return the format type.'''
     return get_xml_variant_without_xml_declaration(buf, log)
     log.debug('XML declaration not found: %s', buf)
+
 
 def get_xml_variant_without_xml_declaration(buf, log):
     '''If this buffer is in a format based on XML, without any XML declaration
@@ -296,8 +305,10 @@ def get_xml_variant_without_xml_declaration(buf, log):
     # couldn't see how to give it a string, so used StringIO which failed
     # for some files curiously.
     import xml.parsers.expat
+
     class GotFirstTag(Exception):
         pass
+
     def start_element(name, attrs):
         raise GotFirstTag(name)
     p = xml.parsers.expat.ParserCreate()
@@ -331,6 +342,7 @@ def get_xml_variant_without_xml_declaration(buf, log):
     log.warning('Did not recognise XML format: %s', top_level_tag_name)
     return {'format': 'XML'}
 
+
 def has_rdfa(buf, log):
     '''If the buffer HTML contains RDFa then this returns True'''
     # quick check for the key words
@@ -342,7 +354,7 @@ def has_rdfa(buf, log):
     about_re = '<[^>]+\sabout="[^"]+"[^>]*>'
     property_re = '<[^>]+\sproperty="[^"]+"[^>]*>'
     # remove CR to catch tags spanning more than one line
-    #buf = re.sub('\r\n', ' ', buf)
+    # buf = re.sub('\r\n', ' ', buf)
     if not re.search(about_re, buf):
         log.debug('Not RDFA')
         return False
@@ -445,6 +457,7 @@ def check_output(*popenargs, **kwargs):
         raise Exception('Non-zero exit status %s: %s' % (retcode, output))
     return output
 
+
 def run_bsd_file(filepath, log):
     '''Run the BSD command-line tool "file" to determine file type. Returns
     a format dict or None if it fails.'''
@@ -493,7 +506,10 @@ def is_ttl(buf, log):
 
     log.debug('Not Turtle RDF - triples not detected (%i)' % num_replacements)
 
+
 turtle_regex_ = None
+
+
 def turtle_regex():
     '''Return a compiled regex that matches a turtle triple.
 
@@ -515,11 +531,12 @@ def turtle_regex():
     '''
     global turtle_regex_
     if not turtle_regex_:
-        rdf_term = '(<[^ >]+>|_:\S+|".+?"(@\w+)?(\^\^\S+)?|\'.+?\'(@\w+)?(\^\^\S+)?|""".+?"""(@\w+)?(\^\^\S+)?|\'\'\'.+?\'\'\'(@\w+)?(\^\^\S+)?|[+-]?([0-9]+|[0-9]*\.[0-9]+)(E[+-]?[0-9]+)?|false|true)'
+        rdf_term = '(<[^ >]+>|_:\S+|".+?"(@\w+)?(\^\^\S+)?|\'.+?\'(@\w+)?(\^\^\S+)?|""".+?"""(@\w+)' \
+                   '?(\^\^\S+)?|\'\'\'.+?\'\'\'(@\w+)?(\^\^\S+)?|[+-]?([0-9]+|[0-9]*\.[0-9]+)(E[+-]?[0-9]+)?|false|true)'
 
         # simple case is: triple_re = '^T T T \.$'.replace('T', rdf_term)
         # but extend to deal with multiple predicate-objects:
-        #triple = '^T T T\s*(;\s*T T\s*)*\.\s*$'.replace('T', rdf_term).replace(' ', '\s+')
+        # triple = '^T T T\s*(;\s*T T\s*)*\.\s*$'.replace('T', rdf_term).replace(' ', '\s+')
         triple = '(^T|;)\s*T T\s*(;|\.\s*$)'.replace('T', rdf_term).replace(' ', '\s+')
         turtle_regex_ = re.compile(triple, re.MULTILINE)
     return turtle_regex_

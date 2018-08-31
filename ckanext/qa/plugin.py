@@ -1,5 +1,4 @@
 import logging
-import types
 
 import ckan.model as model
 import ckan.plugins as p

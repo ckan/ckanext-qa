@@ -9,6 +9,7 @@ from wsgiref.simple_server import make_server
 import urllib2
 import socket
 
+
 class MockHTTPServer(object):
     """
     Mock HTTP server that can take the place of a remote server for testing
@@ -86,21 +87,22 @@ class MockHTTPServer(object):
         except TypeError:
             return var
 
+
 class MockEchoTestServer(MockHTTPServer):
     """
-    WSGI application that echos back the status, headers and 
+    WSGI application that echos back the status, headers and
     content passed via the URL, eg:
 
         a 500 error response: 'http://localhost/?status=500'
 
-        a 200 OK response, returning the function's docstring: 'http://localhost/?status=200;content-type=text/plain;content_var=ckan.tests.lib.test_package_search:test_wsgi_app.__doc__'
+        a 200 OK response, returning the function's docstring:
+         'http://localhost/?status=200;content-type=text/plain;content_var=ckan.tests.lib.test_package_search:test_wsgi_app.__doc__'
 
     To specify content, use:
 
         content=string
         content_var=package.module:variable
     """
-
 
     def __call__(self, environ, start_response):
 
@@ -130,6 +132,7 @@ class MockEchoTestServer(MockHTTPServer):
         )
         return [content]
 
+
 class MockTimeoutTestServer(MockHTTPServer):
     """
     Sleeps ``timeout`` seconds before responding. Make sure that your timeout value is
@@ -144,4 +147,3 @@ class MockTimeoutTestServer(MockHTTPServer):
         sleep(self.timeout)
         start_response('200 OK', [('Content-Type', 'text/plain')])
         return ['xyz']
-

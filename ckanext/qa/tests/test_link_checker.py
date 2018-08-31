@@ -3,33 +3,27 @@ from functools import wraps
 import json
 from urllib import urlencode
 try:
-    from ckan.tests.helpers import reset_db, assert_in
-    from ckan.tests import factories as ckan_factories
-    from ckan.tests.legacy import BaseCase, url_for, CreateTestData
+    from ckan.tests.helpers import assert_in
     from ckan.tests.legacy import TestController as ControllerTestCase
 except ImportError:
-    from ckan.new_tests.helpers import reset_db
-    from ckan.new_tests import factories as ckan_factories
-    from ckan.tests import BaseCase, url_for, CreateTestData, assert_in
+    from ckan.tests import assert_in
     from ckan.tests import TestController as ControllerTestCase
-from nose.tools import assert_raises, assert_equal
+from nose.tools import assert_equal
 
-from ckanext.archiver.tasks import (update_package,
-                                    download,
-                                    ArchiverError,
-                                    DownloadError,
-                                    ChooseNotToDownload,
-                                    LinkCheckerError,
-                                    CkanError,
-                                   )
+from ckanext.archiver.tasks import update_package
 
 from mock_remote_server import MockEchoTestServer
 
 # enable celery logging for when you run nosetests -s
 log = logging.getLogger('ckanext.archiver.tasks')
+
+
 def get_logger():
     return log
+
+
 update_package.get_logger = get_logger
+
 
 def with_mock_url(url=''):
     """
@@ -95,10 +89,10 @@ class TestLinkChecker(ControllerTestCase):
         result = self.check_link(url)
         assert_in(u'Invalid url scheme. Please use one of: ftp http https',
                   result['url_errors'])
-        #assert_raises(LinkCheckerError, link_checker, context, data)
+        # assert_raises(LinkCheckerError, link_checker, context, data)
 
     def test_empty_url(self):
-        url =  u''
+        url = u''
         result = self.check_link(url)
         assert_in("URL parsing failure - did not find a host name", result['url_errors'])
 
@@ -113,15 +107,16 @@ class TestLinkChecker(ControllerTestCase):
         assert_in('Server returned HTTP error status: 404 Not Found', result['url_errors'])
 
     # Disabled as doesn't work
-    #@with_mock_url('')
-    #def test_url_with_30x_follows_redirect(self, url):
+    # @with_mock_url('')
+    # def test_url_with_30x_follows_redirect(self, url):
     #    redirect_url = url + u'?status=200&content=test&content-type=text/csv'
     #    url += u'?status=301&location=%s' % quote_plus(redirect_url)
     #    result = self.check_link(url)
     #    # The redirect works and the CSV is picked up
     #    assert_equal(result['format'], 'CSV')
 
-    # e.g. "http://www.dasa.mod.uk/applications/newWeb/www/index.php?page=48&thiscontent=180&date=2011-05-26&pubType=1&PublishTime=09:30:00&from=home&tabOption=1"
+    # e.g. "http://www.dasa.mod.uk/applications/newWeb/www/index.php?page=48
+    # &thiscontent=180&date=2011-05-26&pubType=1&PublishTime=09:30:00&from=home&tabOption=1"
     @with_mock_url('?time=09:30&status=200')
     def test_colon_in_query_string(self, url):
         # accept, because browsers accept this

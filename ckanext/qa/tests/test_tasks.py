@@ -28,18 +28,28 @@ log = logging.getLogger(__name__)
 
 # Monkey patch get_cached_resource_filepath so that it doesn't barf when
 # it can't find the file
+
+
 def mock_get_cached_resource_filepath(cache_url):
     if not cache_url:
         return None
     return cache_url.replace('http://remotesite.com/', '/resources')
+
+
 ckanext.qa.tasks.get_cached_resource_filepath = mock_get_cached_resource_filepath
 
 # Monkey patch sniff_file_format. This isolates the testing of tasks from
 # actual sniffing
 sniffed_format = None
+
+
 def mock_sniff_file_format(filepath, log):
     return sniffed_format
+
+
 ckanext.qa.tasks.sniff_file_format = mock_sniff_file_format
+
+
 def set_sniffed_format(format_name):
     global sniffed_format
     if format_name:
@@ -48,8 +58,10 @@ def set_sniffed_format(format_name):
     else:
         sniffed_format = None
 
+
 TODAY = datetime.datetime(year=2008, month=10, day=10)
 TODAY_STR = TODAY.isoformat()
+
 
 class TestTask(BaseCase):
 
@@ -138,8 +150,8 @@ class TestResourceScore(BaseCase):
         result = resource_score(self._test_resource(archived=False, cached=False, format=None), log)
         # falls back on previous QA data detailing failed attempts
         assert result['openness_score'] == 1, result
-        assert result['format'] == None, result
-        assert result['archival_timestamp'] == None, result
+        assert result['format'] is None, result
+        assert result['archival_timestamp'] is None, result
         assert 'This file had not been downloaded at the time of scoring it.' in result['openness_score_reason'], result
         assert 'Could not determine a file extension in the URL.' in result['openness_score_reason'], result
         assert 'Format field is blank.' in result['openness_score_reason'], result
@@ -149,7 +161,7 @@ class TestResourceScore(BaseCase):
         result = resource_score(self._test_resource(cached=False, format=None), log)
         # falls back on previous QA data detailing failed attempts
         assert result['openness_score'] == 1, result
-        assert result['format'] == None, result
+        assert result['format'] is None, result
         assert result['archival_timestamp'] == TODAY_STR, result
         assert 'This file had not been downloaded at the time of scoring it.' in result['openness_score_reason'], result
         assert 'Could not determine a file extension in the URL.' in result['openness_score_reason'], result
@@ -223,7 +235,10 @@ class TestResourceScore(BaseCase):
         assert result['openness_score'] == 0, result
         assert_equal(result['format'], None)
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], u'File could not be downloaded. Reason: Download error. Error details: Server returned 500 error. Attempted on 10/10/2008. Tried 16 times since 01/10/2008. This URL has not worked in the history of this tool.')
+        assert_equal(result['openness_score_reason'], u'File could not be downloaded. '
+                                                      u'Reason: Download error. Error details: Server returned 500 error.'
+                                                      u' Attempted on 10/10/2008. Tried 16 times since 01/10/2008.'
+                                                      u' This URL has not worked in the history of this tool.')
 
     def test_not_available_any_more(self):
         # A cache of the data still exists from the previous run, but this
@@ -248,7 +263,9 @@ class TestResourceScore(BaseCase):
         assert result['openness_score'] == 0, result
         assert_equal(result['format'], 'CSV')
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], 'File could not be downloaded. Reason: Download error. Error details: Server returned 404 error. Attempted on 10/10/2008. This URL last worked on: 01/10/2008.')
+        assert_equal(result['openness_score_reason'], 'File could not be downloaded. '
+                                                      'Reason: Download error. Error details: Server returned 404 error.'
+                                                      ' Attempted on 10/10/2008. This URL last worked on: 01/10/2008.')
 
 
 class TestExtensionVariants:

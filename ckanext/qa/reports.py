@@ -29,9 +29,10 @@ def openness_index(include_sub_organizations=False):
     total_score_counts = Counter()
     counts = {}
     # Get all the scores and build up the results by org
-    for org in add_progress_bar(model.Session.query(model.Group)
-            .filter(model.Group.type == 'organization')
-            .filter(model.Group.state == 'active').all()):
+    orgs = add_progress_bar(model.Session.query(model.Group)
+                            .filter(model.Group.type == 'organization')
+                            .filter(model.Group.state == 'active').all())
+    for org in orgs:
         scores = []
         # NB org.packages() misses out many - see:
         # http://redmine.dguteam.org.uk/issues/1844
@@ -64,7 +65,7 @@ def openness_index(include_sub_organizations=False):
                     # occurs only if there is an organization created since the last loop?
                     continue
                 counts_with_sub_orgs[org_name]['score_counts'] += \
-                        counts[sub_org_name]['score_counts']
+                    counts[sub_org_name]['score_counts']
         results = counts_with_sub_orgs
     else:
         results = counts
@@ -75,7 +76,7 @@ def openness_index(include_sub_organizations=False):
         num_pkgs_scored = sum([v for k, v in org_counts['score_counts'].items()
                               if k is not None])
         average_stars = round(float(total_stars) / num_pkgs_scored, 1) \
-                        if num_pkgs_scored else 0.0
+            if num_pkgs_scored else 0.0
         row = OrderedDict((
             ('organization_title', results[org_name]['organization_title']),
             ('organization_name', org_name),
@@ -97,6 +98,7 @@ def openness_index(include_sub_organizations=False):
             'num_packages_scored': sum(total_score_counts.values()),
             'num_packages': num_packages,
             }
+
 
 def openness_for_organization(organization=None, include_sub_organizations=False):
     org = model.Group.get(organization)
@@ -141,7 +143,7 @@ def openness_for_organization(organization=None, include_sub_organizations=False
     num_pkgs_with_stars = sum([v for k, v in score_counts.items()
                                if k is not None])
     average_stars = round(float(total_stars) / num_pkgs_with_stars, 1) \
-                    if num_pkgs_with_stars else 0.0
+        if num_pkgs_with_stars else 0.0
 
     return {'table': rows,
             'score_counts': jsonify_counter(score_counts),
@@ -162,7 +164,8 @@ def openness_report_combinations():
 openness_report_info = {
     'name': 'openness',
     'title': _('Openness (Five Stars)'),
-    'description': _('Datasets graded on Tim Berners Lees\' Five Stars of Openness - openly licensed, openly accessible, structured, open format, URIs for entities, linked.'),
+    'description': _('Datasets graded on Tim Berners Lees\' Five Stars of Openness - openly licensed,'
+                     ' openly accessible, structured, open format, URIs for entities, linked.'),
     'option_defaults': OrderedDict((('organization', None),
                                     ('include_sub_organizations', False),
                                     )),
