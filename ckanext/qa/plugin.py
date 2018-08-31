@@ -5,10 +5,10 @@ import ckan.model as model
 import ckan.plugins as p
 
 from ckanext.archiver.interfaces import IPipe
-from ckanext.qa.logic import action, auth
-from ckanext.qa.model import QA, aggregate_qa_for_a_dataset
-from ckanext.qa import helpers
-from ckanext.qa import lib
+from logic import action, auth
+from model import QA, aggregate_qa_for_a_dataset
+import helpers
+import lib
 from ckanext.report.interfaces import IReport
 
 
