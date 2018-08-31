@@ -68,7 +68,7 @@ class LinkCheckerController(BaseController):
              [2] http://www.ons.gov.uk/ons/rel/regional-trends/region-and-country-profiles/social-indicators/index.html
         """
         urls = request.GET.getall('url')
-        result = [ self._check_link(url) for url in urls ]
+        result = [self._check_link(url) for url in urls]
         return json.dumps(result)
 
     def _check_link(self, url):
@@ -122,7 +122,7 @@ class LinkCheckerController(BaseController):
         path = parsed_url.path
         base, extension = posixpath.splitext(path)
         while extension:
-            formats.append(extension[1:].upper()) # strip leading '.' from extension
+            formats.append(extension[1:].upper())  # strip leading '.' from extension
             base, extension = posixpath.splitext(base)
         if formats:
             extension = '.'.join(formats[::-1]).lower()
@@ -132,7 +132,7 @@ class LinkCheckerController(BaseController):
             return ' / '.join(formats[::-1])
 
         # No file extension found, attempt to extract format using the mimetype
-        stripped_mimetype = self._extract_mimetype(headers) # stripped of charset
+        stripped_mimetype = self._extract_mimetype(headers)  # stripped of charset
         format_tuple = ckan_helpers.resource_formats().get(stripped_mimetype)
         if format_tuple:
             return format_tuple[1]

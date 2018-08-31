@@ -6,7 +6,6 @@ import logging
 from pylons import config
 
 from ckan import plugins as p
-from ckan.model.types import make_uuid
 from tasks import update_package, update
 
 log = logging.getLogger(__name__)
@@ -28,7 +27,6 @@ def compat_enqueue(name, fn, queue, args=None):
         import uuid
         from ckan.lib.celery_app import celery
         celery.send_task(name, args=args + [queue], task_id=str(uuid.uuid4()))
-
 
 
 def resource_format_scores():
@@ -90,7 +88,6 @@ def munge_format_to_be_canonical(format_name):
 
 def create_qa_update_package_task(package, queue):
     from pylons import config
-    task_id = '%s-%s' % (package.name, make_uuid()[:4])
     ckan_ini_filepath = os.path.abspath(config.__file__)
 
     compat_enqueue('qa.update_package', update_package, queue,  args=[ckan_ini_filepath, package.id])
@@ -104,7 +101,6 @@ def create_qa_update_task(resource, queue):
         package = resource.resource_group.package
     else:
         package = resource.package
-    task_id = '%s/%s/%s' % (package.name, resource.id[:4], make_uuid()[:4])
     ckan_ini_filepath = os.path.abspath(config.__file__)
 
     compat_enqueue('qa.update', update, queue, args=[ckan_ini_filepath, resource.id])

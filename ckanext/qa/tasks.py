@@ -33,8 +33,10 @@ if toolkit.check_ckan_version(max_version='2.7.99'):
     def update_celery(*args, **kwargs):
         update(*args, **kwargs)
 
+
 class QAError(Exception):
     pass
+
 
 # Description of each score, used elsewhere
 OPENNESS_SCORE_DESCRIPTION = {
@@ -55,13 +57,14 @@ def load_config(ckan_ini_filepath):
     ckan.config.environment.load_environment(conf.global_conf,
                                              conf.local_conf)
 
-    ## give routes enough information to run url_for
+    # give routes enough information to run url_for
     parsed = urlparse.urlparse(conf.get('ckan.site_url', 'http://0.0.0.0'))
     request_config = routes.request_config()
     request_config.host = parsed.netloc + parsed.path
     request_config.protocol = parsed.scheme
 
     load_translations(conf.get('ckan.locale_default', 'en'))
+
 
 def load_translations(lang):
     # Register a translator in this thread so that
@@ -75,6 +78,7 @@ def load_translations(lang):
     class FakePylons:
             translator = None
     fakepylons = FakePylons()
+
     class FakeRequest:
         # Stores details of the translator
         environ = {'pylons.pylons': fakepylons}
@@ -85,6 +89,7 @@ def load_translations(lang):
 
     # pull out translator and register it
     registry.register(translator, fakepylons.translator)
+
 
 def update_package(ckan_ini_filepath, package_id):
     """
@@ -213,28 +218,29 @@ def resource_score(resource):
             raise QAError('Could not find resource "%s"' % resource.id)
 
         score, format_ = score_if_link_broken(archival, resource, score_reasons)
-        if score == None:
+        if score is None:
             # we don't want to take the publisher's word for it, in case the link
             # is only to a landing page, so highest priority is the sniffed type
             score, format_ = score_by_sniffing_data(archival, resource,
                                                     score_reasons)
-            if score == None:
+            if score is None:
                 # Fall-backs are user-given data
                 score, format_ = score_by_url_extension(resource, score_reasons)
-                if score == None:
+                if score is None:
                     score, format_ = score_by_format_field(resource, score_reasons)
-                    if score == None:
+                    if score is None:
                         log.warning('Could not score resource: "%s" with url: "%s"',
                                     resource.id, resource.url)
                         score_reasons.append(_('Could not understand the file format, therefore score is 1.'))
                         score = 1
-                        if format_ == None:
+                        if format_ is None:
                             # use any previously stored format value for this resource
                             format_ = get_qa_format(resource.id)
         score_reason = ' '.join(score_reasons)
         format_ = format_ or None
     except Exception, e:
-        log.error('Unexpected error while calculating openness score %s: %s\nException: %s', e.__class__.__name__,  unicode(e), traceback.format_exc())
+        log.error('Unexpected error while calculating openness score %s: %s\nException: %s',
+                  e.__class__.__name__,  unicode(e), traceback.format_exc())
         score_reason = _("Unknown error: %s") % str(e)
         raise
 
@@ -285,7 +291,7 @@ def broken_link_error_message(archival):
         else:
             messages.append(_('This was the first attempt.'))
     else:
-        messages.append(_('Tried %s times since %s.') % \
+        messages.append(_('Tried %s times since %s.') %
                         (archival.failure_count,
                          format_date(archival.first_failure)))
         if last_success:
@@ -314,6 +320,7 @@ def score_if_link_broken(archival, resource, score_reasons):
         return (0, format_)
     return (None, None)
 
+
 def score_by_sniffing_data(archival, resource, score_reasons):
     '''
     Looks inside a data file\'s contents to determine its format and score.
@@ -339,7 +346,8 @@ def score_by_sniffing_data(archival, resource, score_reasons):
             score = lib.resource_format_scores().get(sniffed_format['format']) \
                 if sniffed_format else None
             if sniffed_format:
-                score_reasons.append(_('Content of file appeared to be format "%s" which receives openness score: %s.') % (sniffed_format['format'], score))
+                score_reasons.append(_('Content of file appeared to be format "%s" which receives openness score: %s.')
+                                     % (sniffed_format['format'], score))
                 return score, sniffed_format['format']
             else:
                 score_reasons.append(_('The format of the file was not recognized from its contents.'))
@@ -353,7 +361,7 @@ def score_by_sniffing_data(archival, resource, score_reasons):
             elif archival.is_broken is None and archival.status_id:
                 # i.e. 'Download failure' or 'System error during archival'
                 score_reasons.append(_('A system error occurred during downloading this file') + '. '
-                                       + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
+                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
                 return (None, None)
             else:
                 score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
@@ -384,10 +392,13 @@ def score_by_url_extension(resource, score_reasons):
                 return score, format_
             else:
                 score = 1
-                score_reasons.append(_('URL extension "%s" relates to format "%s" but a score for that format is not configured, so giving it default score %s.') % (extension, format_, score))
+                score_reasons.append(_('URL extension "%s" relates to format "%s"'
+                                       ' but a score for that format is not configured, so giving it default score %s.')
+                                     % (extension, format_, score))
                 return score, format_
         score_reasons.append(_('URL extension "%s" is an unknown format.') % extension)
     return (None, None)
+
 
 def extension_variants(url):
     '''
@@ -399,8 +410,8 @@ def extension_variants(url):
     >>> extension_variants('http://dept.gov.uk/data.csv?callback=1')
     ['csv']
     '''
-    url = url.split('?')[0] # get rid of params
-    url = url.split('/')[-1] # get rid of path - leaves filename
+    url = url.split('?')[0]  # get rid of params
+    url = url.split('/')[-1]  # get rid of path - leaves filename
     split_url = url.split('.')
     results = []
     for number_of_sections in [2, 1]:
