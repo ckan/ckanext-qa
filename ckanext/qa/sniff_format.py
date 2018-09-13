@@ -12,8 +12,11 @@ import messytables
 import lib
 from ckan.lib import helpers as ckan_helpers
 
+import logging
 
-def sniff_file_format(filepath, log):
+log = logging.getLogger(__name__)
+
+def sniff_file_format(filepath):
     '''For a given filepath, work out what file format it is.
 
     Returns a dict with format as a string, which is the format's canonical
@@ -38,31 +41,31 @@ def sniff_file_format(filepath, log):
         if mime_type == 'application/xml':
             with open(filepath) as f:
                 buf = f.read(5000)
-            format_ = get_xml_variant_including_xml_declaration(buf, log)
+            format_ = get_xml_variant_including_xml_declaration(buf)
         elif mime_type == 'application/zip':
-            format_ = get_zipped_format(filepath, log)
+            format_ = get_zipped_format(filepath)
         elif mime_type in ('application/msword', 'application/vnd.ms-office'):
             # In the past Magic gives the msword mime-type for Word and other
             # MS Office files too, so use BSD File to be sure which it is.
-            format_ = run_bsd_file(filepath, log)
-            if not format_ and is_excel(filepath, log):
+            format_ = run_bsd_file(filepath)
+            if not format_ and is_excel(filepath):
                 format_ = {'format': 'XLS'}
         elif mime_type == 'application/octet-stream':
             # Excel files sometimes come up as this
-            if is_excel(filepath, log):
+            if is_excel(filepath):
                 format_ = {'format': 'XLS'}
             else:
                 # e.g. Shapefile
-                format_ = run_bsd_file(filepath, log)
+                format_ = run_bsd_file(filepath)
             if not format_:
                 with open(filepath) as f:
                     buf = f.read(500)
-                format_ = is_html(buf, log)
+                format_ = is_html(buf)
         elif mime_type == 'text/html':
             # Magic can mistake IATI for HTML
             with open(filepath) as f:
                 buf = f.read(100)
-            if is_iati(buf, log):
+            if is_iati(buf):
                 format_ = {'format': 'IATI'}
 
         if format_:
@@ -77,12 +80,12 @@ def sniff_file_format(filepath, log):
                 # is it JSON?
                 with open(filepath, 'rU') as f:
                     buf = f.read(10000)
-                if is_json(buf, log):
+                if is_json(buf):
                     format_ = {'format': 'JSON'}
                 # is it CSV?
-                elif is_csv(buf, log):
+                elif is_csv(buf):
                     format_ = {'format': 'CSV'}
-                elif is_psv(buf, log):
+                elif is_psv(buf):
                     format_ = {'format': 'PSV'}
 
         if not format_:
@@ -97,41 +100,41 @@ def sniff_file_format(filepath, log):
                 # is it JSON?
                 with open(filepath, 'rU') as f:
                     buf = f.read(10000)
-                if is_json(buf, log):
+                if is_json(buf):
                     format_ = {'format': 'JSON'}
                 # is it CSV?
-                elif is_csv(buf, log):
+                elif is_csv(buf):
                     format_ = {'format': 'CSV'}
-                elif is_psv(buf, log):
+                elif is_psv(buf):
                     format_ = {'format': 'PSV'}
                 # XML files without the "<?xml ... ?>" tag end up here
-                elif is_xml_but_without_declaration(buf, log):
-                    format_ = get_xml_variant_without_xml_declaration(buf, log)
-                elif is_ttl(buf, log):
+                elif is_xml_but_without_declaration(buf):
+                    format_ = get_xml_variant_without_xml_declaration(buf)
+                elif is_ttl(buf):
                     format_ = {'format': 'TTL'}
 
             elif format_['format'] == 'HTML':
                 # maybe it has RDFa in it
                 with open(filepath) as f:
                     buf = f.read(100000)
-                if has_rdfa(buf, log):
+                if has_rdfa(buf):
                     format_ = {'format': 'RDFa'}
 
     else:
         # Excel files sometimes not picked up by magic, so try alternative
-        if is_excel(filepath, log):
+        if is_excel(filepath):
             format_ = {'format': 'XLS'}
         # BSD file picks up some files that Magic misses
         # e.g. some MS Word files
         if not format_:
-            format_ = run_bsd_file(filepath, log)
+            format_ = run_bsd_file(filepath)
 
     if not format_:
         log.warning('Could not detect format of file: %s', filepath)
     return format_
 
 
-def is_json(buf, log):
+def is_json(buf):
     '''Returns whether this text buffer (potentially truncated) is in
     JSON format.'''
     string = '"[^"]*"'
@@ -196,21 +199,21 @@ def is_json(buf, log):
     return True
 
 
-def is_csv(buf, log):
+def is_csv(buf):
     '''If the buffer is a CSV file then return True.'''
     buf_rows = StringIO.StringIO(buf)
     table_set = messytables.CSVTableSet(buf_rows)
-    return _is_spreadsheet(table_set, 'CSV', log)
+    return _is_spreadsheet(table_set, 'CSV')
 
 
-def is_psv(buf, log):
+def is_psv(buf):
     '''If the buffer is a PSV file then return True.'''
     buf_rows = StringIO.StringIO(buf)
     table_set = messytables.CSVTableSet(buf_rows, delimiter='|')
-    return _is_spreadsheet(table_set, 'PSV', log)
+    return _is_spreadsheet(table_set, 'PSV')
 
 
-def _is_spreadsheet(table_set, format, log):
+def _is_spreadsheet(table_set, format):
     def get_cells_per_row(num_cells, num_rows):
         if not num_rows:
             return 0
@@ -251,7 +254,7 @@ def _is_spreadsheet(table_set, format, log):
     return False
 
 
-def is_html(buf, log):
+def is_html(buf):
     '''If this buffer is HTML, return that format type, else None.'''
     xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<html[^>]*>'
     match = re.match(xml_re, buf, re.IGNORECASE)
@@ -261,7 +264,7 @@ def is_html(buf, log):
     log.debug('Not HTML')
 
 
-def is_iati(buf, log):
+def is_iati(buf):
     '''If this buffer is IATI format, return that format type, else None.'''
     xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<iati-(activities|organisations)[^>]*>'
     match = re.match(xml_re, buf, re.IGNORECASE)
@@ -271,7 +274,7 @@ def is_iati(buf, log):
     log.debug('Not IATI')
 
 
-def is_xml_but_without_declaration(buf, log):
+def is_xml_but_without_declaration(buf):
     '''Decides if this is a buffer of XML, but missing the usual <?xml ...?>
     tag.'''
     xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<([^>\s]*)([^>]*)>'
@@ -290,14 +293,14 @@ def is_xml_but_without_declaration(buf, log):
     return False
 
 
-def get_xml_variant_including_xml_declaration(buf, log):
+def get_xml_variant_including_xml_declaration(buf):
     '''If this buffer is in a format based on XML and has the <xml>
     declaration, return the format type.'''
-    return get_xml_variant_without_xml_declaration(buf, log)
+    return get_xml_variant_without_xml_declaration(buf)
     log.debug('XML declaration not found: %s', buf)
 
 
-def get_xml_variant_without_xml_declaration(buf, log):
+def get_xml_variant_without_xml_declaration(buf):
     '''If this buffer is in a format based on XML, without any XML declaration
     or other boilerplate, return the format type.'''
     # Parse the XML to find the first tag name.
@@ -343,7 +346,7 @@ def get_xml_variant_without_xml_declaration(buf, log):
     return {'format': 'XML'}
 
 
-def has_rdfa(buf, log):
+def has_rdfa(buf):
     '''If the buffer HTML contains RDFa then this returns True'''
     # quick check for the key words
     if 'about=' not in buf or 'property=' not in buf:
@@ -365,7 +368,7 @@ def has_rdfa(buf, log):
     return True
 
 
-def get_zipped_format(filepath, log):
+def get_zipped_format(filepath):
     '''For a given zip file, return the format of file inside.
     For multiple files, choose by the most open, and then by the most
     popular extension.'''
@@ -432,7 +435,7 @@ def get_zipped_format(filepath, log):
     return format_
 
 
-def is_excel(filepath, log):
+def is_excel(filepath):
     try:
         xlrd.open_workbook(filepath)
     except Exception, e:
@@ -458,7 +461,7 @@ def check_output(*popenargs, **kwargs):
     return output
 
 
-def run_bsd_file(filepath, log):
+def run_bsd_file(filepath):
     '''Run the BSD command-line tool "file" to determine file type. Returns
     a format dict or None if it fails.'''
     result = check_output(['file', filepath])
@@ -488,7 +491,7 @@ def run_bsd_file(filepath, log):
              filepath, result)
 
 
-def is_ttl(buf, log):
+def is_ttl(buf):
     '''If the buffer is a Turtle RDF file then return True.'''
     # Turtle spec: "Turtle documents may have the strings '@prefix' or '@base' (case dependent) near the beginning of the document."
     at_re = '^@(prefix|base) '
