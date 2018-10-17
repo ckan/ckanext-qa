@@ -89,6 +89,8 @@ class TestSniffFormat:
     def test_odt(self):
         self.check_format('odt')
     def test_odp(self):
+        if p.toolkit.check_ckan_version(max_version='2.3.99'):
+            raise SkipTest
         self.check_format('odp')
     def test_ppt(self):
         self.check_format('ppt')
