@@ -155,7 +155,7 @@ class TestSniffFormat:
     def test_wfs_2_0(self):
         self.check_format('wfs', 'blaby_get_capabilities_2_0.wfs')
     def test_wmts(self):
-        if p.toolkit.check_ckan_version(max_version='2.4.99'):
+        if p.toolkit.check_ckan_version(max_version='2.5.99'):
             raise SkipTest
         self.check_format('wmts', 'ukho_bathymetry.wmts')
     def test_wcs(self):

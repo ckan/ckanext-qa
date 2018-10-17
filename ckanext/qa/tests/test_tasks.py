@@ -4,8 +4,10 @@ import urllib
 import datetime
 
 from nose.tools import assert_equal
+from nose.plugins.skip import SkipTest
 from ckan import model
 from ckan.logic import get_action
+from ckan import plugins as p
 import ckan.lib.helpers as ckan_helpers
 try:
     from ckan.tests.helpers import reset_db
@@ -183,6 +185,8 @@ class TestResourceScore(BaseCase):
 
     def test_by_format_field_excel(self):
         set_sniffed_format(None)
+        if p.toolkit.check_ckan_version(max_version='2.4.99'):
+            raise SkipTest
         result = resource_score(self._test_resource(format='Excel'), log)
         assert_equal(result['format'], 'XLS')
 
