@@ -1,8 +1,9 @@
 import os
 import logging
-import nose
 
 from nose.tools import assert_equal
+from nose.plugins.skip import SkipTest
+
 from ckan import plugins as p
 
 from ckanext.qa.sniff_format import sniff_file_format, is_json, is_ttl, turtle_regex
@@ -155,7 +156,7 @@ class TestSniffFormat:
         self.check_format('wfs', 'blaby_get_capabilities_2_0.wfs')
     def test_wmts(self):
         if p.toolkit.check_ckan_version(max_version='2.4.99'):
-            raise nose.SkipTest()
+            raise SkipTest
         self.check_format('wmts', 'ukho_bathymetry.wmts')
     def test_wcs(self):
         self.check_format('wcs', 'ukho_bathymetry.wcs')
