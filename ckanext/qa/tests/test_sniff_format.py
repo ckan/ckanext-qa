@@ -29,7 +29,7 @@ class TestSniffFormat:
     def assert_file_has_format_sniffed_correctly(cls, format_extension, filepath):
         '''Given a filepath, checks the sniffed format matches the format_extension.'''
         expected_format = format_extension
-        sniffed_format = sniff_file_format(filepath, log)
+        sniffed_format = sniff_file_format(filepath)
         assert sniffed_format, expected_format
         expected_format_without_zip = expected_format.replace('.zip', '')
         assert_equal(sniffed_format['format'].lower(), expected_format_without_zip)
@@ -234,27 +234,27 @@ class TestSniffFormat:
 
 
 def test_is_json():
-    assert is_json('5', log)
-    assert is_json('-5', log)
-    assert is_json('-5.4', log)
-    assert is_json('-5.4e5', log)
-    assert is_json('-5.4e-5', log)
-    assert not is_json('4.', log)
-    assert is_json('"hello"', log)
-    assert not is_json('hello"', log)
-    assert is_json('["hello"]', log)
-    assert not is_json('"hello"]', log)
-    assert is_json('[5]', log)
-    assert is_json('[5, 6]', log)
-    assert is_json('[5,6]', log)
-    assert is_json('["cat", 6]', log)
-    assert is_json('{"cat": 6}', log)
-    assert is_json('{"cat":6}', log)
-    assert is_json('{"cat": "bob"}', log)
-    assert is_json('{"cat": [1, 2]}', log)
-    assert is_json('{"cat": [1, 2], "dog": 5, "rabbit": "great"}', log)
-    assert not is_json('{"cat": [1, 2}]', log)
-    assert is_json('[{"cat": [1]}, 2]', log)
+    assert is_json('5')
+    assert is_json('-5')
+    assert is_json('-5.4')
+    assert is_json('-5.4e5')
+    assert is_json('-5.4e-5')
+    assert not is_json('4.')
+    assert is_json('"hello"')
+    assert not is_json('hello"')
+    assert is_json('["hello"]')
+    assert not is_json('"hello"]')
+    assert is_json('[5]')
+    assert is_json('[5, 6]')
+    assert is_json('[5,6]')
+    assert is_json('["cat", 6]')
+    assert is_json('{"cat": 6}')
+    assert is_json('{"cat":6}')
+    assert is_json('{"cat": "bob"}')
+    assert is_json('{"cat": [1, 2]}')
+    assert is_json('{"cat": [1, 2], "dog": 5, "rabbit": "great"}')
+    assert not is_json('{"cat": [1, 2}]')
+    assert is_json('[{"cat": [1]}, 2]')
 
     # false positives of the algorithm:
     # assert not is_json('[{"cat": [1]}2, 2]', log)
@@ -292,5 +292,5 @@ def test_turtle_regex():
 
 def test_is_ttl__num_triples():
     triple = '<subject> <predicate> <object>; <predicate> <object>.'
-    assert not is_ttl('\n'.join([triple]*2), log)
-    assert is_ttl('\n'.join([triple]*5), log)
+    assert not is_ttl('\n'.join([triple]*2))
+    assert is_ttl('\n'.join([triple]*5))
