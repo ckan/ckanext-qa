@@ -14,10 +14,10 @@ reason - A reason why the dataset doesn't have a rating.
   {%- else -%}
     <span class="star-rating-stars">
       {%- for index in range(stars) -%}
-        <span class="icon icon-star"></span>
+        <span class="fa fa-star"></span>
       {%- endfor -%}
       {%- for index in range(5-stars) -%}
-        <span class="icon icon-star-empty"></span>
+        <span class="fa fa-star-o"></span>
       {%- endfor -%}
       {%- if stars == 0 -%}
         {# 0 stars looks awfully like 5 stars, so be explicit #}
