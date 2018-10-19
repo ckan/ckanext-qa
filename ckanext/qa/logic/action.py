@@ -15,8 +15,8 @@ def qa_resource_show(context, data_dict):
     '''
     model = context['model']
     session = context['session']
-    #user = context.get('user')
-    #p.toolkit.check_access('qa_resource_show', context, data_dict)
+    # user = context.get('user')
+    # p.toolkit.check_access('qa_resource_show', context, data_dict)
 
     res_id = p.toolkit.get_or_bust(data_dict, 'id')
     res = session.query(model.Resource).get(res_id)

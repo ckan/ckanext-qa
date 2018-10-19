@@ -23,6 +23,7 @@ task_status = {'archiver': TASK_STATUS_ARCHIVER_OK,
 
 # These methods work like CKAN's ones:
 
+
 @app.route("/api/action/task_status_update_many", methods=['GET', 'POST'])
 def task_status_update_many():
     request_store.append({
@@ -31,6 +32,7 @@ def task_status_update_many():
     })
     return 'ok'
 
+
 @app.route("/api/action/task_status_update", methods=['GET', 'POST'])
 def task_status_update():
     request_store.append({
@@ -38,6 +40,7 @@ def task_status_update():
         "headers": dict(request.headers)
     })
     return 'ok'
+
 
 @app.route("/api/action/task_status_show", methods=['GET', 'POST'])
 def task_status_show():
@@ -51,8 +54,9 @@ def task_status_show():
             return status
     except KeyError:
         pass
-    resp = make_response('{"success": false}', 404) # JSON
+    resp = make_response('{"success": false}', 404)  # JSON
     return resp
+
 
 @app.route("/api/action/resource_update", methods=['GET', 'POST'])
 def resource_update():
@@ -64,29 +68,34 @@ def resource_update():
 
 # These methods are for test purposes only:
 
+
 @app.route("/last_request", methods=['GET', 'POST'])
 def last_request():
     return jsonify(request_store.pop())
+
 
 @app.route("/set_task_status/<task_type>/<task_status_str>", methods=['GET'])
 def set_task_status(task_type, task_status_str):
     task_status[task_type] = task_status_str
     return 'ok'
 
+
 @app.route("/set_archiver_task_status_ok", methods=['GET'])
 def set_archiver_task_status_ok():
     task_status['archiver'] = TASK_STATUS_ARCHIVER_OK
     return 'ok'
+
 
 @app.route("/unset_task_status/<task_type>", methods=['GET'])
 def unset_task_status(task_type):
     task_status[task_type] = None
     return 'ok'
 
+
 @app.route("/", methods=['GET', 'POST'])
 def ok():
     return 'ok'
 
+
 if __name__ == "__main__":
     app.run(port=50001)
-

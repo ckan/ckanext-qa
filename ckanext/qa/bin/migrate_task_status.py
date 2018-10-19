@@ -43,10 +43,10 @@ def migrate(options):
         # * resource_id
         fields = {}
         qa_task_status = model.Session.query(model.TaskStatus)\
-                                    .filter_by(entity_id=res.id)\
-                                    .filter_by(task_type='qa')\
-                                    .filter_by(key='status')\
-                                    .first()
+            .filter_by(entity_id=res.id)\
+            .filter_by(task_type='qa')\
+            .filter_by(key='status')\
+            .first()
         if not qa_task_status:
             add_stat('No QA data', res, stats)
             continue
@@ -136,6 +136,7 @@ def date_str_to_datetime_or_none(date_str):
     if date_str:
         return date_str_to_datetime(date_str)
     return None
+
 
 if __name__ == '__main__':
     usage = """Tool to migrate QA data from TaskStatus to QA table

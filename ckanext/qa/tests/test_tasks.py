@@ -4,8 +4,10 @@ import urllib
 import datetime
 
 from nose.tools import assert_equal
+from nose.plugins.skip import SkipTest
 from ckan import model
 from ckan.logic import get_action
+from ckan import plugins as p
 import ckan.lib.helpers as ckan_helpers
 try:
     from ckan.tests.helpers import reset_db
@@ -28,18 +30,28 @@ log = logging.getLogger(__name__)
 
 # Monkey patch get_cached_resource_filepath so that it doesn't barf when
 # it can't find the file
+
+
 def mock_get_cached_resource_filepath(cache_url):
     if not cache_url:
         return None
     return cache_url.replace('http://remotesite.com/', '/resources')
+
+
 ckanext.qa.tasks.get_cached_resource_filepath = mock_get_cached_resource_filepath
 
 # Monkey patch sniff_file_format. This isolates the testing of tasks from
 # actual sniffing
 sniffed_format = None
-def mock_sniff_file_format(filepath, log):
+
+
+def mock_sniff_file_format(filepath):
     return sniffed_format
+
+
 ckanext.qa.tasks.sniff_file_format = mock_sniff_file_format
+
+
 def set_sniffed_format(format_name):
     global sniffed_format
     if format_name:
@@ -48,8 +60,10 @@ def set_sniffed_format(format_name):
     else:
         sniffed_format = None
 
+
 TODAY = datetime.datetime(year=2008, month=10, day=10)
 TODAY_STR = TODAY.isoformat()
+
 
 class TestTask(BaseCase):
 
@@ -128,28 +142,28 @@ class TestResourceScore(BaseCase):
 
     def test_by_sniff_csv(self):
         set_sniffed_format('CSV')
-        result = resource_score(self._test_resource(), log)
+        result = resource_score(self._test_resource())
         assert result['openness_score'] == 3, result
         assert 'Content of file appeared to be format "CSV"' in result['openness_score_reason'], result
         assert result['format'] == 'CSV', result
         assert result['archival_timestamp'] == TODAY_STR, result
 
     def test_not_archived(self):
-        result = resource_score(self._test_resource(archived=False, cached=False, format=None), log)
+        result = resource_score(self._test_resource(archived=False, cached=False, format=None))
         # falls back on previous QA data detailing failed attempts
         assert result['openness_score'] == 1, result
-        assert result['format'] == None, result
-        assert result['archival_timestamp'] == None, result
+        assert result['format'] is None, result
+        assert result['archival_timestamp'] is None, result
         assert 'This file had not been downloaded at the time of scoring it.' in result['openness_score_reason'], result
         assert 'Could not determine a file extension in the URL.' in result['openness_score_reason'], result
         assert 'Format field is blank.' in result['openness_score_reason'], result
         assert 'Could not understand the file format, therefore score is 1.' in result['openness_score_reason'], result
 
     def test_archiver_ran_but_not_cached(self):
-        result = resource_score(self._test_resource(cached=False, format=None), log)
+        result = resource_score(self._test_resource(cached=False, format=None))
         # falls back on previous QA data detailing failed attempts
         assert result['openness_score'] == 1, result
-        assert result['format'] == None, result
+        assert result['format'] is None, result
         assert result['archival_timestamp'] == TODAY_STR, result
         assert 'This file had not been downloaded at the time of scoring it.' in result['openness_score_reason'], result
         assert 'Could not determine a file extension in the URL.' in result['openness_score_reason'], result
@@ -158,7 +172,7 @@ class TestResourceScore(BaseCase):
 
     def test_by_extension(self):
         set_sniffed_format(None)
-        result = resource_score(self._test_resource('http://site.com/filename.xls'), log)
+        result = resource_score(self._test_resource('http://site.com/filename.xls'))
         assert result['openness_score'] == 2, result
         assert result['archival_timestamp'] == TODAY_STR, result
         assert_equal(result['format'], 'XLS')
@@ -167,14 +181,14 @@ class TestResourceScore(BaseCase):
 
     def test_extension_not_recognized(self):
         set_sniffed_format(None)
-        result = resource_score(self._test_resource('http://site.com/filename.zar'), log)
+        result = resource_score(self._test_resource('http://site.com/filename.zar'))
         assert result['openness_score'] == 1, result
         assert 'not recognized from its contents' in result['openness_score_reason'], result
         assert 'URL extension "zar" is an unknown format' in result['openness_score_reason'], result
 
     def test_by_format_field(self):
         set_sniffed_format(None)
-        result = resource_score(self._test_resource(format='XLS'), log)
+        result = resource_score(self._test_resource(format='XLS'))
         assert result['openness_score'] == 2, result
         assert_equal(result['format'], 'XLS')
         assert 'not recognized from its contents' in result['openness_score_reason'], result
@@ -183,12 +197,14 @@ class TestResourceScore(BaseCase):
 
     def test_by_format_field_excel(self):
         set_sniffed_format(None)
-        result = resource_score(self._test_resource(format='Excel'), log)
+        if p.toolkit.check_ckan_version(max_version='2.4.99'):
+            raise SkipTest
+        result = resource_score(self._test_resource(format='Excel'))
         assert_equal(result['format'], 'XLS')
 
     def test_format_field_not_recognized(self):
         set_sniffed_format(None)
-        result = resource_score(self._test_resource(format='ZAR'), log)
+        result = resource_score(self._test_resource(format='ZAR'))
         assert result['openness_score'] == 1, result
         assert 'not recognized from its contents' in result['openness_score_reason'], result
         assert 'Could not determine a file extension in the URL' in result['openness_score_reason'], result
@@ -196,7 +212,7 @@ class TestResourceScore(BaseCase):
 
     def test_no_format_clues(self):
         set_sniffed_format(None)
-        result = resource_score(self._test_resource(format=None), log)
+        result = resource_score(self._test_resource(format=None))
         assert result['openness_score'] == 1, result
         assert 'not recognized from its contents' in result['openness_score_reason'], result
         assert 'Could not determine a file extension in the URL' in result['openness_score_reason'], result
@@ -204,7 +220,7 @@ class TestResourceScore(BaseCase):
 
     def test_available_but_not_open(self):
         set_sniffed_format('CSV')
-        result = resource_score(self._test_resource(license_id=None), log)
+        result = resource_score(self._test_resource(license_id=None))
         assert result['openness_score'] == 0, result
         assert_equal(result['format'], 'CSV')
         assert 'License not open' in result['openness_score_reason'], result
@@ -219,11 +235,14 @@ class TestResourceScore(BaseCase):
         archival.failure_count = 16
         archival.is_broken = True
         model.Session.commit()
-        result = resource_score(res, log)
+        result = resource_score(res)
         assert result['openness_score'] == 0, result
         assert_equal(result['format'], None)
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], u'File could not be downloaded. Reason: Download error. Error details: Server returned 500 error. Attempted on 10/10/2008. Tried 16 times since 01/10/2008. This URL has not worked in the history of this tool.')
+        assert_equal(result['openness_score_reason'], u'File could not be downloaded. '
+                                                      u'Reason: Download error. Error details: Server returned 500 error.'
+                                                      u' Attempted on 10/10/2008. Tried 16 times since 01/10/2008.'
+                                                      u' This URL has not worked in the history of this tool.')
 
     def test_not_available_any_more(self):
         # A cache of the data still exists from the previous run, but this
@@ -244,11 +263,13 @@ class TestResourceScore(BaseCase):
         archival.first_failure = datetime.datetime(year=2008, month=10, day=2)
         archival.failure_count = 1
         archival.is_broken = True
-        result = resource_score(res, log)
+        result = resource_score(res)
         assert result['openness_score'] == 0, result
         assert_equal(result['format'], 'CSV')
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], 'File could not be downloaded. Reason: Download error. Error details: Server returned 404 error. Attempted on 10/10/2008. This URL last worked on: 01/10/2008.')
+        assert_equal(result['openness_score_reason'], 'File could not be downloaded. '
+                                                      'Reason: Download error. Error details: Server returned 404 error.'
+                                                      ' Attempted on 10/10/2008. This URL last worked on: 01/10/2008.')
 
 
 class TestExtensionVariants:
@@ -292,7 +313,7 @@ class TestSaveQaResult(object):
         resource = model.Resource.get(resource_dict['id'])
         qa_result = self.get_qa_result()
 
-        qa = ckanext.qa.tasks.save_qa_result(resource, qa_result, log)
+        qa = ckanext.qa.tasks.save_qa_result(resource, qa_result)
 
         assert_equal(qa.openness_score, qa_result['openness_score'])
         assert_equal(qa.openness_score_reason,
@@ -318,7 +339,7 @@ class TestUpdatePackage(object):
         dataset = ckan_factories.Dataset(resources=[resource])
         resource = model.Resource.get(dataset['resources'][0]['id'])
 
-        ckanext.qa.tasks.update_package_(dataset['id'], log)
+        ckanext.qa.tasks.update_package_(dataset['id'])
 
         qa = qa_model.QA.get_for_resource(dataset['resources'][0]['id'])
         assert qa
@@ -342,7 +363,7 @@ class TestUpdateResource(object):
         dataset = ckan_factories.Dataset(resources=[resource])
         resource = model.Resource.get(dataset['resources'][0]['id'])
 
-        ckanext.qa.tasks.update_resource_(dataset['resources'][0]['id'], log)
+        ckanext.qa.tasks.update_resource_(dataset['resources'][0]['id'])
 
         qa = qa_model.QA.get_for_resource(dataset['resources'][0]['id'])
         assert qa
