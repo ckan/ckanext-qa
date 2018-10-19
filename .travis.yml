@@ -15,8 +15,6 @@ services:
 install:
   - bash bin/travis-build.bash
   - pip install coveralls
-  - pip install flake8==3.5.0
-  - pip install pycodestyle==2.3.0
 script: sh bin/travis-run.sh
 after_success:
     - coveralls
@@ -33,6 +31,10 @@ jobs:
   include:
     - stage: Flake8
       env: FLAKE8=True
+      install:
+        - bash bin/travis-build.bash
+        - pip install flake8==3.5.0
+        - pip install pycodestyle==2.3.0
       script:
          - flake8 --version
          # stop the build if there are Python syntax errors or undefined names
