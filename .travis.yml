@@ -24,6 +24,10 @@ after_success:
 dist: trusty
 group: deprecated-2017Q4
 
+stages:
+  - Flake8
+  - test
+
 jobs:
   include:
     - stage: Flake8
