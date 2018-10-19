@@ -22,7 +22,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-if toolkit.check_ckan_version(max_version='2.7.99'):
+if toolkit.check_ckan_version(max_version='2.6.99'):
     from ckan.lib import celery_app
 
     @celery_app.celery.task(name="qa.update_package")
