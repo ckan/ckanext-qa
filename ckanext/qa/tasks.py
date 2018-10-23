@@ -17,9 +17,6 @@ import ckan.lib.helpers as ckan_helpers
 from sniff_format import sniff_file_format
 import lib
 from ckanext.archiver.model import Archival, Status
-from celery.utils.log import get_task_logger
-
-log = get_task_logger(__name__)
 
 import logging
 
