@@ -25,7 +25,7 @@ setup(
         'messytables>=0.8',
         'python-magic>=0.4',
         'progressbar',
-        'six>=1.9' # until messytables->html5lib releases https://github.com/html5lib/html5lib-python/pull/301
+        'six>=1.9'  # until messytables->html5lib releases https://github.com/html5lib/html5lib-python/pull/301
     ],
     tests_require=[
         'nose',

@@ -16,6 +16,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
+
 def sniff_file_format(filepath):
     '''For a given filepath, work out what file format it is.
 
@@ -218,6 +219,7 @@ def _is_spreadsheet(table_set, format):
         if not num_rows:
             return 0
         return float(num_cells) / float(num_rows)
+
     num_cells = num_rows = 0
     try:
         table = table_set.tables[0]
@@ -314,6 +316,7 @@ def get_xml_variant_without_xml_declaration(buf):
 
     def start_element(name, attrs):
         raise GotFirstTag(name)
+
     p = xml.parsers.expat.ParserCreate()
     p.StartElementHandler = start_element
     try:
@@ -493,7 +496,8 @@ def run_bsd_file(filepath):
 
 def is_ttl(buf):
     '''If the buffer is a Turtle RDF file then return True.'''
-    # Turtle spec: "Turtle documents may have the strings '@prefix' or '@base' (case dependent) near the beginning of the document."
+    # Turtle spec: "Turtle documents may have the strings '@prefix' or '@base' (case dependent) near the
+    # beginning of the document."
     at_re = '^@(prefix|base) '
     match = re.search(at_re, buf, re.MULTILINE)
     if match:

@@ -62,6 +62,7 @@ def register_translator():
     translator_obj = MockTranslator()
     registry.register(translator, translator_obj)
 
+
 def load_config(ckan_ini_filepath):
     import paste.deploy
     config_abs_path = os.path.abspath(ckan_ini_filepath)
@@ -89,12 +90,14 @@ def load_translations(lang):
     registry.prepare()
 
     class FakePylons:
-            translator = None
+        translator = None
+
     fakepylons = FakePylons()
 
     class FakeRequest:
         # Stores details of the translator
         environ = {'pylons.pylons': fakepylons}
+
     registry.register(request, FakeRequest())
 
     # create translator
@@ -117,7 +120,7 @@ def update_package(ckan_ini_filepath, package_id):
         update_package_(package_id)
     except Exception, e:
         log.error('Exception occurred during QA update_package: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__, unicode(e))
         raise
 
 
@@ -156,7 +159,7 @@ def update(ckan_ini_filepath, resource_id):
         update_resource_(resource_id)
     except Exception, e:
         log.error('Exception occurred during QA update_resource: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__, unicode(e))
         raise
 
 
@@ -255,7 +258,7 @@ def resource_score(resource):
         format_ = format_ or None
     except Exception, e:
         log.error('Unexpected error while calculating openness score %s: %s\nException: %s',
-                  e.__class__.__name__,  unicode(e), traceback.format_exc())
+                  e.__class__.__name__, unicode(e), traceback.format_exc())
         score_reason = _("Unknown error: %s") % str(e)
         raise
 
@@ -290,11 +293,13 @@ def resource_score(resource):
 def broken_link_error_message(archival):
     '''Given an archival for a broken link, it returns a helpful
     error message (string) describing the attempts.'''
+
     def format_date(date):
         if date:
             return date.strftime('%d/%m/%Y')
         else:
             return ''
+
     messages = [_('File could not be downloaded.'),
                 _('Reason') + ':', unicode(archival.status) + '.',
                 _('Error details: %s.') % archival.reason,
@@ -371,12 +376,14 @@ def score_by_sniffing_data(archival, resource, score_reasons):
             # No cache_url
             if archival.status_id == Status.by_text('Chose not to download'):
                 score_reasons.append(_('File was not downloaded deliberately') + '. '
-                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
+                                     + _('Reason') + ': %s. ' % archival.reason + _(
+                    'Using other methods to determine file openness.'))
                 return (None, None)
             elif archival.is_broken is None and archival.status_id:
                 # i.e. 'Download failure' or 'System error during archival'
                 score_reasons.append(_('A system error occurred during downloading this file') + '. '
-                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
+                                     + _('Reason') + ': %s. ' % archival.reason + _(
+                    'Using other methods to determine file openness.'))
                 return (None, None)
             else:
                 score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
@@ -403,7 +410,8 @@ def score_by_url_extension(resource, score_reasons):
         if format_:
             score = lib.resource_format_scores().get(format_)
             if score:
-                score_reasons.append(_('URL extension "%s" relates to format "%s" and receives score: %s.') % (extension, format_, score))
+                score_reasons.append(
+                    _('URL extension "%s" relates to format "%s" and receives score: %s.') % (extension, format_, score))
                 return score, format_
             else:
                 score = 1
