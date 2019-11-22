@@ -2,11 +2,10 @@ import logging
 from functools import wraps
 import json
 from urllib import urlencode
+from nose.tools import assert_in
 try:
-    from ckan.tests.helpers import assert_in
     from ckan.tests.legacy import TestController as ControllerTestCase
 except ImportError:
-    from ckan.tests import assert_in
     from ckan.tests import TestController as ControllerTestCase
 from nose.tools import assert_equal
 
