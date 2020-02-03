@@ -140,14 +140,14 @@ def is_json(buf):
     JSON format.'''
     string = '"[^"]*"'
     string_re = re.compile(string)
-    number_re = re.compile('-?\d+(\.\d+)?([eE][+-]?\d+)?')
+    number_re = re.compile(r'-?\d+(\.\d+)?([eE][+-]?\d+)?')
     extra_values_re = re.compile('true|false|null')
-    object_start_re = re.compile('{%s:\s?' % string)
-    object_middle_re = re.compile('%s:\s?' % string)
+    object_start_re = re.compile(r'{%s:\s?' % string)
+    object_middle_re = re.compile(r'%s:\s?' % string)
     object_end_re = re.compile('}')
-    comma_re = re.compile(',\s?')
-    array_start_re = re.compile('\[')
-    array_end_re = re.compile('\]')
+    comma_re = re.compile(r',\s?')
+    array_start_re = re.compile(r'\[')
+    array_end_re = re.compile(r'\]')
     any_value_regexs = [string_re, number_re, object_start_re, array_start_re, extra_values_re]
 
     # simplified state machine - just looks at stack of object/array and
@@ -258,7 +258,7 @@ def _is_spreadsheet(table_set, format):
 
 def is_html(buf):
     '''If this buffer is HTML, return that format type, else None.'''
-    xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<html[^>]*>'
+    xml_re = r'.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<html[^>]*>'
     match = re.match(xml_re, buf, re.IGNORECASE)
     if match:
         log.info('HTML tag detected')
@@ -268,7 +268,7 @@ def is_html(buf):
 
 def is_iati(buf):
     '''If this buffer is IATI format, return that format type, else None.'''
-    xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<iati-(activities|organisations)[^>]*>'
+    xml_re = r'.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<iati-(activities|organisations)[^>]*>'
     match = re.match(xml_re, buf, re.IGNORECASE)
     if match:
         log.info('IATI tag detected')
@@ -279,7 +279,7 @@ def is_iati(buf):
 def is_xml_but_without_declaration(buf):
     '''Decides if this is a buffer of XML, but missing the usual <?xml ...?>
     tag.'''
-    xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<([^>\s]*)([^>]*)>'
+    xml_re = r'.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<([^>\s]*)([^>]*)>'
     match = re.match(xml_re, buf, re.IGNORECASE)
     if match:
         top_level_tag_name, top_level_tag_attributes = match.groups()[-2:]
@@ -357,8 +357,8 @@ def has_rdfa(buf):
         return False
 
     # more rigorous check for them as tag attributes
-    about_re = '<[^>]+\sabout="[^"]+"[^>]*>'
-    property_re = '<[^>]+\sproperty="[^"]+"[^>]*>'
+    about_re = r'<[^>]+\sabout="[^"]+"[^>]*>'
+    property_re = r'<[^>]+\sproperty="[^"]+"[^>]*>'
     # remove CR to catch tags spanning more than one line
     # buf = re.sub('\r\n', ' ', buf)
     if not re.search(about_re, buf):
@@ -538,12 +538,12 @@ def turtle_regex():
     '''
     global turtle_regex_
     if not turtle_regex_:
-        rdf_term = '(<[^ >]+>|_:\S+|".+?"(@\w+)?(\^\^\S+)?|\'.+?\'(@\w+)?(\^\^\S+)?|""".+?"""(@\w+)' \
-                   '?(\^\^\S+)?|\'\'\'.+?\'\'\'(@\w+)?(\^\^\S+)?|[+-]?([0-9]+|[0-9]*\.[0-9]+)(E[+-]?[0-9]+)?|false|true)'
+        rdf_term = r'(<[^ >]+>|_:\S+|".+?"(@\w+)?(\^\^\S+)?|\'.+?\'(@\w+)?(\^\^\S+)?|""".+?"""(@\w+)' \
+                   r'?(\^\^\S+)?|\'\'\'.+?\'\'\'(@\w+)?(\^\^\S+)?|[+-]?([0-9]+|[0-9]*\.[0-9]+)(E[+-]?[0-9]+)?|false|true)'
 
         # simple case is: triple_re = '^T T T \.$'.replace('T', rdf_term)
         # but extend to deal with multiple predicate-objects:
         # triple = '^T T T\s*(;\s*T T\s*)*\.\s*$'.replace('T', rdf_term).replace(' ', '\s+')
-        triple = '(^T|;)\s*T T\s*(;|\.\s*$)'.replace('T', rdf_term).replace(' ', '\s+')
+        triple = r'(^T|;)\s*T T\s*(;|\.\s*$)'.replace('T', rdf_term).replace(' ', r'\s+')
         turtle_regex_ = re.compile(triple, re.MULTILINE)
     return turtle_regex_
