@@ -367,18 +367,15 @@ def score_by_sniffing_data(archival, resource, score_reasons):
     filepath = archival.cache_filepath
     delete_file = False
     if not os.path.exists(filepath):
-        log.debug("File not found on disk for resource %s", resource)
-        if resource.url_type == 'upload':
-            try:
-                resource_dict = toolkit.get_action('resource_show')(None, {'id': resource.id})
-                filepath = _download_url(resource_dict['url']).name
-                delete_file = True
-            except Exception as e:
-                score_reasons.append(_('A system error occurred during downloading this file') + '. %s' % e)
-                return (None, None)
-        else:
-            score_reasons.append(_('Cache filepath does not exist: "%s".') % filepath)
+        log.debug("%s not found on disk, retrieving from URL %s",
+                  filepath, archival.cache_url)
+        try:
+            filepath = _download_url(archival.cache_url).name
+            delete_file = True
+        except Exception as e:
+            score_reasons.append(_('A system error occurred during downloading this file') + '. %s' % e)
             return (None, None)
+
     if filepath:
         sniffed_format = sniff_file_format(filepath)
         if delete_file:
