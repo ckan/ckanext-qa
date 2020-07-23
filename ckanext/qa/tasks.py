@@ -377,12 +377,14 @@ def score_by_sniffing_data(archival, resource, score_reasons):
             return (None, None)
 
     if filepath:
-        sniffed_format = sniff_file_format(filepath)
-        if delete_file:
-            try:
-                os.remove(filepath)
-            except OSError as e:
-                log.warn("Unable to remove temporary file %s: %s", filepath, e)
+        try:
+            sniffed_format = sniff_file_format(filepath)
+        finally:
+            if delete_file:
+                try:
+                    os.remove(filepath)
+                except OSError as e:
+                    log.warn("Unable to remove temporary file %s: %s", filepath, e)
         score = lib.resource_format_scores().get(sniffed_format['format']) \
             if sniffed_format else None
         if sniffed_format:
