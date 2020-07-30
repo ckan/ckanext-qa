@@ -44,7 +44,7 @@ class StatsCount(dict):
     report_value_limit = 150
 
     def __init__(self, *args, **kwargs):
-        self._start_time = datetime.datetime.now(tzinfo=pytz.utc)
+        self._start_time = datetime.datetime.now(tz=pytz.utc)
         super(StatsCount, self).__init__(*args, **kwargs)
 
     def _init_category(self, category):
@@ -82,7 +82,7 @@ class StatsCount(dict):
             lines = [indent_str + 'None']
 
         if show_time_taken:
-            time_taken = datetime.datetime.now(tzinfo=pytz.utc) - self._start_time
+            time_taken = datetime.datetime.now(tz=pytz.utc) - self._start_time
             lines.append(indent_str + 'Time taken (h:m:s): %s' % time_taken)
         return '\n'.join(lines)
 

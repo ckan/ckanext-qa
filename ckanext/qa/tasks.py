@@ -608,7 +608,7 @@ def save_qa_result(resource, qa_result):
     import ckan.model as model
     from ckanext.qa.model import QA
 
-    now = datetime.datetime.now(tzinfo=pytz.utc)
+    now = datetime.datetime.now(tz=pytz.utc)
 
     qa = QA.get_for_resource(resource.id)
     if not qa:
