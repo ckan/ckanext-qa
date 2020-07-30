@@ -35,16 +35,13 @@ print package_stats.report()
 import copy
 import datetime
 
-import pytz
-
-
 class StatsCount(dict):
     # {category:count}
     _init_value = 0
     report_value_limit = 150
 
     def __init__(self, *args, **kwargs):
-        self._start_time = datetime.datetime.now(tz=pytz.utc)
+        self._start_time = datetime.datetime.utcnow()
         super(StatsCount, self).__init__(*args, **kwargs)
 
     def _init_category(self, category):
@@ -82,7 +79,7 @@ class StatsCount(dict):
             lines = [indent_str + 'None']
 
         if show_time_taken:
-            time_taken = datetime.datetime.now(tz=pytz.utc) - self._start_time
+            time_taken = datetime.datetime.utcnow() - self._start_time
             lines.append(indent_str + 'Time taken (h:m:s): %s' % time_taken)
         return '\n'.join(lines)
 
