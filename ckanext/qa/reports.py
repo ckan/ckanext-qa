@@ -72,7 +72,7 @@ def openness_index(include_sub_organizations=False):
 
     table = []
     for org_name, org_counts in results.iteritems():
-        total_stars = sum([k*v for k, v in org_counts['score_counts'].items() if k])
+        total_stars = sum([k * v for k, v in org_counts['score_counts'].items() if k])
         num_pkgs_scored = sum([v for k, v in org_counts['score_counts'].items()
                               if k is not None])
         average_stars = round(float(total_stars) / num_pkgs_scored, 1) \
@@ -82,7 +82,7 @@ def openness_index(include_sub_organizations=False):
             ('organization_name', org_name),
             ('total_stars', total_stars),
             ('average_stars', average_stars),
-            ))
+        ))
         row.update(jsonify_counter(org_counts['score_counts']))
         table.append(row)
 
@@ -136,10 +136,10 @@ def openness_for_organization(organization=None, include_sub_organizations=False
                 ('organization_title', org.title),
                 ('openness_score', qa['openness_score']),
                 ('openness_score_reason', qa['openness_score_reason']),
-                )))
+            )))
             score_counts[qa['openness_score']] += 1
 
-    total_stars = sum([k*v for k, v in score_counts.items() if k])
+    total_stars = sum([k * v for k, v in score_counts.items() if k])
     num_pkgs_with_stars = sum([v for k, v in score_counts.items()
                                if k is not None])
     average_stars = round(float(total_stars) / num_pkgs_with_stars, 1) \
@@ -172,7 +172,7 @@ openness_report_info = {
     'option_combinations': openness_report_combinations,
     'generate': openness_report,
     'template': 'report/openness.html',
-    }
+}
 
 
 def jsonify_counter(counter):

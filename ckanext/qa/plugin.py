@@ -67,7 +67,7 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
         return {
             'qa_resource_show': action.qa_resource_show,
             'qa_package_openness_show': action.qa_package_openness_show,
-            }
+        }
 
     # IAuthFunctions
 
@@ -75,7 +75,7 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
         return {
             'qa_resource_show': auth.qa_resource_show,
             'qa_package_openness_show': auth.qa_package_openness_show,
-            }
+        }
 
     # ITemplateHelpers
 
@@ -85,7 +85,7 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
             helpers.qa_openness_stars_resource_html,
             'qa_openness_stars_dataset_html':
             helpers.qa_openness_stars_dataset_html,
-            }
+        }
 
     # IPackageController
 

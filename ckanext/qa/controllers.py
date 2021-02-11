@@ -102,7 +102,7 @@ class LinkCheckerController(BaseController):
             result['mimetype'] = self._extract_mimetype(headers)
             result['size'] = headers.get('content-length', '')
             result['last_modified'] = self._parse_and_format_date(headers.get('last-modified', ''))
-        except LinkCheckerError, e:
+        except LinkCheckerError as e:
             result['url_errors'].append(str(e))
         return result
 

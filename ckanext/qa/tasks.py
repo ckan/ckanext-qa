@@ -6,6 +6,7 @@ import datetime
 import json
 import math
 import os
+import six
 import tempfile
 import time
 import traceback
@@ -129,9 +130,9 @@ def update_package(ckan_ini_filepath, package_id):
 
     try:
         update_package_(package_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_package: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__, e)
         raise
 
 
@@ -168,9 +169,9 @@ def update(ckan_ini_filepath, resource_id):
     load_config(ckan_ini_filepath)
     try:
         update_resource_(resource_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_resource: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__, e)
         raise
 
 
@@ -267,10 +268,10 @@ def resource_score(resource):
                             format_ = get_qa_format(resource.id)
         score_reason = ' '.join(score_reasons)
         format_ = format_ or None
-    except Exception, e:
+    except Exception as e:
         log.error('Unexpected error while calculating openness score %s: %s\nException: %s',
-                  e.__class__.__name__,  unicode(e), traceback.format_exc())
-        score_reason = _("Unknown error: %s") % str(e)
+                  e.__class__.__name__, e, traceback.format_exc())
+        score_reason = _("Unknown error: %s") % e
         raise
 
     # Even if we can get the link, we should still treat the resource
@@ -310,7 +311,7 @@ def broken_link_error_message(archival):
         else:
             return ''
     messages = [_('File could not be downloaded.'),
-                _('Reason') + ':', unicode(archival.status) + '.',
+                _('Reason') + ':', six.text_type(archival.status) + '.',
                 _('Error details: %s.') % archival.reason,
                 _('Attempted on %s.') % format_date(archival.updated)]
     last_success = format_date(archival.last_success)
@@ -423,7 +424,6 @@ def _download_url(url):
     log.info('Fetching from: {0}'.format(url))
     tmp_file = get_tmp_file(url)
     length = 0
-    cl = None
     try:
         headers = {}
         response = get_response(url, headers)
@@ -441,16 +441,16 @@ def _download_url(url):
         log.debug('HTTP error: {}'.format(error))
         tmp_file.close()
         os.remove(tmp_file.name)
-        raise HTTPError(
-            "Received a bad HTTP response when trying to download "
-            "the data file", status_code=error.response.status_code,
+        raise requests.exceptions.HTTPError(
+            "Received a bad HTTP response when trying to download the data file",
+            status_code=error.response.status_code,
             request_url=url, response=error)
     except requests.exceptions.Timeout:
         log.warning('URL time out after {0}s'.format(DOWNLOAD_TIMEOUT))
         tmp_file.close()
         os.remove(tmp_file.name)
         raise IOError('Connection timed out after {}s'.format(
-                       DOWNLOAD_TIMEOUT))
+                      DOWNLOAD_TIMEOUT))
     except requests.exceptions.RequestException as e:
         try:
             err_message = str(e.reason)
@@ -459,7 +459,7 @@ def _download_url(url):
         log.warning('URL error: {}'.format(err_message))
         tmp_file.close()
         os.remove(tmp_file.name)
-        raise HTTPError(
+        raise requests.exceptions.HTTPError(
             message=err_message, status_code=None,
             request_url=url, response=None)
 
@@ -471,7 +471,7 @@ def _download_url(url):
 def get_response(url, headers):
     def get_url():
         kwargs = {'headers': headers, 'timeout': DOWNLOAD_TIMEOUT,
-                  'verify': SSL_VERIFY, 'stream': True} # just gets the headers for now
+                  'verify': SSL_VERIFY, 'stream': True}  # just gets the headers for now
         if 'ckan.download_proxy' in config:
             proxy = config.get('ckan.download_proxy')
             kwargs['proxies'] = {'http': proxy, 'https': proxy}

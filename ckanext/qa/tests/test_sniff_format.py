@@ -292,5 +292,5 @@ def test_turtle_regex():
 
 def test_is_ttl__num_triples():
     triple = '<subject> <predicate> <object>; <predicate> <object>.'
-    assert not is_ttl('\n'.join([triple]*2))
-    assert is_ttl('\n'.join([triple]*5))
+    assert not is_ttl('\n'.join([triple] * 2))
+    assert is_ttl('\n'.join([triple] * 5))

@@ -7,6 +7,7 @@ from threading import Thread
 from time import sleep
 from wsgiref.simple_server import make_server
 import urllib2
+import six
 import socket
 
 
@@ -37,7 +38,7 @@ class MockHTTPServer(object):
         This uses context manager to make sure the server is stopped::
 
             >>> with MockTestServer().serve() as addr:
-            ...     print urllib2.urlopen('%s/?content=hello+world').read()
+            ...     print(urllib2.urlopen('%s/?content=hello+world').read())
             ...
             'hello world'
         """
@@ -80,8 +81,8 @@ class MockHTTPServer(object):
         called and its return value used.
         """
         modpath, var = varspec.split(':')
-        mod = reduce(getattr, modpath.split('.')[1:], __import__(modpath))
-        var = reduce(getattr, var.split('.'), mod)
+        mod = six.moves.reduce(getattr, modpath.split('.')[1:], __import__(modpath))
+        var = six.moves.reduce(getattr, var.split('.'), mod)
         try:
             return var()
         except TypeError:
@@ -116,7 +117,7 @@ class MockEchoTestServer(MockHTTPServer):
         else:
             content = request.str_params.get('content', '')
 
-        if isinstance(content, unicode):
+        if isinstance(content, six.string_types):
             raise TypeError("Expected raw byte string for content")
 
         headers = [
