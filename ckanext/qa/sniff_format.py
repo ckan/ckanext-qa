@@ -36,7 +36,7 @@ def sniff_file_format(filepath):
     '''
     format_ = None
     log.info('Sniffing file format of: %s', filepath)
-    filepath_utf8 = filepath.encode('utf8') if isinstance(filepath, six.text_types) \
+    filepath_utf8 = filepath.encode('utf8') if isinstance(filepath, six.string_types) \
         else filepath
     mime_type = magic.from_file(filepath_utf8, mime=True)
     log.info('Magic detects file as: %s', mime_type)
