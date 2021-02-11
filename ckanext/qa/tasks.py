@@ -442,8 +442,9 @@ def _download_url(url):
         tmp_file.close()
         os.remove(tmp_file.name)
         raise requests.exceptions.HTTPError(
-            url, error.response.status_code,
-            "Received a bad HTTP response when trying to download the data file")
+            error.response.status_code,
+            "Received a bad HTTP response when trying to download the data file",
+            url)
     except requests.exceptions.Timeout:
         log.warning('URL time out after {0}s'.format(DOWNLOAD_TIMEOUT))
         tmp_file.close()
@@ -458,7 +459,7 @@ def _download_url(url):
         log.warning('URL error: {}'.format(err_message))
         tmp_file.close()
         os.remove(tmp_file.name)
-        raise requests.exceptions.HTTPError(url, None, err_message)
+        raise requests.exceptions.HTTPError(None, err_message, url)
 
     log.info('Downloaded ok - %s', printable_file_size(length))
     tmp_file.seek(0)
