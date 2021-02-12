@@ -30,7 +30,7 @@ class TestSniffFormat:
         '''Given a filepath, checks the sniffed format matches the format_extension.'''
         expected_format = format_extension
         sniffed_format = sniff_file_format(filepath)
-        assert sniffed_format, "Expected {} but failed to sniff any format: {}".format(expected_format, sniffed_format)
+        assert sniffed_format, "Expected {} but failed to sniff any format for file: {}".format(expected_format, filepath)
         expected_format_without_zip = expected_format.replace('.zip', '')
         assert_equal(sniffed_format['format'].lower(), expected_format_without_zip)
 
@@ -49,16 +49,11 @@ class TestSniffFormat:
     def check_format(cls, format, filename=None):
         for format_extension, filepath in cls.fixture_files:
             if format_extension == format:
-                if filename:
-                    if filename in filepath:
-                        break
-                    else:
-                        continue
-                else:
-                    break
+                if not filename or filename in filepath:
+                    cls.assert_file_has_format_sniffed_correctly(format_extension, filepath)
+                break
         else:
             assert 0, format  # Could not find fixture for format
-        cls.assert_file_has_format_sniffed_correctly(format_extension, filepath)
 
     def test_xls(self):
         self.check_format('xls', '10-p108-data-results')
