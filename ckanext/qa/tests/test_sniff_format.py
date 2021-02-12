@@ -51,7 +51,7 @@ class TestSniffFormat:
             if format_extension == format:
                 if not filename or filename in filepath:
                     cls.assert_file_has_format_sniffed_correctly(format_extension, filepath)
-                break
+                    break
         else:
             assert 0, format  # Could not find fixture for format
 
