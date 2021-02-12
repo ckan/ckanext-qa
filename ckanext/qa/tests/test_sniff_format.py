@@ -30,7 +30,7 @@ class TestSniffFormat:
         '''Given a filepath, checks the sniffed format matches the format_extension.'''
         expected_format = format_extension
         sniffed_format = sniff_file_format(filepath)
-        assert sniffed_format, expected_format
+        assert sniffed_format, "Expected {} but failed to sniff any format: {}".format(expected_format, sniffed_format)
         expected_format_without_zip = expected_format.replace('.zip', '')
         assert_equal(sniffed_format['format'].lower(), expected_format_without_zip)
 
