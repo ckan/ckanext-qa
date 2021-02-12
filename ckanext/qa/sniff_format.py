@@ -124,7 +124,7 @@ def sniff_file_format(filepath):
                 if has_rdfa(buf):
                     format_ = {'format': 'RDFa'}
 
-    else:
+    if not format_:
         # Excel files sometimes not picked up by magic, so try alternative
         if is_excel(filepath):
             format_ = {'format': 'XLS'}
