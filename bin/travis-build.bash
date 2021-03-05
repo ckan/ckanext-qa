@@ -29,7 +29,7 @@ if [ -f requirement-setuptools.txt ]; then
     pip install -r requirement-setuptools.txt
 fi
 
-if [ $CKANVERSION == 'master' ]
+if [ ${CKANVERSION:-master} == 'master' ]
 then
     echo "CKAN version: master"
     export CKAN_MINOR_VERSION=100
@@ -40,7 +40,7 @@ else
     echo "CKAN version: ${CKAN_TAG#ckan-}"
 fi
 
-if (( $CKAN_MINOR_VERSION >= 9 )) && (( $ver = 2 ))
+if (( "$CKAN_MINOR_VERSION" >= 9 )) && (( $ver = 2 ))
 then
     pip install -r requirements-py2.txt
 else
