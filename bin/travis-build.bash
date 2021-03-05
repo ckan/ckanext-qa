@@ -23,7 +23,7 @@ sudo apt-get install libmagic1
 
 echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
-cd ckan
+pushd ckan
 
 if [ -f requirement-setuptools.txt ]; then
     pip install -r requirement-setuptools.txt
@@ -46,7 +46,15 @@ else
 fi
 pip install -r dev-requirements.txt --allow-all-external
 python setup.py develop
-cd -
+
+echo "Creating the PostgreSQL user and database..."
+sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
+sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
+
+echo "Initialising the database..."
+paster db init -c test-core.ini
+
+popd
 
 echo "Setting up Solr..."
 # solr is multicore for tests on ckan master now, but it's easier to run tests
@@ -57,34 +65,27 @@ printf "NO_START=0\nJETTY_HOST=127.0.0.1\nJETTY_PORT=8983\nJAVA_HOME=$JAVA_HOME"
 sudo cp ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty restart
 
-echo "Creating the PostgreSQL user and database..."
-sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
-sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
-
-echo "Initialising the database..."
-paster --plugin=ckan db init -c test-core.ini
-
 echo "Installing dependency ckanext-report and its requirements..."
 git clone --depth=50 https://github.com/datagovuk/ckanext-report.git
-cd ckanext-report
+pushd ckanext-report
   if [ -f requirements-py2.txt ] && [ $ver -eq 2 ]; then
     pip install -r requirements-py2.txt
   elif [ -f requirements.txt ]; then
     pip install -r requirements.txt
   fi
   pip install --no-deps -e .
-cd -
+popd
 
 echo "Installing dependency ckanext-archiver and its requirements..."
 git clone --depth=50 https://github.com/ckan/ckanext-archiver.git
-cd ckanext-archiver
+pushd ckanext-archiver
   if [ -f requirements-py2.txt ] && [ $ver -eq 2 ]; then
     pip install -r requirements-py2.txt
   elif [ -f requirements.txt ]; then
     pip install -r requirements.txt
   fi
   pip install --no-deps -e .
-cd -
+popd
 
 echo "Installing ckanext-qa and its requirements..."
 pip install -r requirements.txt
