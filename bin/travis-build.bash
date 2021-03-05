@@ -32,13 +32,15 @@ fi
 if [ $CKANVERSION == 'master' ]
 then
     echo "CKAN version: master"
+    export CKAN_MINOR_VERSION=100
 else
+    export CKAN_MINOR_VERSION=${CKANVERSION##*.}
     CKAN_TAG=$(git tag | grep ^ckan-$CKANVERSION | sort --version-sort | tail -n 1)
     git checkout $CKAN_TAG
     echo "CKAN version: ${CKAN_TAG#ckan-}"
 fi
 
-if [ -f requirements-py2.txt ] && [ $ver -eq 2 ]
+if (( $CKAN_MINOR_VERSION >= 9 )) && (( $ver = 2 ))
 then
     pip install -r requirements-py2.txt
 else
@@ -52,7 +54,12 @@ sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
 sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
 
 echo "Initialising the database..."
-paster db init -c test-core.ini
+if (( $CKAN_MINOR_VERSION >= 9 ))
+then
+    ckan -c test-core.ini db init
+else
+    paster db init -c test-core.ini
+fi
 
 popd
 
