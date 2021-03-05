@@ -1,4 +1,10 @@
-xlrd==1.0.0
-python-magic==0.4.12
+xlrd==1.1.0
+#python-magic==0.4.15 #in ckancore
 messytables==0.15.2
 progressbar==2.3
+#SQLAlchemy>=0.6.6 #in ckancore
+#requests==2.11.1 #in ckancore
+six>=1.0.0 #in ckancore
+
+ckanext-archiver
+ckanext-report
