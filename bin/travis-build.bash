@@ -62,9 +62,7 @@ sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
 sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
 
 echo "Initialising the database..."
-cd ckan
-paster db init -c test-core.ini
-cd -
+paster --plugin=ckan db init -c test-core.ini
 
 echo "Installing dependency ckanext-report and its requirements..."
 git clone --depth=50 https://github.com/datagovuk/ckanext-report.git
@@ -87,6 +85,11 @@ cd ckanext-archiver
   fi
   pip install --no-deps -e .
 cd -
+
+echo "Installing ckanext-qa and its requirements..."
+pip install -r requirements.txt
+pip install -r dev-requirements.txt
+python setup.py develop
 
 echo "Moving test-core.ini into a subdir..."
 mkdir -p subdir
