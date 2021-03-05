@@ -25,7 +25,7 @@ echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
 cd ckan
 
-if [ $ver -eq 3 ]; then
+if [ -f requirement-setuptools.txt ]; then
     pip install -r requirement-setuptools.txt
 fi
 
