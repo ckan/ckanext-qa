@@ -101,7 +101,9 @@ jobs:
     - name: Install requirements
       run: |
         pip install -r dev-requirements.txt
-        pip install -r pip-requirements.txt
+        if [ -f pip-requirements.txt ]; then
+          pip install -r pip-requirements.txt
+        fi
         pip install -r requirements.txt
         pip install -e .
         apk add file
