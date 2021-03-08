@@ -19,7 +19,7 @@ from progressbar import ProgressBar, Percentage, Bar, ETA
 
 START_OF_TIME = datetime.datetime(1980, 1, 1)
 END_OF_TIME = datetime.datetime(9999, 12, 31)
-TODAY = datetime.datetime.now()
+TODAY = datetime.datetime.utcnow()
 
 # NB put no CKAN imports here, or logging breaks
 
@@ -59,7 +59,7 @@ def migrate(options):
         # time, so some timezone nonesense going on. Can't do much.
         archival = Archival.get_for_resource(res.id)
         if not archival:
-            print add_stat('QA but no Archival data', res, stats)
+            print(add_stat('QA but no Archival data', res, stats))
             continue
         archival_date = archival.updated
         # the state of the resource was as it was archived on the date of
@@ -112,10 +112,10 @@ def migrate(options):
                 model.Session.add(qa)
             add_stat('Added to QA table', res, stats)
 
-    print 'Summary\n', stats.report()
+    print('Summary\n', stats.report())
     if options.write:
         model.repo.commit_and_remove()
-        print 'Written'
+        print('Written')
 
 
 def add_stat(outcome, res, stats, extra_info=None):
@@ -154,10 +154,10 @@ if __name__ == '__main__':
     if len(args) != 1:
         parser.error('Wrong number of arguments (%i)' % len(args))
     config_ini = args[0]
-    print 'Loading CKAN config...'
+    print('Loading CKAN config...')
     common.load_config(config_ini)
     common.register_translator()
-    print 'Done'
+    print('Done')
     # Setup logging to print debug out for local only
     rootLogger = logging.getLogger()
     rootLogger.setLevel(logging.WARNING)

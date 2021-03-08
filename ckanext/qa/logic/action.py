@@ -30,7 +30,7 @@ def qa_resource_show(context, data_dict):
         'name': pkg.name,
         'title': pkg.title,
         'id': res.id
-        }
+    }
     return_dict['archival'] = archival.as_dict()
     return_dict.update(qa.as_dict())
     return return_dict

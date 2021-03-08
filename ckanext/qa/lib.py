@@ -55,7 +55,7 @@ def resource_format_scores():
         with open(json_filepath) as format_file:
             try:
                 file_resource_formats = json.loads(format_file.read())
-            except ValueError, e:
+            except ValueError as e:
                 # includes simplejson.decoder.JSONDecodeError
                 raise ValueError('Invalid JSON syntax in %s: %s' %
                                  (json_filepath, e))
@@ -90,7 +90,7 @@ def create_qa_update_package_task(package, queue):
     from pylons import config
     ckan_ini_filepath = os.path.abspath(config.__file__)
 
-    compat_enqueue('qa.update_package', tasks.update_package, queue,  args=[ckan_ini_filepath, package.id])
+    compat_enqueue('qa.update_package', tasks.update_package, queue, args=[ckan_ini_filepath, package.id])
     log.debug('QA of package put into celery queue %s: %s',
               queue, package.name)
 

@@ -6,7 +6,16 @@ echo "This is travis-build.bash..."
 
 echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
-sudo apt-get install solr-jetty libcommons-fileupload-java
+sudo apt-get install -y solr-jetty libcommons-fileupload-java
+
+ver=$(python -c"import sys; print(sys.version_info.major)")
+if [ $ver -eq 2 ]; then
+    echo "python version 2"
+elif [ $ver -eq 3 ]; then
+    echo "python version 3"
+else
+    echo "Unknown python version: $ver"
+fi
 
 echo "Upgrading libmagic for ckanext-qa..."
 # appears to upgrade it from 5.09-2 to 5.09-2ubuntu0.6 which seems to help the tests
@@ -14,26 +23,45 @@ sudo apt-get install libmagic1
 
 echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
-cd ckan
+pushd ckan
 
-if [ $CKANVERSION == 'master' ]
+if [ -f requirement-setuptools.txt ]; then
+    pip install -r requirement-setuptools.txt
+fi
+
+if [ ${CKANVERSION:-master} == 'master' ]
 then
     echo "CKAN version: master"
+    export CKAN_MINOR_VERSION=100
 else
+    export CKAN_MINOR_VERSION=${CKANVERSION##*.}
     CKAN_TAG=$(git tag | grep ^ckan-$CKANVERSION | sort --version-sort | tail -n 1)
     git checkout $CKAN_TAG
     echo "CKAN version: ${CKAN_TAG#ckan-}"
 fi
 
-python setup.py develop
-if [ -f requirements-py2.txt ]
+if (( "$CKAN_MINOR_VERSION" >= 9 )) && (( $ver = 2 ))
 then
     pip install -r requirements-py2.txt
 else
     pip install -r requirements.txt
 fi
 pip install -r dev-requirements.txt --allow-all-external
-cd -
+python setup.py develop
+
+echo "Creating the PostgreSQL user and database..."
+sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
+sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
+
+echo "Initialising the database..."
+if (( $CKAN_MINOR_VERSION >= 9 ))
+then
+    ckan -c test-core.ini db init
+else
+    paster db init -c test-core.ini
+fi
+
+popd
 
 echo "Setting up Solr..."
 # solr is multicore for tests on ckan master now, but it's easier to run tests
@@ -44,32 +72,35 @@ printf "NO_START=0\nJETTY_HOST=127.0.0.1\nJETTY_PORT=8983\nJAVA_HOME=$JAVA_HOME"
 sudo cp ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty restart
 
-echo "Creating the PostgreSQL user and database..."
-sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
-sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
-
-echo "Initialising the database..."
-cd ckan
-paster db init -c test-core.ini
-cd -
-
 echo "Installing dependency ckanext-report and its requirements..."
-pip install -e git+https://github.com/datagovuk/ckanext-report.git#egg=ckanext-report
+git clone --depth=50 https://github.com/datagovuk/ckanext-report.git
+pushd ckanext-report
+  if [ -f requirements-py2.txt ] && [ $ver -eq 2 ]; then
+    pip install -r requirements-py2.txt
+  elif [ -f requirements.txt ]; then
+    pip install -r requirements.txt
+  fi
+  pip install --no-deps -e .
+popd
 
 echo "Installing dependency ckanext-archiver and its requirements..."
-git clone https://github.com/ckan/ckanext-archiver.git
-cd ckanext-archiver
-pip install -e .
-pip install -r requirements.txt
-cd -
+git clone --depth=50 https://github.com/ckan/ckanext-archiver.git
+pushd ckanext-archiver
+  if [ -f requirements-py2.txt ] && [ $ver -eq 2 ]; then
+    pip install -r requirements-py2.txt
+  elif [ -f requirements.txt ]; then
+    pip install -r requirements.txt
+  fi
+  pip install --no-deps -e .
+popd
 
 echo "Installing ckanext-qa and its requirements..."
-python setup.py develop
 pip install -r requirements.txt
 pip install -r dev-requirements.txt
+python setup.py develop
 
 echo "Moving test-core.ini into a subdir..."
-mkdir subdir
-mv test-core.ini subdir
+mkdir -p subdir
+cp test-core.ini subdir
 
 echo "travis-build.bash is done."

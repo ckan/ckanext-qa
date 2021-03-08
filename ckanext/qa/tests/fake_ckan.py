@@ -10,12 +10,12 @@ TASK_STATUS_ARCHIVER_OK = json.dumps(
                     'last_success': '2008-10-01',
                     'first_failure': '',
                     'failure_count': 0,
-                    }),
+                }),
                 'stack': '',
                 'last_updated': '2008-10-10T19:30:37.536836',
                 }
      }
-    )
+)
 
 request_store = []
 task_status = {'archiver': TASK_STATUS_ARCHIVER_OK,

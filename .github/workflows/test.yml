@@ -1,0 +1,125 @@
+---
+#based on https://raw.githubusercontent.com/ckan/ckanext-scheming/master/.github/workflows/test.yml
+# alternative https://github.com/ckan/ckan/blob/master/contrib/cookiecutter/ckan_extension/%7B%7Bcookiecutter.project%7D%7D/.github/workflows/test.yml
+name: Tests
+on: [push, pull_request]
+env:
+  CKAN_SQLALCHEMY_URL: postgresql://ckan_default:pass@postgres/ckan_test
+  CKAN_DATASTORE_WRITE_URL: postgresql://datastore_write:pass@postgres/datastore_test
+  CKAN_DATASTORE_READ_URL: postgresql://datastore_read:pass@postgres/datastore_test
+  CKAN_SOLR_URL: http://solr:8983/solr/ckan
+  CKAN_REDIS_URL: redis://redis:6379/1
+jobs:
+
+
+
+
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - name: Install requirements
+        run: pip install flake8 pycodestyle
+      - name: Check syntax
+        run: flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan
+
+  test:
+    needs: lint
+    strategy:
+      matrix:
+        # not ready for CKAN 2.9 yet
+        # ckan-version: [2.9, 2.9-py2, 2.8, 2.7]
+        ckan-version: [2.8, 2.7]
+        env:
+          - { ARCHIVER_GIT_REPO: "ckan", ARCHIVER_BRANCH: "master", REPORT_GIT_REPO: "datagovuk", REPORT_BRANCH: "master" }
+          - { ARCHIVER_GIT_REPO: "qld-gov-au", ARCHIVER_BRANCH: "2.1.0-qgov.1", REPORT_GIT_REPO: "qld-gov-au", REPORT_BRANCH: "0.1" }
+          - { ARCHIVER_GIT_REPO: "qld-gov-au", ARCHIVER_BRANCH: "develop", REPORT_GIT_REPO: "qld-gov-au", REPORT_BRANCH: "develop" }
+      fail-fast: false
+
+    name: CKAN ${{ matrix.ckan-version }}
+    runs-on: ubuntu-18.04
+    container:
+      image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
+    services:
+      solr:
+        image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
+      postgres:
+        image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+          image: redis:3
+    env: ${{ matrix.env }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install report and archiver plugins
+      run: |
+        echo "Installing dependency ckanext-report and its requirements..."
+        if [ ! -d ckanext-report ]; then
+          git clone --depth=50 --branch=$REPORT_BRANCH https://github.com/$REPORT_GIT_REPO/ckanext-report ckanext-report
+        fi
+        cd ckanext-report
+          if [ -f pip-requirements.txt ]; then
+            pip install -r pip-requirements.txt
+          fi
+          if [ -f dev-requirements.txt ]; then
+            pip install -r dev-requirements.txt
+          fi
+
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          pip install --no-deps -e .
+        cd ..
+
+        echo "Installing dependency ckanext-archiver and its requirements..."
+        if [ ! -d ckanext-archiver ]; then
+          git clone --depth=50 --branch=$ARCHIVER_BRANCH https://github.com/$ARCHIVER_GIT_REPO/ckanext-archiver ckanext-archiver
+        fi
+        cd ckanext-archiver
+          if [ -f pip-requirements.txt ]; then
+            pip install -r pip-requirements.txt
+          fi
+          if [ -f dev-requirements.txt ]; then
+            pip install -r dev-requirements.txt
+          fi
+
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          pip install --no-deps -e .
+        cd ..
+
+    - name: Install requirements
+      run: |
+        pip install -r dev-requirements.txt
+        if [ -f pip-requirements.txt ]; then
+          pip install -r pip-requirements.txt
+        fi
+        pip install -r requirements.txt
+        pip install -e .
+        apk add file
+        # Replace default path to CKAN core config file with the one on the container
+        sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+
+    - name: Setup extension (CKAN >= 2.9)
+      if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
+      run: |
+        ckan -c test.ini db init
+    - name: Setup extension (CKAN < 2.9)
+      if: ${{ matrix.ckan-version == '2.7' || matrix.ckan-version == '2.8' }}
+      run: |
+        paster --plugin=ckan db init -c test.ini
+    - name: Run all tests
+      run: |
+        nosetests --with-pylons=test.ini --with-coverage --cover-package=ckanext.qa --cover-inclusive --cover-erase --cover-tests
+
+

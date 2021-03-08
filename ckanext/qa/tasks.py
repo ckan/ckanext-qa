@@ -4,15 +4,25 @@ Berners-Lee\'s five stars of openness
 '''
 import datetime
 import json
+import math
 import os
+import six
+import tempfile
+import time
 import traceback
+
 import urlparse
 import routes
 
-from ckan.common import _
+import requests
 
+from ckan.common import _
 from ckan.lib import i18n
 from ckan.plugins import toolkit
+try:
+    from ckan.plugins.toolkit import config
+except ImportError:
+    from pylons import config
 import ckan.lib.helpers as ckan_helpers
 from sniff_format import sniff_file_format
 import lib
@@ -21,6 +31,11 @@ from ckanext.archiver.model import Archival, Status
 import logging
 
 log = logging.getLogger(__name__)
+
+SSL_VERIFY = True
+MAX_CONTENT_LENGTH = int(config.get('ckanext.qa.max_content_length', 1e7))
+CHUNK_SIZE = 16 * 1024  # 16kb
+DOWNLOAD_TIMEOUT = 30
 
 if toolkit.check_ckan_version(max_version='2.6.99'):
     from ckan.lib import celery_app
@@ -115,9 +130,9 @@ def update_package(ckan_ini_filepath, package_id):
 
     try:
         update_package_(package_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_package: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__, e)
         raise
 
 
@@ -154,9 +169,9 @@ def update(ckan_ini_filepath, resource_id):
     load_config(ckan_ini_filepath)
     try:
         update_resource_(resource_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_resource: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__, e)
         raise
 
 
@@ -253,10 +268,10 @@ def resource_score(resource):
                             format_ = get_qa_format(resource.id)
         score_reason = ' '.join(score_reasons)
         format_ = format_ or None
-    except Exception, e:
+    except Exception as e:
         log.error('Unexpected error while calculating openness score %s: %s\nException: %s',
-                  e.__class__.__name__,  unicode(e), traceback.format_exc())
-        score_reason = _("Unknown error: %s") % str(e)
+                  e.__class__.__name__, e, traceback.format_exc())
+        score_reason = _("Unknown error: %s") % e
         raise
 
     # Even if we can get the link, we should still treat the resource
@@ -296,7 +311,7 @@ def broken_link_error_message(archival):
         else:
             return ''
     messages = [_('File could not be downloaded.'),
-                _('Reason') + ':', unicode(archival.status) + '.',
+                _('Reason') + ':', six.text_type(archival.status) + '.',
                 _('Error details: %s.') % archival.reason,
                 _('Attempted on %s.') % format_date(archival.updated)]
     last_success = format_date(archival.last_success)
@@ -352,35 +367,142 @@ def score_by_sniffing_data(archival, resource, score_reasons):
         return (None, None)
     # Analyse the cached file
     filepath = archival.cache_filepath
+    delete_file = False
     if not os.path.exists(filepath):
-        score_reasons.append(_('Cache filepath does not exist: "%s".') % filepath)
-        return (None, None)
-    else:
-        if filepath:
+        log.debug("%s not found on disk, retrieving from URL %s",
+                  filepath, archival.cache_url)
+        try:
+            filepath = _download_url(archival.cache_url).name
+            delete_file = True
+        except Exception as e:
+            score_reasons.append(_('A system error occurred during downloading this file') + '. %s' % e)
+            return (None, None)
+
+    if filepath:
+        try:
             sniffed_format = sniff_file_format(filepath)
-            score = lib.resource_format_scores().get(sniffed_format['format']) \
-                if sniffed_format else None
-            if sniffed_format:
-                score_reasons.append(_('Content of file appeared to be format "%s" which receives openness score: %s.')
-                                     % (sniffed_format['format'], score))
-                return score, sniffed_format['format']
-            else:
-                score_reasons.append(_('The format of the file was not recognized from its contents.'))
-                return (None, None)
+        finally:
+            if delete_file:
+                try:
+                    os.remove(filepath)
+                except OSError as e:
+                    log.warn("Unable to remove temporary file %s: %s", filepath, e)
+        score = lib.resource_format_scores().get(sniffed_format['format']) \
+            if sniffed_format else None
+        if sniffed_format:
+            score_reasons.append(_('Content of file appeared to be format "%s" which receives openness score: %s.')
+                                 % (sniffed_format['format'], score))
+            return score, sniffed_format['format']
         else:
-            # No cache_url
-            if archival.status_id == Status.by_text('Chose not to download'):
-                score_reasons.append(_('File was not downloaded deliberately') + '. '
-                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
-                return (None, None)
-            elif archival.is_broken is None and archival.status_id:
-                # i.e. 'Download failure' or 'System error during archival'
-                score_reasons.append(_('A system error occurred during downloading this file') + '. '
-                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
-                return (None, None)
-            else:
-                score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
-                return (None, None)
+            score_reasons.append(_('The format of the file was not recognized from its contents.'))
+            return (None, None)
+    else:
+        # No cache_url
+        if archival.status_id == Status.by_text('Chose not to download'):
+            score_reasons.append(_('File was not downloaded deliberately') + '. '
+                                 + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
+            return (None, None)
+        elif archival.is_broken is None and archival.status_id:
+            # i.e. 'Download failure' or 'System error during archival'
+            score_reasons.append(_('A system error occurred during downloading this file') + '. '
+                                 + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
+            return (None, None)
+        else:
+            score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
+            return (None, None)
+
+
+def _download_url(url):
+    # check scheme
+    scheme = urlparse.urlsplit(url).scheme
+    if scheme not in ('http', 'https', 'ftp'):
+        raise IOError(
+            'Only http, https, and ftp resources may be fetched.'
+        )
+
+    # fetch the resource data
+    log.info('Fetching from: {0}'.format(url))
+    tmp_file = get_tmp_file(url)
+    length = 0
+    try:
+        headers = {}
+        response = get_response(url, headers)
+
+        # download the file to a tempfile on disk
+        for chunk in response.iter_content(CHUNK_SIZE):
+            length += len(chunk)
+            if length > MAX_CONTENT_LENGTH:
+                log.warn("File size exceeds length limit %s, truncating", MAX_CONTENT_LENGTH)
+                break
+            tmp_file.write(chunk)
+
+    except requests.exceptions.HTTPError as error:
+        # status code error
+        log.debug('HTTP error: {}'.format(error))
+        tmp_file.close()
+        os.remove(tmp_file.name)
+        raise requests.exceptions.HTTPError(
+            error.response.status_code,
+            "Received a bad HTTP response when trying to download the data file",
+            url)
+    except requests.exceptions.Timeout:
+        log.warning('URL time out after {0}s'.format(DOWNLOAD_TIMEOUT))
+        tmp_file.close()
+        os.remove(tmp_file.name)
+        raise IOError('Connection timed out after {}s'.format(
+                      DOWNLOAD_TIMEOUT))
+    except requests.exceptions.RequestException as e:
+        try:
+            err_message = str(e.reason)
+        except AttributeError:
+            err_message = str(e)
+        log.warning('URL error: {}'.format(err_message))
+        tmp_file.close()
+        os.remove(tmp_file.name)
+        raise requests.exceptions.HTTPError(None, err_message, url)
+
+    log.info('Downloaded ok - %s', printable_file_size(length))
+    tmp_file.seek(0)
+    return tmp_file
+
+
+def get_response(url, headers):
+    def get_url():
+        kwargs = {'headers': headers, 'timeout': DOWNLOAD_TIMEOUT,
+                  'verify': SSL_VERIFY, 'stream': True}  # just gets the headers for now
+        if 'ckan.download_proxy' in config:
+            proxy = config.get('ckan.download_proxy')
+            kwargs['proxies'] = {'http': proxy, 'https': proxy}
+        return requests.get(url, **kwargs)
+    response = get_url()
+    if response.status_code == 202:
+        # Seen: https://data-cdfw.opendata.arcgis.com/datasets
+        # In this case it means it's still processing, so do retries.
+        # 202 can mean other things, but there's no harm in retries.
+        wait = 1
+        while wait < 120 and response.status_code == 202:
+            # log.info('Retrying after {}s'.format(wait))
+            time.sleep(wait)
+            response = get_url()
+            wait *= 3
+    response.raise_for_status()
+    return response
+
+
+def get_tmp_file(url):
+    filename = url.split('/')[-1].split('#')[0].split('?')[0]
+    tmp_file = tempfile.NamedTemporaryFile(suffix=filename, delete=False)
+    return tmp_file
+
+
+def printable_file_size(size_bytes):
+    if size_bytes == 0:
+        return '0 bytes'
+    size_name = ('bytes', 'KB', 'MB', 'GB', 'TB')
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 1)
+    return "%s %s" % (s, size_name[i])
 
 
 def score_by_url_extension(resource, score_reasons):
@@ -482,7 +604,7 @@ def save_qa_result(resource, qa_result):
     import ckan.model as model
     from ckanext.qa.model import QA
 
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
 
     qa = QA.get_for_resource(resource.id)
     if not qa:

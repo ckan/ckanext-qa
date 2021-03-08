@@ -78,7 +78,7 @@ class TestTask(BaseCase):
         context = {'model': model, 'ignore_auth': True, 'session': model.Session, 'user': 'test'}
         pkg = {'name': 'testpkg', 'license_id': 'uk-ogl', 'resources': [
             {'url': 'http://test.com/', 'format': 'CSV', 'description': 'Test'}
-            ]}
+        ]}
         pkg = get_action('package_create')(context, pkg)
         resource_dict = pkg['resources'][0]
         res_id = resource_dict['id']
@@ -304,7 +304,7 @@ class TestSaveQaResult(object):
             'openness_score_reason': 'Detected as CSV which scores 3',
             'format': 'CSV',
             'archival_timestamp': datetime.datetime(2015, 12, 16),
-            }
+        }
         qa_result.update(kwargs)
         return qa_result
 
@@ -335,7 +335,7 @@ class TestUpdatePackage(object):
             'url': 'http://example.com/file.csv',
             'title': 'Some data',
             'format': '',
-            }
+        }
         dataset = ckan_factories.Dataset(resources=[resource])
         resource = model.Resource.get(dataset['resources'][0]['id'])
 
@@ -359,7 +359,7 @@ class TestUpdateResource(object):
             'url': 'http://example.com/file.csv',
             'title': 'Some data',
             'format': '',
-            }
+        }
         dataset = ckan_factories.Dataset(resources=[resource])
         resource = model.Resource.get(dataset['resources'][0]['id'])
 
