@@ -163,9 +163,9 @@ def openness_report_combinations():
 
 openness_report_info = {
     'name': 'openness',
-    'title': _('Openness (Five Stars)'),
-    'description': _('Datasets graded on Tim Berners-Lee\'s Five Stars of Openness - openly licensed,'
-                     ' openly accessible, structured, open format, URIs for entities, linked.'),
+    'title': 'Openness (Five Stars)',
+    'description': 'Datasets graded on Tim Berners-Lee\'s Five Stars of Openness - openly licensed,'
+                   ' openly accessible, structured, open format, URIs for entities, linked.',
     'option_defaults': OrderedDict((('organization', None),
                                     ('include_sub_organizations', False),
                                     )),
