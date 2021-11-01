@@ -1,3 +1,4 @@
+from builtins import input
 import logging
 import sys
 
@@ -240,7 +241,7 @@ class QACommand(p.toolkit.CkanCommand):
             .filter_by(key='openness_score_reason')
         print('* %s with openness_score_reason to migrate e.g.\n%s' %
               (q_reason.count(), q_reason.first()))
-        raw_input('Press Enter to continue')
+        input('Press Enter to continue')
 
         q_status.delete()
         model.Session.commit()
