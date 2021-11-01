@@ -63,6 +63,7 @@ def register_translator():
     translator_obj = MockTranslator()
     registry.register(translator, translator_obj)
 
+
 def load_config(ckan_ini_filepath):
     import paste.deploy
     config_abs_path = os.path.abspath(ckan_ini_filepath)
@@ -90,7 +91,7 @@ def load_translations(lang):
     registry.prepare()
 
     class FakePylons:
-            translator = None
+        translator = None
     fakepylons = FakePylons()
 
     class FakeRequest:
@@ -372,12 +373,14 @@ def score_by_sniffing_data(archival, resource, score_reasons):
             # No cache_url
             if archival.status_id == Status.by_text('Chose not to download'):
                 score_reasons.append(_('File was not downloaded deliberately') + '. '
-                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
+                                     + _('Reason') + ': %s. ' % archival.reason +
+                                     _('Using other methods to determine file openness.'))
                 return (None, None)
             elif archival.is_broken is None and archival.status_id:
                 # i.e. 'Download failure' or 'System error during archival'
                 score_reasons.append(_('A system error occurred during downloading this file') + '. '
-                                     + _('Reason') + ': %s. ' % archival.reason + _('Using other methods to determine file openness.'))
+                                     + _('Reason') + ': %s. ' % archival.reason +
+                                     _('Using other methods to determine file openness.'))
                 return (None, None)
             else:
                 score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
@@ -404,7 +407,8 @@ def score_by_url_extension(resource, score_reasons):
         if format_:
             score = lib.resource_format_scores().get(format_)
             if score:
-                score_reasons.append(_('URL extension "%s" relates to format "%s" and receives score: %s.') % (extension, format_, score))
+                score_reasons.append(_('URL extension "%s" relates to format "%s" and receives score: %s.')
+                                     % (extension, format_, score))
                 return score, format_
             else:
                 score = 1

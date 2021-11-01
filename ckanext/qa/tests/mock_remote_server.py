@@ -11,6 +11,7 @@ import socket
 from functools import reduce
 import six
 
+
 class MockHTTPServer(object):
     """
     Mock HTTP server that can take the place of a remote server for testing
