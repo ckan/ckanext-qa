@@ -8,6 +8,7 @@ import os
 import traceback
 import urlparse
 import routes
+import six
 
 from ckan.common import _
 
@@ -115,9 +116,9 @@ def update_package(ckan_ini_filepath, package_id):
 
     try:
         update_package_(package_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_package: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__,  six.text_type(e))
         raise
 
 
@@ -154,9 +155,9 @@ def update(ckan_ini_filepath, resource_id):
     load_config(ckan_ini_filepath)
     try:
         update_resource_(resource_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_resource: %s: %s',
-                  e.__class__.__name__,  unicode(e))
+                  e.__class__.__name__,  six.text_type(e))
         raise
 
 
@@ -253,9 +254,9 @@ def resource_score(resource):
                             format_ = get_qa_format(resource.id)
         score_reason = ' '.join(score_reasons)
         format_ = format_ or None
-    except Exception, e:
+    except Exception as e:
         log.error('Unexpected error while calculating openness score %s: %s\nException: %s',
-                  e.__class__.__name__,  unicode(e), traceback.format_exc())
+                  e.__class__.__name__,  six.text_type(e), traceback.format_exc())
         score_reason = _("Unknown error: %s") % str(e)
         raise
 
@@ -296,7 +297,7 @@ def broken_link_error_message(archival):
         else:
             return ''
     messages = [_('File could not be downloaded.'),
-                _('Reason') + ':', unicode(archival.status) + '.',
+                _('Reason') + ':', six.text_type(archival.status) + '.',
                 _('Error details: %s.') % archival.reason,
                 _('Attempted on %s.') % format_date(archival.updated)]
     last_success = format_date(archival.last_success)
