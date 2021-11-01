@@ -48,12 +48,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install archiver
-          run: |
-            git clone https://github.com/ckan/ckanext-archiver
-            cd ckanext-archiver
-            pip install -r requirements.txt
-            pip install -r dev-requirements.txt
-            pip install -e .
+        run: |
+          git clone https://github.com/ckan/ckanext-archiver
+          cd ckanext-archiver
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
+          pip install -e .
       - name: Install requirements
         run: |
           pip install -r requirements.txt
