@@ -177,44 +177,44 @@ class QACommand(p.toolkit.CkanCommand):
         from ckanext.qa.sniff_format import sniff_file_format
 
         if len(self.args) < 2:
-            print 'Not enough arguments', self.args
+            print('Not enough arguments', self.args)
             sys.exit(1)
         for filepath in self.args[1:]:
             format_ = sniff_file_format(
                 filepath, logging.getLogger('ckanext.qa.sniffer'))
             if format_:
-                print 'Detected as: %s - %s' % (format_['display_name'],
-                                                filepath)
+                print('Detected as: %s - %s' % (format_['display_name'],
+                                                filepath))
             else:
-                print 'ERROR: Could not recognise format of: %s' % filepath
+                print('ERROR: Could not recognise format of: %s' % filepath)
 
     def view(self, package_ref=None):
         from ckan import model
 
         q = model.Session.query(model.TaskStatus).filter_by(task_type='qa')
-        print 'QA records - %i TaskStatus rows' % q.count()
-        print '      across %i Resources' % q.distinct('entity_id').count()
+        print('QA records - %i TaskStatus rows' % q.count())
+        print('      across %i Resources' % q.distinct('entity_id').count())
 
         if package_ref:
             pkg = model.Package.get(package_ref)
-            print 'Package %s %s' % (pkg.name, pkg.id)
+            print('Package %s %s' % (pkg.name, pkg.id))
             for res in pkg.resources:
-                print 'Resource %s' % res.id
+                print('Resource %s' % res.id)
                 for row in q.filter_by(entity_id=res.id):
-                    print '* %s = %r error=%r' % (row.key, row.value,
-                                                  row.error)
+                    print('* %s = %r error=%r' % (row.key, row.value,
+                                                  row.error))
 
     def clean(self):
         from ckan import model
 
-        print 'Before:'
+        print('Before:')
         self.view()
 
         q = model.Session.query(model.TaskStatus).filter_by(task_type='qa')
         q.delete()
         model.Session.commit()
 
-        print 'After:'
+        print('After:')
         self.view()
 
     def migrate1(self):
@@ -223,32 +223,32 @@ class QACommand(p.toolkit.CkanCommand):
         q_status = model.Session.query(model.TaskStatus) \
             .filter_by(task_type='qa') \
             .filter_by(key='status')
-        print '* %s with "status" will be deleted e.g. %s' % (q_status.count(),
-                                                              q_status.first())
+        print('* %s with "status" will be deleted e.g. %s' % (q_status.count(),
+                                                              q_status.first()))
         q_failures = model.Session.query(model.TaskStatus) \
             .filter_by(task_type='qa') \
             .filter_by(key='openness_score_failure_count')
-        print '* %s with openness_score_failure_count to be deleted e.g.\n%s'\
-            % (q_failures.count(), q_failures.first())
+        print('* %s with openness_score_failure_count to be deleted e.g.\n%s'
+              % (q_failures.count(), q_failures.first()))
         q_score = model.Session.query(model.TaskStatus) \
             .filter_by(task_type='qa') \
             .filter_by(key='openness_score')
-        print '* %s with openness_score to migrate e.g.\n%s' % \
-            (q_score.count(), q_score.first())
+        print('* %s with openness_score to migrate e.g.\n%s' %
+              (q_score.count(), q_score.first()))
         q_reason = model.Session.query(model.TaskStatus) \
             .filter_by(task_type='qa') \
             .filter_by(key='openness_score_reason')
-        print '* %s with openness_score_reason to migrate e.g.\n%s' % \
-            (q_reason.count(), q_reason.first())
+        print('* %s with openness_score_reason to migrate e.g.\n%s' %
+              (q_reason.count(), q_reason.first()))
         raw_input('Press Enter to continue')
 
         q_status.delete()
         model.Session.commit()
-        print '..."status" deleted'
+        print('..."status" deleted')
 
         q_failures.delete()
         model.Session.commit()
-        print '..."openness_score_failure_count" deleted'
+        print('..."openness_score_failure_count" deleted')
 
         for task_status in q_score:
             reason_task_status = q_reason \
@@ -267,13 +267,13 @@ class QACommand(p.toolkit.CkanCommand):
                 'is_broken': None,
                 })
             model.Session.commit()
-        print '..."openness_score" and "openness_score_reason" migrated'
+        print('..."openness_score" and "openness_score_reason" migrated')
 
         count = q_reason.count()
         q_reason.delete()
         model.Session.commit()
-        print '... %i remaining "openness_score_reason" deleted' % count
+        print('... %i remaining "openness_score_reason" deleted' % count)
 
         model.Session.flush()
         model.Session.remove()
-        print 'Migration succeeded'
+        print('Migration succeeded')

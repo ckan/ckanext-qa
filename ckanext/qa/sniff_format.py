@@ -4,6 +4,7 @@ import os
 from collections import defaultdict
 import subprocess
 import StringIO
+import six
 
 import xlrd
 import magic
@@ -33,7 +34,7 @@ def sniff_file_format(filepath):
     '''
     format_ = None
     log.info('Sniffing file format of: %s', filepath)
-    filepath_utf8 = filepath.encode('utf8') if isinstance(filepath, unicode) \
+    filepath_utf8 = filepath.encode('utf8') if isinstance(filepath, six.text_type) \
         else filepath
     mime_type = magic.from_file(filepath_utf8, mime=True)
     log.info('Magic detects file as: %s', mime_type)
