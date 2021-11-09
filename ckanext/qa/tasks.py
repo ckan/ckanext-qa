@@ -16,7 +16,6 @@ from ckan.lib import i18n
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
 from ckanext.qa.sniff_format import sniff_file_format
-from ckanext.qa.lib import resource_format_scores, munge_format_to_be_canonical
 from ckanext.archiver.model import Archival, Status
 
 import logging
@@ -339,6 +338,9 @@ def score_if_link_broken(archival, resource, score_reasons):
 
 
 def score_by_sniffing_data(archival, resource, score_reasons):
+
+    from ckanext.qa.lib import resource_format_scores
+
     '''
     Looks inside a data file\'s contents to determine its format and score.
 
@@ -388,6 +390,9 @@ def score_by_sniffing_data(archival, resource, score_reasons):
 
 
 def score_by_url_extension(resource, score_reasons):
+
+    from ckanext.qa.lib import resource_format_scores
+
     '''
     Looks at the URL for a resource to determine its format and score.
 
@@ -441,6 +446,9 @@ def extension_variants(url):
 
 
 def score_by_format_field(resource, score_reasons):
+
+    from ckanext.qa.lib import resource_format_scores, munge_format_to_be_canonical
+
     '''
     Looks at the format field of a resource to determine its format and score.
 
