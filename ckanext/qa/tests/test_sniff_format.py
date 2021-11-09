@@ -1,8 +1,7 @@
 import os
 import logging
 
-from nose.tools import assert_equal
-from nose.plugins.skip import SkipTest
+import pytest
 
 from ckan import plugins as p
 
@@ -13,17 +12,20 @@ log = logging.getLogger('ckan.sniff')
 
 
 class TestSniffFormat:
-    @classmethod
-    def setup_class(cls):
-        # Assemble a list of the test fixture data files.
-        # They MUST have a file extension equal to the format they will be correctly
-        # sniffed as. e.g. .xls  or  .xls.zip
-        cls.fixture_files = []  # (format_extension, filepath)
+
+    @pytest.fixture(autouse=True)
+    @pytest.mark.usefixtures(u"clean_db")
+    @pytest.mark.ckan_config("ckan.plugins", "archiver qa")
+    def initial_data(self, clean_db):
+
+        fixture_files = []
         fixture_data_dir = os.path.join(os.path.dirname(__file__), 'data')
         for filename in os.listdir(fixture_data_dir):
             format_extension = '.'.join(filename.split('.')[1:]).replace('_', ' ')
             filepath = os.path.join(fixture_data_dir, filename)
-            cls.fixture_files.append((format_extension, filepath))
+            fixture_files.append((format_extension, filepath))
+
+        return fixture_files
 
     @classmethod
     def assert_file_has_format_sniffed_correctly(cls, format_extension, filepath):
@@ -32,14 +34,14 @@ class TestSniffFormat:
         sniffed_format = sniff_file_format(filepath)
         assert sniffed_format, expected_format
         expected_format_without_zip = expected_format.replace('.zip', '')
-        assert_equal(sniffed_format['format'].lower(), expected_format_without_zip)
+        assert sniffed_format['format'].lower() == expected_format_without_zip
 
         expected_container = None
         if expected_format.endswith('.zip'):
             expected_container = 'ZIP'
         elif expected_format.endswith('.gzip'):
             expected_container = 'ZIP'  # lumped together with zip for simplicity now
-        assert_equal(sniffed_format.get('container'), expected_container)
+        assert sniffed_format.get('container') == expected_container
 
     # def test_all(self):
     #    for format_extension, filepath in self.fixture_files:

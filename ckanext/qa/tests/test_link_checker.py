@@ -1,13 +1,13 @@
+import pytest
+
 import logging
 from functools import wraps
 import json
 from urllib import urlencode
-from nose.tools import assert_in
 try:
     from ckan.tests.legacy import TestController as ControllerTestCase
 except ImportError:
     from ckan.tests import TestController as ControllerTestCase
-from nose.tools import assert_equal
 
 from ckanext.archiver.tasks import update_package
 
@@ -41,6 +41,13 @@ class TestLinkChecker(ControllerTestCase):
     """
     Tests for link checker task
     """
+
+    @pytest.fixture(autouse=True)
+    @pytest.mark.usefixtures(u"clean_db")
+    @pytest.mark.ckan_config("ckan.plugins", "archiver qa")
+    def initial_data(self, clean_db):
+        return {}
+
     def check_link(self, url):
         result = self.app.get('/qa/link_checker?%s' % urlencode({'url': url}))
         return json.loads(result.body)[0]
@@ -48,22 +55,22 @@ class TestLinkChecker(ControllerTestCase):
     @with_mock_url('?status=200')
     def test_url_working_but_formatless(self, url):
         result = self.check_link(url)
-        assert_equal(result['format'], None)
+        assert result['format'] is None
 
     @with_mock_url('file.csv')
     def test_format_by_url_extension(self, url):
         result = self.check_link(url)
-        assert_equal(result['format'], 'CSV')
+        assert result['format'] == 'CSV'
 
     @with_mock_url('file.csv.zip')
     def test_format_by_url_extension_zipped(self, url):
         result = self.check_link(url)
-        assert_equal(result['format'], 'CSV / ZIP')
+        assert result['format'] == 'CSV / ZIP'
 
     @with_mock_url('file.f1.f2')
     def test_format_by_url_extension_unknown(self, url):
         result = self.check_link(url)
-        assert_equal(result['format'], 'F1 / F2')
+        assert result['format'] == 'F1 / F2'
 
     def test_encoded_url(self):
         # This is not actually a URL, and the encoded letters get
@@ -71,39 +78,38 @@ class TestLinkChecker(ControllerTestCase):
         # an exception.
         url = 'Over+\xc2\xa325,000+expenditure+report+April-13'
         result = self.check_link(url)
-        assert_equal(result['format'], '')
+        assert result['format'] == ''
 
     @with_mock_url('?status=200;content-type=text/plain')
     def test_format_by_mimetype_txt(self, url):
         result = self.check_link(url)
-        assert_equal(result['format'], 'TXT')
+        assert result['format']== 'TXT'
 
     @with_mock_url('?status=200;content-type=text/csv')
     def test_format_by_mimetype_csv(self, url):
         result = self.check_link(url)
-        assert_equal(result['format'], 'CSV')
+        assert result['format'] == 'CSV'
 
     def test_file_url(self):
         url = u'file:///home/root/test.txt'
         result = self.check_link(url)
-        assert_in(u'Invalid url scheme. Please use one of: ftp http https',
-                  result['url_errors'])
+        assert u'Invalid url scheme. Please use one of: ftp http https' in result['url_errors']
         # assert_raises(LinkCheckerError, link_checker, context, data)
 
     def test_empty_url(self):
         url = u''
         result = self.check_link(url)
-        assert_in("URL parsing failure - did not find a host name", result['url_errors'])
+        assert "URL parsing failure - did not find a host name" in result['url_errors']
 
     @with_mock_url('?status=503')
     def test_url_with_503(self, url):
         result = self.check_link(url)
-        assert_in('Server returned HTTP error status: 503 Service Unavailable', result['url_errors'])
+        assert 'Server returned HTTP error status: 503 Service Unavailable' in result['url_errors']
 
     @with_mock_url('?status=404')
     def test_url_with_404(self, url):
         result = self.check_link(url)
-        assert_in('Server returned HTTP error status: 404 Not Found', result['url_errors'])
+        assert 'Server returned HTTP error status: 404 Not Found' in result['url_errors']
 
     # Disabled as doesn't work
     # @with_mock_url('')
@@ -122,11 +128,11 @@ class TestLinkChecker(ControllerTestCase):
         # see discussion: http://trac.ckan.org/ticket/318
         result = self.check_link(url)
         print(result)
-        assert_equal(result['url_errors'], [])
+        assert result['url_errors'] == []
 
     @with_mock_url('?status=200 ')
     def test_trailing_whitespace(self, url):
         # accept, because browsers accept this
         result = self.check_link(url)
         print(result)
-        assert_equal(result['url_errors'], [])
+        assert result['url_errors'] == []

@@ -1,3 +1,4 @@
-nose
 mock
 flask
+pytest-ckan
+pytest-cov
