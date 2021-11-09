@@ -83,7 +83,7 @@ class TestLinkChecker(ControllerTestCase):
     @with_mock_url('?status=200;content-type=text/plain')
     def test_format_by_mimetype_txt(self, url):
         result = self.check_link(url)
-        assert result['format']== 'TXT'
+        assert result['format'] == 'TXT'
 
     @with_mock_url('?status=200;content-type=text/csv')
     def test_format_by_mimetype_csv(self, url):
