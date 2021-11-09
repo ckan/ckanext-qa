@@ -6,7 +6,7 @@ import logging
 from pylons import config
 
 from ckan import plugins as p
-import ckanext.qa.tasks as tasks
+from ckanext.qa.tasks import update, update_package
 
 log = logging.getLogger(__name__)
 
@@ -90,7 +90,7 @@ def create_qa_update_package_task(package, queue):
     from pylons import config
     ckan_ini_filepath = os.path.abspath(config.__file__)
 
-    compat_enqueue('qa.update_package', tasks.update_package, queue,  args=[ckan_ini_filepath, package.id])
+    compat_enqueue('qa.update_package', update_package, queue,  args=[ckan_ini_filepath, package.id])
     log.debug('QA of package put into celery queue %s: %s',
               queue, package.name)
 
@@ -103,7 +103,7 @@ def create_qa_update_task(resource, queue):
         package = resource.package
     ckan_ini_filepath = os.path.abspath(config.__file__)
 
-    compat_enqueue('qa.update', tasks.update, queue, args=[ckan_ini_filepath, resource.id])
+    compat_enqueue('qa.update', update, queue, args=[ckan_ini_filepath, resource.id])
 
     log.debug('QA of resource put into celery queue %s: %s/%s url=%r',
               queue, package.name, resource.id, resource.url)
