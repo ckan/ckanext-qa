@@ -16,14 +16,12 @@ class TestSniffFormat:
     @pytest.mark.ckan_config("ckan.plugins", "archiver qa")
     def initial_data(self, clean_db):
 
-        fixture_files = []
+        self.fixture_files = []
         fixture_data_dir = os.path.join(os.path.dirname(__file__), 'data')
         for filename in os.listdir(fixture_data_dir):
             format_extension = '.'.join(filename.split('.')[1:]).replace('_', ' ')
             filepath = os.path.join(fixture_data_dir, filename)
-            fixture_files.append((format_extension, filepath))
-
-        return fixture_files
+            self.fixture_files.append((format_extension, filepath))
 
     @classmethod
     def assert_file_has_format_sniffed_correctly(cls, format_extension, filepath):
@@ -45,9 +43,8 @@ class TestSniffFormat:
     #    for format_extension, filepath in self.fixture_files:
     #        self.assert_file_has_format_sniffed_correctly(format_extension, filepath)
 
-    @classmethod
-    def check_format(cls, format, filename=None):
-        for format_extension, filepath in cls.fixture_files:
+    def check_format(self, format, filename=None):
+        for format_extension, filepath in self.fixture_files:
             if format_extension == format:
                 if filename:
                     if filename in filepath:
@@ -58,7 +55,7 @@ class TestSniffFormat:
                     break
         else:
             assert 0, format  # Could not find fixture for format
-        cls.assert_file_has_format_sniffed_correctly(format_extension, filepath)
+        self.assert_file_has_format_sniffed_correctly(format_extension, filepath)
 
     def test_xls(self):
         self.check_format('xls', '10-p108-data-results')
