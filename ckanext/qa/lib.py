@@ -6,7 +6,7 @@ import logging
 from pylons import config
 
 from ckan import plugins as p
-import tasks
+import ckanext.qa.tasks as tasks
 
 log = logging.getLogger(__name__)
 
