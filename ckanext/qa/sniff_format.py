@@ -10,7 +10,6 @@ import xlrd
 import magic
 import messytables
 
-from ckanext.qa.lib import resource_format_scores
 from ckan.lib import helpers as ckan_helpers
 
 import logging
@@ -371,6 +370,9 @@ def has_rdfa(buf):
 
 
 def get_zipped_format(filepath):
+
+    from ckanext.qa.lib import resource_format_scores
+
     '''For a given zip file, return the format of file inside.
     For multiple files, choose by the most open, and then by the most
     popular extension.'''
