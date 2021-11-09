@@ -7,7 +7,7 @@ from ckanext.archiver.interfaces import IPipe
 from logic import action, auth
 from model import QA, aggregate_qa_for_a_dataset
 import helpers
-import lib
+from ckanext.qa.lib import create_qa_update_package_task
 from ckanext.report.interfaces import IReport
 
 
@@ -52,7 +52,7 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
         dataset = model.Package.get(dataset_id)
         assert dataset
 
-        lib.create_qa_update_package_task(dataset, queue=queue)
+        create_qa_update_package_task(dataset, queue=queue)
 
     # IReport
 
