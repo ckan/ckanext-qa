@@ -4,11 +4,6 @@ import logging
 from functools import wraps
 import json
 from urllib import urlencode
-try:
-    from ckan.tests.legacy import TestController as ControllerTestCase
-except ImportError:
-    from ckan.tests import TestController as ControllerTestCase
-
 from ckanext.archiver.tasks import update_package
 
 from mock_remote_server import MockEchoTestServer
@@ -37,7 +32,7 @@ def with_mock_url(url=''):
     return decorator
 
 
-class TestLinkChecker(ControllerTestCase):
+class TestLinkChecker:
     """
     Tests for link checker task
     """
