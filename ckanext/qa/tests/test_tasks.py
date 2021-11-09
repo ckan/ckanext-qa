@@ -3,27 +3,17 @@ import logging
 import urllib
 import datetime
 
-from nose.tools import assert_equal
-from nose.plugins.skip import SkipTest
+import pytest
 from ckan import model
 from ckan.logic import get_action
-from ckan import plugins as p
 import ckan.lib.helpers as ckan_helpers
-try:
-    from ckan.tests.helpers import reset_db
-    from ckan.tests import factories as ckan_factories
-    from ckan.tests.legacy import BaseCase
-except ImportError:
-    from ckan.new_tests.helpers import reset_db
-    from ckan.new_tests import factories as ckan_factories
-    from ckan.tests import BaseCase
+from ckan.tests import factories as ckan_factories
 
 import ckanext.qa.tasks
 from ckanext.qa.tasks import resource_score, extension_variants
 import ckanext.archiver
 import ckanext.archiver.tasks
 from ckanext.qa import model as qa_model
-from ckanext.archiver import model as archiver_model
 from ckanext.archiver.model import Archival, Status
 
 log = logging.getLogger(__name__)
@@ -65,13 +55,13 @@ TODAY = datetime.datetime(year=2008, month=10, day=10)
 TODAY_STR = TODAY.isoformat()
 
 
-class TestTask(BaseCase):
+class TestTask:
 
-    @classmethod
-    def setup_class(cls):
-        reset_db()
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
+    @pytest.fixture(autouse=True)
+    @pytest.mark.usefixtures(u"clean_db")
+    @pytest.mark.ckan_config("ckan.plugins", "archiver qa")
+    def initial_data(self, clean_db):
+        return {}
 
     def test_trigger_on_archival(cls):
         # create package
@@ -100,14 +90,13 @@ class TestTask(BaseCase):
         # TODO run celery and check it actually ran...
 
 
-class TestResourceScore(BaseCase):
+class TestResourceScore:
 
-    @classmethod
-    def setup_class(cls):
-        reset_db()
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
-        cls.fake_resource = {
+    @pytest.fixture(autouse=True)
+    @pytest.mark.usefixtures(u"clean_db")
+    @pytest.mark.ckan_config("ckan.plugins", "archiver qa")
+    def initial_data(self, clean_db):
+        fake_resource = {
             'id': u'fake_resource_id',
             'url': 'http://remotesite.com/filename.csv',
             'cache_url': 'http://remotesite.com/resources/filename.csv',
@@ -116,6 +105,8 @@ class TestResourceScore(BaseCase):
             'is_open': True,
             'position': 2,
         }
+
+        return fake_resource
 
     def _test_resource(self, url='anything', format='TXT', archived=True, cached=True, license_id='uk-ogl'):
         pkg = {'license_id': license_id,
@@ -175,7 +166,7 @@ class TestResourceScore(BaseCase):
         result = resource_score(self._test_resource('http://site.com/filename.xls'))
         assert result['openness_score'] == 2, result
         assert result['archival_timestamp'] == TODAY_STR, result
-        assert_equal(result['format'], 'XLS')
+        assert result['format'] == 'XLS'
         assert 'not recognized from its contents' in result['openness_score_reason'], result
         assert 'extension "xls" relates to format "XLS"' in result['openness_score_reason'], result
 
@@ -190,17 +181,15 @@ class TestResourceScore(BaseCase):
         set_sniffed_format(None)
         result = resource_score(self._test_resource(format='XLS'))
         assert result['openness_score'] == 2, result
-        assert_equal(result['format'], 'XLS')
+        assert result['format'] == 'XLS'
         assert 'not recognized from its contents' in result['openness_score_reason'], result
         assert 'Could not determine a file extension in the URL' in result['openness_score_reason'], result
         assert 'Format field "XLS"' in result['openness_score_reason'], result
 
     def test_by_format_field_excel(self):
         set_sniffed_format(None)
-        if p.toolkit.check_ckan_version(max_version='2.4.99'):
-            raise SkipTest
         result = resource_score(self._test_resource(format='Excel'))
-        assert_equal(result['format'], 'XLS')
+        assert result['format'] == 'XLS'
 
     def test_format_field_not_recognized(self):
         set_sniffed_format(None)
@@ -222,7 +211,7 @@ class TestResourceScore(BaseCase):
         set_sniffed_format('CSV')
         result = resource_score(self._test_resource(license_id=None))
         assert result['openness_score'] == 0, result
-        assert_equal(result['format'], 'CSV')
+        assert result['format'] == 'CSV'
         assert 'License not open' in result['openness_score_reason'], result
 
     def test_not_available_and_not_open(self):
@@ -237,12 +226,12 @@ class TestResourceScore(BaseCase):
         model.Session.commit()
         result = resource_score(res)
         assert result['openness_score'] == 0, result
-        assert_equal(result['format'], None)
+        assert result['format'] is None
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], u'File could not be downloaded. '
-                                                      u'Reason: Download error. Error details: Server returned 500 error.'
-                                                      u' Attempted on 10/10/2008. Tried 16 times since 01/10/2008.'
-                                                      u' This URL has not worked in the history of this tool.')
+        assert result['openness_score_reason'] == u'File could not be downloaded. '\
+                                                  u'Reason: Download error. Error details: Server returned 500 error.'\
+                                                  u' Attempted on 10/10/2008. Tried 16 times since 01/10/2008.'\
+                                                  u' This URL has not worked in the history of this tool.'
 
     def test_not_available_any_more(self):
         # A cache of the data still exists from the previous run, but this
@@ -265,37 +254,33 @@ class TestResourceScore(BaseCase):
         archival.is_broken = True
         result = resource_score(res)
         assert result['openness_score'] == 0, result
-        assert_equal(result['format'], 'CSV')
+        assert result['format'] == 'CSV'
         # in preference it should report that it is not available
-        assert_equal(result['openness_score_reason'], 'File could not be downloaded. '
-                                                      'Reason: Download error. Error details: Server returned 404 error.'
-                                                      ' Attempted on 10/10/2008. This URL last worked on: 01/10/2008.')
+        assert result['openness_score_reason'] == 'File could not be downloaded. '\
+                                                  'Reason: Download error. Error details: Server returned 404 error.'\
+                                                  ' Attempted on 10/10/2008. This URL last worked on: 01/10/2008.'
 
 
 class TestExtensionVariants:
     def test_0_normal(self):
-        assert_equal(extension_variants('http://dept.gov.uk/coins-data-1996.csv'),
-                     ['csv'])
+        assert extension_variants('http://dept.gov.uk/coins-data-1996.csv') == ['csv']
 
     def test_1_multiple(self):
-        assert_equal(extension_variants('http://dept.gov.uk/coins.data.1996.csv.zip'),
-                     ['csv.zip', 'zip'])
+        assert extension_variants('http://dept.gov.uk/coins.data.1996.csv.zip') == ['csv.zip', 'zip']
 
     def test_2_parameter(self):
-        assert_equal(extension_variants('http://dept.gov.uk/coins-data-1996.csv?callback=1'),
-                     ['csv'])
+        assert extension_variants('http://dept.gov.uk/coins-data-1996.csv?callback=1') == ['csv']
 
     def test_3_none(self):
-        assert_equal(extension_variants('http://dept.gov.uk/coins-data-1996'),
-                     [])
+        assert extension_variants('http://dept.gov.uk/coins-data-1996') == []
 
 
 class TestSaveQaResult(object):
-    @classmethod
-    def setup_class(cls):
-        reset_db()
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
+
+    @pytest.fixture(autouse=True)
+    @pytest.mark.usefixtures(u"clean_db")
+    def initial_data(self, clean_db):
+        return {}
 
     @classmethod
     def get_qa_result(cls, **kwargs):
@@ -315,20 +300,19 @@ class TestSaveQaResult(object):
 
         qa = ckanext.qa.tasks.save_qa_result(resource, qa_result)
 
-        assert_equal(qa.openness_score, qa_result['openness_score'])
-        assert_equal(qa.openness_score_reason,
-                     qa_result['openness_score_reason'])
-        assert_equal(qa.format, qa_result['format'])
-        assert_equal(qa.archival_timestamp, qa_result['archival_timestamp'])
+        assert qa.openness_score == qa_result['openness_score']
+        assert qa.openness_score_reason == qa_result['openness_score_reason']
+        assert qa.format == qa_result['format']
+        assert qa.archival_timestamp == qa_result['archival_timestamp']
         assert qa.updated, qa.updated
 
 
 class TestUpdatePackage(object):
-    @classmethod
-    def setup_class(cls):
-        reset_db()
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
+
+    @pytest.fixture(autouse=True)
+    @pytest.mark.usefixtures(u"clean_db")
+    def initial_data(self, clean_db):
+        return {}
 
     def test_simple(self):
         resource = {
@@ -343,16 +327,16 @@ class TestUpdatePackage(object):
 
         qa = qa_model.QA.get_for_resource(dataset['resources'][0]['id'])
         assert qa
-        assert_equal(qa.openness_score, 0)
-        assert_equal(qa.openness_score_reason, 'License not open')
+        assert qa.openness_score == 0
+        assert qa.openness_score_reason == 'License not open'
 
 
 class TestUpdateResource(object):
-    @classmethod
-    def setup_class(cls):
-        reset_db()
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
+
+    @pytest.fixture(autouse=True)
+    @pytest.mark.usefixtures(u"clean_db")
+    def initial_data(self, clean_db):
+        return {}
 
     def test_simple(self):
         resource = {
@@ -367,5 +351,5 @@ class TestUpdateResource(object):
 
         qa = qa_model.QA.get_for_resource(dataset['resources'][0]['id'])
         assert qa
-        assert_equal(qa.openness_score, 0)
-        assert_equal(qa.openness_score_reason, 'License not open')
+        assert qa.openness_score == 0
+        assert qa.openness_score_reason == 'License not open'
