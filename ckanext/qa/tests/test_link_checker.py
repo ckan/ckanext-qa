@@ -16,6 +16,7 @@ def get_logger():
 
 update_package.get_logger = get_logger
 
+
 class TestLinkChecker:
     """
     Tests for link checker task
