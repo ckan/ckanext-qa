@@ -28,8 +28,8 @@ class TestLinkChecker:
     def initial_data(self, clean_db):
         return {}
 
-    def check_link(self, url):
-        result = self.app.get('/qa/link_checker?%s' % urlencode({'url': url}))
+    def check_link(self, app, url):
+        result = app.get('/qa/link_checker?%s' % urlencode({'url': url}))
         return json.loads(result.body)[0]
 
     def test_url_working_but_formatless(self, client):
