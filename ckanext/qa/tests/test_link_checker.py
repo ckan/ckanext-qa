@@ -25,11 +25,11 @@ class TestLinkChecker:
     @pytest.fixture(autouse=True)
     @pytest.mark.usefixtures(u"clean_db")
     @pytest.mark.ckan_config("ckan.plugins", "archiver qa")
-    def initial_data(self, clean_db):
-        return {}
+    def initial_data(self, clean_db, app):
+        self.app = app
 
-    def check_link(self, app, url):
-        result = app.get('/qa/link_checker?%s' % urlencode({'url': url}))
+    def check_link(self, url):
+        result = self.app.get('/qa/link_checker?%s' % urlencode({'url': url}))
         return json.loads(result.body)[0]
 
     def test_url_working_but_formatless(self, client):
