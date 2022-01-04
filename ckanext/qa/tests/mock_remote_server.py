@@ -6,8 +6,10 @@ from contextlib import contextmanager
 from threading import Thread
 from time import sleep
 from wsgiref.simple_server import make_server
+from functools import reduce
 import urllib2
 import socket
+import six
 
 
 class MockHTTPServer(object):
@@ -116,7 +118,7 @@ class MockEchoTestServer(MockHTTPServer):
         else:
             content = request.str_params.get('content', '')
 
-        if isinstance(content, unicode):
+        if isinstance(content, six.text_type):
             raise TypeError("Expected raw byte string for content")
 
         headers = [
