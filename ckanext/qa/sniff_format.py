@@ -38,7 +38,7 @@ def sniff_file_format(filepath):
     mime_type = magic.from_file(filepath_utf8, mime=True)
     log.info('Magic detects file as: %s', mime_type)
     if mime_type:
-        if mime_type == 'application/xml':
+        if mime_type in ('application/xml', 'text/xml'):
             with open(filepath) as f:
                 buf = f.read(5000)
             format_ = get_xml_variant_including_xml_declaration(buf)
