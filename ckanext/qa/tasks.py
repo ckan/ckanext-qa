@@ -6,7 +6,10 @@ import datetime
 import json
 import os
 import traceback
-import urlparse
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
 import routes
 from builtins import str
 
@@ -15,8 +18,8 @@ from ckan.common import _
 from ckan.lib import i18n
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
-from sniff_format import sniff_file_format
-import lib
+from ckanext.qa.sniff_format import sniff_file_format
+from ckanext.qa import lib
 from ckanext.archiver.model import Archival, Status
 
 import logging

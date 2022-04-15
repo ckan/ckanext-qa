@@ -5,6 +5,7 @@ from builtins import input
 from sqlalchemy import or_
 
 import ckan.plugins as p
+from ckanext.qa import utils
 
 REQUESTS_HEADER = {'content-type': 'application/json',
                    'User-Agent': 'ckanext-qa commands'}
@@ -90,14 +91,9 @@ class QACommand(p.toolkit.CkanCommand):
         elif cmd == 'migrate1':
             self.migrate1()
         elif cmd == 'init':
-            self.init_db()
+            utils.init_db()
         else:
             self.log.error('Command "%s" not recognized' % (cmd,))
-
-    def init_db(self):
-        import ckan.model as model
-        from ckanext.qa.model import init_tables
-        init_tables(model.meta.engine)
 
     def update(self):
         from ckan import model

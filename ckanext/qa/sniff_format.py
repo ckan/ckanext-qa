@@ -4,7 +4,11 @@ import os
 from builtins import str
 from collections import defaultdict
 import subprocess
-import StringIO
+
+try:
+    import StringIO
+except ImportError:
+    from io import StringIO
 
 import xlrd
 import magic

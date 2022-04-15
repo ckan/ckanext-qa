@@ -1,4 +1,4 @@
--e git+http://github.com/datagovuk/ckanext-report.git#egg=ckanext-report
+-e git+http://github.com/ckan/ckanext-report.git#egg=ckanext-report
 -e git+http://github.com/ckan/ckanext-archiver.git#egg=ckanext-archiver
 SQLAlchemy>=0.6.6
 requests
