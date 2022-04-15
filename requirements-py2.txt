@@ -1,5 +1,5 @@
-ckanext-archiver>=2.0
-ckanext-report
+-e git+http://github.com/datagovuk/ckanext-report.git#egg=ckanext-report
+-e git+http://github.com/ckan/ckanext-archiver.git#egg=ckanext-archiver
 SQLAlchemy>=0.6.6
 requests
 six>=1.9  # until messytables->html5lib releases https://github.com/html5lib/html5lib-python/pull/301
@@ -7,4 +7,4 @@ xlrd==1.0.0
 python-magic==0.4.12
 messytables==0.15.2
 future>=0.18.2
-progressbar==2.5
+progressbar==2.3
