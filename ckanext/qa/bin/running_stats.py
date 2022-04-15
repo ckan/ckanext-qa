@@ -31,11 +31,10 @@ print(package_stats.report())
 > not deleted: 70 spending-bristol, ...
 
 '''
-
+from __future__ import print_function
 import copy
 import datetime
 import six
-from __future__ import print_function
 
 
 class StatsCount(dict):

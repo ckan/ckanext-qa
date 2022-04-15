@@ -1,8 +1,8 @@
+from __future__ import print_function
 import logging
 from functools import wraps
 import json
 from urllib import urlencode
-from __future__ import print_function
 from nose.tools import assert_in
 try:
     from ckan.tests.legacy import TestController as ControllerTestCase

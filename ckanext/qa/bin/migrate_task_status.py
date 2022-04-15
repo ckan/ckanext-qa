@@ -5,12 +5,11 @@ You could just rerun the QA to populate the new QA table, but you'd miss key
 information - resources that are no longer available but had the format
 detected in the past.
 '''
-
+from __future__ import print_function
 from optparse import OptionParser
 import logging
 import json
 import datetime
-from __future__ import print_function
 import common
 from running_stats import StatsList
 

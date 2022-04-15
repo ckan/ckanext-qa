@@ -1,7 +1,7 @@
+from __future__ import print_function
 import logging
 import sys
 from builtins import input
-from __future__ import print_function
 from sqlalchemy import or_
 
 import ckan.plugins as p

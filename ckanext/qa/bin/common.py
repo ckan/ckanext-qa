@@ -1,5 +1,6 @@
-import os
 from __future__ import print_function
+import os
+
 
 def load_config(config_filepath):
     import paste.deploy
