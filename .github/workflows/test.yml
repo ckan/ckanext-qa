@@ -67,7 +67,7 @@ jobs:
       run: |
         paster --plugin=ckan db init -c test.ini
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.dcat --cov-report=xml --cov-append --disable-warnings ckanext/dcat/tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.qa --cov-report=xml --cov-append --disable-warnings ckanext/qa/tests
     - name: Upload coverage report to codecov
       uses: codecov/codecov-action@v1
       with:
