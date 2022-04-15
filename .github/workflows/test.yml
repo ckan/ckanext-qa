@@ -47,9 +47,14 @@ jobs:
     - name: adding github workspace as safe directory
       run: git config --global --add safe.directory $GITHUB_WORKSPACE
     - uses: actions/checkout@v2
+    - name: Install py3 requirements
+      if: ${{ matrix.ckan-version == '2.10' || matrix.ckan-version == '2.9' }}
+      run: pip install -r requirements-py3.txt
+    - name: Install py2 requirements  
+      if: ${{ matrix.ckan-version == '2.7' || matrix.ckan-version == '2.8' || matrix.ckan-version == '2.9-py2' }}
+      run: pip install -r requirements.txt
     - name: Install requirements
       run: |
-        pip install -r requirements.txt
         pip install -r dev-requirements.txt
         pip install -e git+https://github.com/ckan/ckanext-archiver.git#egg=ckanext-archiver
         pip install -r https://raw.githubusercontent.com/ckan/ckanext-archiver/master/requirements.txt
