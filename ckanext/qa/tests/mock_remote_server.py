@@ -8,6 +8,8 @@ from time import sleep
 from wsgiref.simple_server import make_server
 import urllib2
 import socket
+from builtins import str
+from functools import reduce
 
 
 class MockHTTPServer(object):
@@ -116,7 +118,7 @@ class MockEchoTestServer(MockHTTPServer):
         else:
             content = request.str_params.get('content', '')
 
-        if isinstance(content, unicode):
+        if isinstance(content, str):
             raise TypeError("Expected raw byte string for content")
 
         headers = [

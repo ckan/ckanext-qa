@@ -1,5 +1,5 @@
 import os
-
+from __future__ import print_function
 
 def load_config(config_filepath):
     import paste.deploy
@@ -48,5 +48,5 @@ def get_resources(state='active', publisher_ref=None, resource_id=None, dataset_
         resources = resources.filter(model.Resource.id == resource_id)
         criteria.append('Resource:%s' % resource_id)
     resources = resources.all()
-    print '%i resources (%s)' % (len(resources), ' '.join(criteria))
+    print('%i resources (%s)' % (len(resources), ' '.join(criteria)))
     return resources

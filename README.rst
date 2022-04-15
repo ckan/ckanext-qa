@@ -31,7 +31,7 @@ Requirements
 
 Before installing ckanext-qa, make sure that you have installed the following:
 
-* CKAN 2.1+
+* CKAN 2.1+ (tests are only running for CKAN 2.7+)
 * ckanext-archiver 2.0+ (https://github.com/ckan/ckanext-archiver)
 * ckanext-report (https://github.com/datagovuk/ckanext-report) for reporting
 

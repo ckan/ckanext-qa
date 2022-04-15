@@ -55,7 +55,7 @@ def resource_format_scores():
         with open(json_filepath) as format_file:
             try:
                 file_resource_formats = json.loads(format_file.read())
-            except ValueError, e:
+            except ValueError as e:
                 # includes simplejson.decoder.JSONDecodeError
                 raise ValueError('Invalid JSON syntax in %s: %s' %
                                  (json_filepath, e))

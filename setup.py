@@ -6,7 +6,10 @@ setup(
     version=__version__,
     description='Quality Assurance plugin for CKAN',
     long_description='',
-    classifiers=[],
+    classifiers=[
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+    ],
     keywords='',
     author='Open Knowledge Foundation, Cabinet Office & contributors',
     author_email='info@okfn.org',

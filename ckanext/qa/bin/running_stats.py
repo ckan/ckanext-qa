@@ -14,7 +14,7 @@ for package in packages:
         package_stats.increment('deleted')
     else:
         package_stats.increment('not deleted')
-print package_stats.report()
+print(package_stats.report())
 > deleted: 30
 > not deleted: 70
 
@@ -26,7 +26,7 @@ for package in packages:
         package_stats.add('deleted', package.name)
     else:
         package_stats.add('not deleted' package.name)
-print package_stats.report()
+print(package_stats.report())
 > deleted: 30 pollution-uk, flood-regions, river-quality, ...
 > not deleted: 70 spending-bristol, ...
 
@@ -34,6 +34,8 @@ print package_stats.report()
 
 import copy
 import datetime
+import six
+from __future__ import print_function
 
 
 class StatsCount(dict):
@@ -68,9 +70,9 @@ class StatsCount(dict):
             report_dict[category] = self.report_value(category)
 
         if order_by_title:
-            items = sorted(report_dict.iteritems())
+            items = sorted(six.iteritems(report_dict))
         else:
-            items = sorted(report_dict.iteritems(),
+            items = sorted(six.iteritems(report_dict),
                            key=lambda x: -x[1][1])
 
         for category, value_tuple in items:
@@ -110,6 +112,6 @@ if __name__ == '__main__':
     package_stats.add('Success', 'good3')
     package_stats.add('Success', 'good4')
     package_stats.add('Failure', 'bad1')
-    print package_stats.report()
+    print(package_stats.report())
 
-    print StatsList().report()
+    print(StatsList().report())

@@ -1,6 +1,7 @@
 import re
 import zipfile
 import os
+from builtins import str
 from collections import defaultdict
 import subprocess
 import StringIO
@@ -33,7 +34,7 @@ def sniff_file_format(filepath):
     '''
     format_ = None
     log.info('Sniffing file format of: %s', filepath)
-    filepath_utf8 = filepath.encode('utf8') if isinstance(filepath, unicode) \
+    filepath_utf8 = filepath.encode('utf8') if isinstance(filepath, str) \
         else filepath
     mime_type = magic.from_file(filepath_utf8, mime=True)
     log.info('Magic detects file as: %s', mime_type)
@@ -318,9 +319,9 @@ def get_xml_variant_without_xml_declaration(buf):
     p.StartElementHandler = start_element
     try:
         p.Parse(buf)
-    except GotFirstTag, e:
+    except GotFirstTag as e:
         top_level_tag_name = str(e).lower()
-    except xml.sax.SAXException, e:
+    except xml.sax.SAXException as e:
         log.info('Sax parse error: %s %s', e, buf)
         return {'format': 'XML'}
 
@@ -381,11 +382,11 @@ def get_zipped_format(filepath):
             filepaths = zip.namelist()
         finally:
             zip.close()
-    except zipfile.BadZipfile, e:
+    except zipfile.BadZipfile as e:
         log.info('Zip file open raised error %s: %s',
                  e, e.args)
         return
-    except Exception, e:
+    except Exception as e:
         log.warning('Zip file open raised exception %s: %s',
                     e, e.args)
         return
@@ -438,7 +439,7 @@ def get_zipped_format(filepath):
 def is_excel(filepath):
     try:
         xlrd.open_workbook(filepath)
-    except Exception, e:
+    except Exception as e:
         log.info('Not Excel - failed to load: %s %s', e, e.args)
         return False
     else:
