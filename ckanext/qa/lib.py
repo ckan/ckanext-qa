@@ -3,6 +3,7 @@ import json
 import re
 import logging
 
+import ckan
 from ckan.common import config
 
 from ckan import plugins as p
@@ -87,7 +88,7 @@ def munge_format_to_be_canonical(format_name):
 
 
 def create_qa_update_package_task(package, queue):
-    ckan_ini_filepath = os.path.abspath(config.__file__)
+    ckan_ini_filepath = os.path.abspath(ckan.config.__file__)
 
     compat_enqueue('qa.update_package', tasks.update_package, queue,  args=[ckan_ini_filepath, package.id])
     log.debug('QA of package put into celery queue %s: %s',
@@ -99,7 +100,7 @@ def create_qa_update_task(resource, queue):
         package = resource.resource_group.package
     else:
         package = resource.package
-    ckan_ini_filepath = os.path.abspath(config.__file__)
+    ckan_ini_filepath = os.path.abspath(ckan.config.__file__)
 
     compat_enqueue('qa.update', tasks.update, queue, args=[ckan_ini_filepath, resource.id])
 
