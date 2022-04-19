@@ -19,7 +19,6 @@ from ckan.lib import i18n
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
 from ckanext.qa.sniff_format import sniff_file_format
-from ckanext.qa import lib
 from ckanext.archiver.model import Archival, Status
 
 import logging
@@ -351,6 +350,7 @@ def score_by_sniffing_data(archival, resource, score_reasons):
       * If it cannot work out the format then format_string is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa import lib
     if not archival or not archival.cache_filepath:
         score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
         return (None, None)
@@ -398,6 +398,7 @@ def score_by_url_extension(resource, score_reasons):
       * If it cannot work out the format then format is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa import lib
     extension_variants_ = extension_variants(resource.url.strip())
     if not extension_variants_:
         score_reasons.append(_('Could not determine a file extension in the URL.'))
@@ -450,6 +451,7 @@ def score_by_format_field(resource, score_reasons):
       * If it cannot work out the format then format_string is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa import lib
     format_field = resource.format or ''
     if not format_field:
         score_reasons.append(_('Format field is blank.'))
