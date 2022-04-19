@@ -15,9 +15,13 @@ def init_db():
     init_tables(model.meta.engine)
 
 
-def update(*args, queue=None):
+def update(*args, **kwargs):
     from ckan import model
     from ckanext.qa import lib
+    queue = kwargs.pop('queue')
+    if kwargs:
+        raise TypeError('"update" got an unexpected keyword argument {}'.format(kwargs))
+    
     packages = []
     resources = []
     if len(args) > 0:
