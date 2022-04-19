@@ -4,17 +4,13 @@ import os
 from builtins import str
 from collections import defaultdict
 import subprocess
-
-try:
-    import StringIO
-except ImportError:
-    from io import StringIO
+from io import StringIO
 
 import xlrd
 import magic
 import messytables
 
-import lib
+from ckanext.qa import lib
 from ckan.lib import helpers as ckan_helpers
 
 import logging
