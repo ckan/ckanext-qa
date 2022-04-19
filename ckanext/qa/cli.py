@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import click
-from ckanext.qa import utils
+import logging
+import ckanext.qa.utils as utils
+
+
+log = logging.getLogger(__name__)
 
 
 def get_commands():
@@ -17,3 +21,15 @@ def qa():
 def init():
     """Creates necessary db tables"""
     utils.init_db()
+
+
+@qa.command()
+@click.argument('ids', nargs=-1)
+@click.option('-q', '--queue', default=None)
+def update(ids, queue):
+    """Creates necessary db tables"""
+    log.info('QA update: ids:%s queue:%s' % (ids, queue))
+    if ids:
+        utils.update(*ids, queue=queue)
+    else:
+        utils.update(queue=queue)
