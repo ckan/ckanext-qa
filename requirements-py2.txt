@@ -7,4 +7,4 @@ xlrd==1.0.0
 python-magic==0.4.12
 messytables==0.15.2
 future>=0.18.2
-progressbar==2.5
+progressbar==2.3

@@ -3,10 +3,11 @@ import json
 import re
 import logging
 
-from pylons import config
+import ckan
+from ckan.common import config
 
 from ckan import plugins as p
-import tasks
+from ckanext.qa import tasks
 
 log = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ def resource_format_scores():
         with open(json_filepath) as format_file:
             try:
                 file_resource_formats = json.loads(format_file.read())
-            except ValueError, e:
+            except ValueError as e:
                 # includes simplejson.decoder.JSONDecodeError
                 raise ValueError('Invalid JSON syntax in %s: %s' %
                                  (json_filepath, e))
@@ -87,8 +88,7 @@ def munge_format_to_be_canonical(format_name):
 
 
 def create_qa_update_package_task(package, queue):
-    from pylons import config
-    ckan_ini_filepath = os.path.abspath(config.__file__)
+    ckan_ini_filepath = os.path.abspath(ckan.config.__file__)
 
     compat_enqueue('qa.update_package', tasks.update_package, queue,  args=[ckan_ini_filepath, package.id])
     log.debug('QA of package put into celery queue %s: %s',
@@ -96,12 +96,11 @@ def create_qa_update_package_task(package, queue):
 
 
 def create_qa_update_task(resource, queue):
-    from pylons import config
     if p.toolkit.check_ckan_version(max_version='2.2.99'):
         package = resource.resource_group.package
     else:
         package = resource.package
-    ckan_ini_filepath = os.path.abspath(config.__file__)
+    ckan_ini_filepath = os.path.abspath(ckan.config.__file__)
 
     compat_enqueue('qa.update', tasks.update, queue, args=[ckan_ini_filepath, resource.id])
 

@@ -4,10 +4,9 @@ import ckan.model as model
 import ckan.plugins as p
 
 from ckanext.archiver.interfaces import IPipe
-from logic import action, auth
-from model import QA, aggregate_qa_for_a_dataset
-import helpers
-import lib
+from ckanext.qa.logic import action, auth
+from ckanext.qa.model import QA, aggregate_qa_for_a_dataset
+from ckanext.qa import helpers
 from ckanext.report.interfaces import IReport
 
 
@@ -16,7 +15,6 @@ log = logging.getLogger(__name__)
 
 class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
     p.implements(p.IConfigurer, inherit=True)
-    p.implements(p.IRoutes, inherit=True)
     p.implements(IPipe, inherit=True)
     p.implements(IReport)
     p.implements(p.IActions)
@@ -29,22 +27,35 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'templates')
 
-    # IRoutes
+    if p.toolkit.check_ckan_version(max_version='2.9.5'):
+        p.implements(p.IRoutes, inherit=True)
+        # TODO IRoutes was deprecated and we need to figure out
+        # if this is important and how to implement
+        # https://github.com/ckan/ckan/commit/f2a5bffed60bb71db8f728091eb33a784c7a2052
 
-    def before_map(self, map):
-        # Link checker - deprecated
-        res = 'ckanext.qa.controllers:LinkCheckerController'
-        map.connect('qa_resource_checklink', '/qa/link_checker',
-                    conditions=dict(method=['GET']),
-                    controller=res,
-                    action='check_link')
-        return map
+        # IRoutes
+        def before_map(self, map):
+            # Link checker - deprecated
+            res = 'ckanext.qa.controllers:LinkCheckerController'
+            map.connect('qa_resource_checklink', '/qa/link_checker',
+                        conditions=dict(method=['GET']),
+                        controller=res,
+                        action='check_link')
+            return map
+
+    if p.toolkit.check_ckan_version(min_version='2.9'):
+        p.implements(p.IClick, inherit=True)
+        # IClick
+        def get_commands(self):
+            from ckanext.qa import cli
+            return cli.get_commands()
 
     # IPipe
 
     def receive_data(self, operation, queue, **params):
         '''Receive notification from ckan-archiver that a dataset has been
         archived.'''
+        from ckanext.qa import lib
         if not operation == 'package-archived':
             return
         dataset_id = params['package_id']
