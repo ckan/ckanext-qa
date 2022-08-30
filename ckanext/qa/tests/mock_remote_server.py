@@ -2,12 +2,21 @@
 An HTTP server that listens on localhost and returns a variety of responses for
 mocking remote servers.
 """
+import sys
 from contextlib import contextmanager
 from threading import Thread
 from time import sleep
 from wsgiref.simple_server import make_server
-import urllib2
 import socket
+from six.moves import reduce
+
+try:
+    import urllib2
+except ImportError:
+    import urllib3
+
+if sys.version_info[0] >= 3:
+    unicode = str
 
 
 class MockHTTPServer(object):

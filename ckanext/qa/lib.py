@@ -2,11 +2,10 @@ import os
 import json
 import re
 import logging
-
-from pylons import config
+from ckan.plugins.toolkit import config
 
 from ckan import plugins as p
-import tasks
+import ckanext.qa.tasks as tasks
 
 log = logging.getLogger(__name__)
 
@@ -49,13 +48,13 @@ def resource_format_scores():
         import ckanext.qa.plugin
         if not json_filepath:
             json_filepath = os.path.join(
-                os.path.dirname(os.path.realpath(ckanext.qa.plugin.__file__)),
+                os.path.dirname(os.path.dirname(os.path.realpath(ckanext.qa.plugin.__file__))),
                 'resource_format_openness_scores.json'
             )
         with open(json_filepath) as format_file:
             try:
                 file_resource_formats = json.loads(format_file.read())
-            except ValueError, e:
+            except ValueError as e:
                 # includes simplejson.decoder.JSONDecodeError
                 raise ValueError('Invalid JSON syntax in %s: %s' %
                                  (json_filepath, e))
@@ -87,23 +86,19 @@ def munge_format_to_be_canonical(format_name):
 
 
 def create_qa_update_package_task(package, queue):
-    from pylons import config
-    ckan_ini_filepath = os.path.abspath(config.__file__)
 
-    compat_enqueue('qa.update_package', tasks.update_package, queue,  args=[ckan_ini_filepath, package.id])
+    compat_enqueue('qa.update_package', tasks.update_package, queue,  args=[package.id])
     log.debug('QA of package put into celery queue %s: %s',
               queue, package.name)
 
 
 def create_qa_update_task(resource, queue):
-    from pylons import config
     if p.toolkit.check_ckan_version(max_version='2.2.99'):
         package = resource.resource_group.package
     else:
         package = resource.package
-    ckan_ini_filepath = os.path.abspath(config.__file__)
 
-    compat_enqueue('qa.update', tasks.update, queue, args=[ckan_ini_filepath, resource.id])
+    compat_enqueue('qa.update', tasks.update, queue, args=[resource.id])
 
     log.debug('QA of resource put into celery queue %s: %s/%s url=%r',
               queue, package.name, resource.id, resource.url)

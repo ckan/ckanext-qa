@@ -1,3 +1,4 @@
+import sys
 import uuid
 import datetime
 
@@ -12,6 +13,10 @@ from ckan.plugins import toolkit
 log = __import__('logging').getLogger(__name__)
 
 Base = declarative_base()
+
+
+if sys.version_info[0] >= 3:
+    unicode = str
 
 
 def make_uuid():

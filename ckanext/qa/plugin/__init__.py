@@ -2,19 +2,27 @@ import logging
 
 import ckan.model as model
 import ckan.plugins as p
+from ckan.plugins import toolkit
 
 from ckanext.archiver.interfaces import IPipe
-from logic import action, auth
-from model import QA, aggregate_qa_for_a_dataset
-import helpers
-import lib
+from ckanext.qa.logic import action, auth
+from ckanext.qa.model import QA, aggregate_qa_for_a_dataset
+import ckanext.qa.helpers as helpers
+import ckanext.qa.lib as lib
 from ckanext.report.interfaces import IReport
 
 
 log = logging.getLogger(__name__)
 
+try:
+    toolkit.requires_ckan_version("2.9")
+except toolkit.CkanVersionException:
+    from ckanext.qa.plugin.pylons_plugin import MixinPlugin
+else:
+    from ckanext.qa.plugin.flask_plugin import MixinPlugin
 
-class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
+
+class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IRoutes, inherit=True)
     p.implements(IPipe, inherit=True)
@@ -27,18 +35,7 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
     # IConfigurer
 
     def update_config(self, config):
-        p.toolkit.add_template_directory(config, 'templates')
-
-    # IRoutes
-
-    def before_map(self, map):
-        # Link checker - deprecated
-        res = 'ckanext.qa.controllers:LinkCheckerController'
-        map.connect('qa_resource_checklink', '/qa/link_checker',
-                    conditions=dict(method=['GET']),
-                    controller=res,
-                    action='check_link')
-        return map
+        toolkit.add_template_directory(config, 'templates')
 
     # IPipe
 
