@@ -1,8 +1,9 @@
 import os
+import pytest
 import logging
 
-from nose.tools import assert_equal
-from nose.plugins.skip import SkipTest
+# from nose.tools import assert_equal
+# from nose.plugins.skip import SkipTest
 
 from ckan import plugins as p
 
@@ -12,6 +13,7 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('ckan.sniff')
 
 
+@pytest.mark.usefixtures('files')
 class TestSniffFormat:
     @classmethod
     def setup_class(cls):
@@ -32,14 +34,14 @@ class TestSniffFormat:
         sniffed_format = sniff_file_format(filepath)
         assert sniffed_format, expected_format
         expected_format_without_zip = expected_format.replace('.zip', '')
-        assert_equal(sniffed_format['format'].lower(), expected_format_without_zip)
+        assert(sniffed_format['format'].lower(), expected_format_without_zip)
 
         expected_container = None
         if expected_format.endswith('.zip'):
             expected_container = 'ZIP'
         elif expected_format.endswith('.gzip'):
             expected_container = 'ZIP'  # lumped together with zip for simplicity now
-        assert_equal(sniffed_format.get('container'), expected_container)
+        assert(sniffed_format.get('container'), expected_container)
 
     # def test_all(self):
     #    for format_extension, filepath in self.fixture_files:

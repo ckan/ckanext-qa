@@ -2,8 +2,8 @@
    these badges work. The necessary Travis and Coverage config files have been
    generated for you.
 
-.. image:: https://travis-ci.org/ckan/ckanext-qa.svg?branch=master
-    :target: https://travis-ci.org/ckan/ckanext-qa
+.. image:: https://github.com/ckan/ckanext-qa/actions/workflows/test.yml/badge.svg
+    :target: https://github.com/ckan/ckanext-qa/actions/workflows/test.yml
 
 CKAN QA Extension (Quality Assurance)
 =====================================
@@ -31,7 +31,7 @@ Requirements
 
 Before installing ckanext-qa, make sure that you have installed the following:
 
-* CKAN 2.1+
+* CKAN 2.1+ (tests are only running for CKAN 2.7+)
 * ckanext-archiver 2.0+ (https://github.com/ckan/ckanext-archiver)
 * ckanext-report (https://github.com/datagovuk/ckanext-report) for reporting
 

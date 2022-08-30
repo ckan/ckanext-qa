@@ -1,16 +1,29 @@
+# -*- coding: utf-8 -*-
+
+from io import BytesIO
+import sys
 import re
 import zipfile
 import os
 from collections import defaultdict
 import subprocess
-import StringIO
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 
 import xlrd
 import magic
 import messytables
 
-import lib
+import ckanext.qa.lib as lib
 from ckan.lib import helpers as ckan_helpers
+
+
+if sys.version_info[0] >= 3:
+    unicode = str
 
 import logging
 
@@ -40,7 +53,7 @@ def sniff_file_format(filepath):
     log.info('Magic detects file as: %s', mime_type)
     if mime_type:
         if mime_type == 'application/xml':
-            with open(filepath) as f:
+            with open(filepath, 'r', encoding='ISO-8859-1') as f:
                 buf = f.read(5000)
             format_ = get_xml_variant_including_xml_declaration(buf)
         elif mime_type == 'application/zip':
@@ -59,15 +72,22 @@ def sniff_file_format(filepath):
                 # e.g. Shapefile
                 format_ = run_bsd_file(filepath)
             if not format_:
-                with open(filepath) as f:
+                with open(filepath, 'r', encoding='ISO-8859-1') as f:
                     buf = f.read(500)
                 format_ = is_html(buf)
         elif mime_type == 'text/html':
             # Magic can mistake IATI for HTML
-            with open(filepath) as f:
+            with open(filepath, 'r', encoding='ISO-8859-1') as f:
                 buf = f.read(100)
             if is_iati(buf):
                 format_ = {'format': 'IATI'}
+        elif mime_type == 'application/csv':
+            with open(filepath, 'r', encoding='ISO-8859-1', newline=None) as f:
+                buf = f.read(10000)
+            if is_csv(buf):
+                format_ = {'format': 'CSV'}
+            elif is_psv(buf):
+                format_ = {'format': 'PSV'}
 
         if format_:
             return format_
@@ -79,7 +99,7 @@ def sniff_file_format(filepath):
         if not format_:
             if mime_type.startswith('text/'):
                 # is it JSON?
-                with open(filepath, 'rU') as f:
+                with open(filepath, 'r', encoding='ISO-8859-1', newline=None) as f:
                     buf = f.read(10000)
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
@@ -99,7 +119,7 @@ def sniff_file_format(filepath):
 
             if format_['format'] == 'TXT':
                 # is it JSON?
-                with open(filepath, 'rU') as f:
+                with open(filepath, 'r', encoding='ISO-8859-1', newline=None) as f:
                     buf = f.read(10000)
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
@@ -110,13 +130,13 @@ def sniff_file_format(filepath):
                     format_ = {'format': 'PSV'}
                 # XML files without the "<?xml ... ?>" tag end up here
                 elif is_xml_but_without_declaration(buf):
-                    format_ = get_xml_variant_without_xml_declaration(buf)
+                    format_ = get_xml_variant_without_xml_declaration(buf.encode('ISO-8859-1'))
                 elif is_ttl(buf):
                     format_ = {'format': 'TTL'}
 
             elif format_['format'] == 'HTML':
                 # maybe it has RDFa in it
-                with open(filepath) as f:
+                with open(filepath, 'r', encoding='ISO-8859-1') as f:
                     buf = f.read(100000)
                 if has_rdfa(buf):
                     format_ = {'format': 'RDFa'}
@@ -202,14 +222,14 @@ def is_json(buf):
 
 def is_csv(buf):
     '''If the buffer is a CSV file then return True.'''
-    buf_rows = StringIO.StringIO(buf)
+    buf_rows = BytesIO(buf.encode('ISO-8859-1'))
     table_set = messytables.CSVTableSet(buf_rows)
     return _is_spreadsheet(table_set, 'CSV')
 
 
 def is_psv(buf):
     '''If the buffer is a PSV file then return True.'''
-    buf_rows = StringIO.StringIO(buf)
+    buf_rows = BytesIO(buf.encode('ISO-8859-1'))
     table_set = messytables.CSVTableSet(buf_rows, delimiter='|')
     return _is_spreadsheet(table_set, 'PSV')
 
@@ -321,9 +341,9 @@ def get_xml_variant_without_xml_declaration(buf):
     p.StartElementHandler = start_element
     try:
         p.Parse(buf)
-    except GotFirstTag, e:
+    except GotFirstTag as e:
         top_level_tag_name = str(e).lower()
-    except xml.sax.SAXException, e:
+    except xml.sax.SAXException as e:
         log.info('Sax parse error: %s %s', e, buf)
         return {'format': 'XML'}
 
@@ -384,11 +404,11 @@ def get_zipped_format(filepath):
             filepaths = zip.namelist()
         finally:
             zip.close()
-    except zipfile.BadZipfile, e:
+    except zipfile.BadZipfile as e:
         log.info('Zip file open raised error %s: %s',
                  e, e.args)
         return
-    except Exception, e:
+    except Exception as e:
         log.warning('Zip file open raised exception %s: %s',
                     e, e.args)
         return
@@ -441,7 +461,7 @@ def get_zipped_format(filepath):
 def is_excel(filepath):
     try:
         xlrd.open_workbook(filepath)
-    except Exception, e:
+    except Exception as e:
         log.info('Not Excel - failed to load: %s %s', e, e.args)
         return False
     else:
@@ -468,7 +488,7 @@ def run_bsd_file(filepath):
     '''Run the BSD command-line tool "file" to determine file type. Returns
     a format dict or None if it fails.'''
     result = check_output(['file', filepath])
-    match = re.search('Name of Creating Application: ([^,]*),', result)
+    match = re.search(b'Name of Creating Application: ([^,]*),', result)
     if match:
         app_name = match.groups()[0]
         format_map = {'Microsoft Office PowerPoint': 'ppt',
@@ -484,7 +504,7 @@ def run_bsd_file(filepath):
             log.info('"file" detected file format: %s',
                      format_tuple[2])
             return {'format': format_tuple[1]}
-    match = re.search(': ESRI Shapefile', result)
+    match = re.search(b': ESRI Shapefile', result)
     if match:
         format_ = {'format': 'SHP'}
         log.info('"file" detected file format: %s',
