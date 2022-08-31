@@ -155,7 +155,7 @@ def migrate1():
         .filter_by(key='openness_score_reason')
     print('* %s with openness_score_reason to migrate e.g.\n%s' %
           (q_reason.count(), q_reason.first()))
-    
+
     six.moves.input('Press Enter to continue')
 
     q_status.delete()

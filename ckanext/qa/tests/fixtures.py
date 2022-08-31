@@ -14,6 +14,7 @@ def client():
 
     yield "http://127.0.0.1:" + str(port)
 
+
 @pytest.fixture(scope='class')
 def files():
     fixture_data_dir = os.path.join(os.path.dirname(__file__), 'data')

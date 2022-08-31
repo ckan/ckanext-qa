@@ -12,9 +12,9 @@ import socket
 from six.moves import reduce
 
 try:
-    import urllib2
+    from urllib2 import urlopen
 except ImportError:
-    import urllib3
+    from urllib.request import urlopen
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -29,7 +29,7 @@ class MockHTTPServer(object):
     a separate thread, eg::
 
         >>> with MockTestServer().serve() as server_address:
-        ...     urllib2.urlopen(server_address)
+        ...     urlopen(server_address)
         ...
 
     Subclass this and override __call__ to provide your own WSGI handler function.
@@ -47,7 +47,7 @@ class MockHTTPServer(object):
         This uses context manager to make sure the server is stopped::
 
             >>> with MockTestServer().serve() as addr:
-            ...     print urllib2.urlopen('%s/?content=hello+world').read()
+            ...     print urlopen('%s/?content=hello+world').read()
             ...
             'hello world'
         """
@@ -78,7 +78,7 @@ class MockHTTPServer(object):
             # call completes. Set a very small timeout as we don't actually need to
             # wait for a response. We don't care about exceptions here either.
             try:
-                urllib2.urlopen("http://%s:%s/" % (host, port), timeout=0.01)
+                urlopen("http://%s:%s/" % (host, port), timeout=0.01)
             except Exception:
                 pass
 

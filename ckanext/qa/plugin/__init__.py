@@ -14,17 +14,15 @@ from ckanext.report.interfaces import IReport
 
 log = logging.getLogger(__name__)
 
-try:
-    toolkit.requires_ckan_version("2.9")
-except toolkit.CkanVersionException:
-    from ckanext.qa.plugin.pylons_plugin import MixinPlugin
-else:
+
+if toolkit.check_ckan_version(min_version='2.9.0'):
     from ckanext.qa.plugin.flask_plugin import MixinPlugin
+else:
+    from ckanext.qa.plugin.pylons_plugin import MixinPlugin
 
 
 class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
     p.implements(p.IConfigurer, inherit=True)
-    p.implements(p.IRoutes, inherit=True)
     p.implements(IPipe, inherit=True)
     p.implements(IReport)
     p.implements(p.IActions)

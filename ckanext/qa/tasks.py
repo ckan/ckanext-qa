@@ -10,7 +10,6 @@ import traceback
 
 from ckan.common import _
 
-from ckan.lib import i18n
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
 from ckanext.qa.sniff_format import sniff_file_format

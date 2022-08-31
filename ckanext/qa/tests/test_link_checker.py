@@ -9,13 +9,7 @@ try:
 except ImportError:
     from urllib.parse import urlencode
 
-try:
-    from ckan.tests.legacy import TestController as ControllerTestCase
-except ImportError:
-    from ckan.tests import TestController as ControllerTestCase
-
 from ckanext.archiver.tasks import update_package
-import ckan.tests.helpers as helpers
 
 from .mock_remote_server import MockEchoTestServer
 
@@ -42,39 +36,38 @@ def with_mock_url(url=''):
         return decorated
     return decorator
 
+
 @pytest.mark.usefixtures('with_plugins')
 @pytest.mark.ckan_config('ckan.plugins', 'archiver qa')
 class TestLinkChecker(object):
     """
     Tests for link checker task
     """
-    
-    __test__=True
 
     def check_link(self, url, base_url, app):
-        base_url = base_url + '/' if base_url != None else ''
+        base_url = base_url + '/' if base_url is not None else ''
         result = app.get('/qa/link_checker?%s' % urlencode({'url': base_url + url}))
         return json.loads(result.body)[0]
 
     def test_url_working_but_formatless(self, client, app):
         url = '?status=200'
         result = self.check_link(url, client, app)
-        assert(result['format'], None)
+        assert result['format'] is None
 
     def test_format_by_url_extension(self, client, app):
         url = 'file.csv'
         result = self.check_link(url, client, app)
-        assert(result['format'], 'CSV')
+        assert result['format'] == 'CSV'
 
     def test_format_by_url_extension_zipped(self, client, app):
         url = 'file.csv.zip'
         result = self.check_link(url, client, app)
-        assert(result['format'], 'CSV / ZIP')
+        assert result['format'] == 'CSV / ZIP'
 
     def test_format_by_url_extension_unknown(self, client, app):
         url = 'file.f1.f2'
         result = self.check_link(url, client, app)
-        assert(result['format'], 'F1 / F2')
+        assert result['format'] == 'F1 / F2'
 
     def test_encoded_url(self, client, app):
         # This is not actually a URL, and the encoded letters get
@@ -82,17 +75,17 @@ class TestLinkChecker(object):
         # an exception.
         url = 'Over+\xc2\xa325,000+expenditure+report+April-13'
         result = self.check_link(url, client, app)
-        assert(result['format'], None)
+        assert result['format'] is None
 
     def test_format_by_mimetype_txt(self, client, app):
         url = '?status=200&content-type=text/plain'
         result = self.check_link(url, client, app)
-        assert(result['format'], 'TXT')
+        assert result['format'] == 'TXT'
 
     def test_format_by_mimetype_csv(self, client, app):
         url = '?status=200&content-type=text/csv'
         result = self.check_link(url, client, app)
-        assert(result['format'], 'CSV')
+        assert result['format'] == 'CSV'
 
     def test_file_url(self, client, app):
         url = u'file:///home/root/test.txt'
@@ -133,11 +126,11 @@ class TestLinkChecker(object):
         # see discussion: http://trac.ckan.org/ticket/318
         result = self.check_link(url, client, app)
         print(result)
-        assert(result['url_errors'], [])
+        assert result['url_errors'] == []
 
     def test_trailing_whitespace(self, client, app):
         url = '?status=200 '
         # accept, because browsers accept this
         result = self.check_link(url, client, app)
         print(result)
-        assert(result['url_errors'], [])
+        assert result['url_errors'] == []

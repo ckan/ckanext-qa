@@ -8,12 +8,6 @@ import os
 from collections import defaultdict
 import subprocess
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
-
-
 import xlrd
 import magic
 import messytables
@@ -52,7 +46,7 @@ def sniff_file_format(filepath):
     mime_type = magic.from_file(filepath_utf8, mime=True)
     log.info('Magic detects file as: %s', mime_type)
     if mime_type:
-        if mime_type == 'application/xml':
+        if mime_type in ('application/xml', 'text/xml'):
             with open(filepath, 'r', encoding='ISO-8859-1') as f:
                 buf = f.read(5000)
             format_ = get_xml_variant_including_xml_declaration(buf)
@@ -130,7 +124,7 @@ def sniff_file_format(filepath):
                     format_ = {'format': 'PSV'}
                 # XML files without the "<?xml ... ?>" tag end up here
                 elif is_xml_but_without_declaration(buf):
-                    format_ = get_xml_variant_without_xml_declaration(buf.encode('ISO-8859-1'))
+                    format_ = get_xml_variant_without_xml_declaration(buf)
                 elif is_ttl(buf):
                     format_ = {'format': 'TTL'}
 
@@ -340,7 +334,7 @@ def get_xml_variant_without_xml_declaration(buf):
     p = xml.parsers.expat.ParserCreate()
     p.StartElementHandler = start_element
     try:
-        p.Parse(buf)
+        p.Parse(buf.encode('ISO-8859-1'))
     except GotFirstTag as e:
         top_level_tag_name = str(e).lower()
     except xml.sax.SAXException as e:
