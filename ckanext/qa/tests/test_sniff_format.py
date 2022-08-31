@@ -2,9 +2,6 @@ import os
 import pytest
 import logging
 
-# from nose.tools import assert_equal
-# from nose.plugins.skip import SkipTest
-
 from ckan import plugins as p
 
 from ckanext.qa.sniff_format import sniff_file_format, is_json, is_ttl, turtle_regex
@@ -106,7 +103,7 @@ class TestSniffFormat:
 
     def test_odp(self):
         if p.toolkit.check_ckan_version(max_version='2.3.99'):
-            raise SkipTest
+            pytest.skip("Test only on version >2.5.99")
         self.check_format('odp')
 
     def test_ppt(self):
@@ -207,7 +204,8 @@ class TestSniffFormat:
 
     def test_wmts(self):
         if p.toolkit.check_ckan_version(max_version='2.5.99'):
-            raise SkipTest
+            pytest.skip("Test only on version >2.5.99")
+
         self.check_format('wmts', 'ukho_bathymetry.wmts')
 
     def test_wcs(self):
