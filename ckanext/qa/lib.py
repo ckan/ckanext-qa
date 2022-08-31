@@ -5,7 +5,7 @@ import logging
 from ckan.plugins.toolkit import config
 
 from ckan import plugins as p
-import ckanext.qa.tasks as tasks
+from ckanext.qa.tasks import update_package, update
 
 log = logging.getLogger(__name__)
 
@@ -45,10 +45,9 @@ def resource_format_scores():
     if not _RESOURCE_FORMAT_SCORES:
         _RESOURCE_FORMAT_SCORES = {}
         json_filepath = config.get('qa.resource_format_openness_scores_json')
-        import ckanext.qa.plugin
         if not json_filepath:
             json_filepath = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.realpath(ckanext.qa.plugin.__file__))),
+                os.path.dirname(os.path.realpath(__file__)),
                 'resource_format_openness_scores.json'
             )
         with open(json_filepath) as format_file:
@@ -87,7 +86,7 @@ def munge_format_to_be_canonical(format_name):
 
 def create_qa_update_package_task(package, queue):
 
-    compat_enqueue('qa.update_package', tasks.update_package, queue,  args=[package.id])
+    compat_enqueue('qa.update_package', update_package, queue,  args=[package.id])
     log.debug('QA of package put into celery queue %s: %s',
               queue, package.name)
 
@@ -98,7 +97,7 @@ def create_qa_update_task(resource, queue):
     else:
         package = resource.package
 
-    compat_enqueue('qa.update', tasks.update, queue, args=[resource.id])
+    compat_enqueue('qa.update', update, queue, args=[resource.id])
 
     log.debug('QA of resource put into celery queue %s: %s/%s url=%r',
               queue, package.name, resource.id, resource.url)

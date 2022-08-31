@@ -1,3 +1,4 @@
+ckantoolkit>=0.0.7
 SQLAlchemy>=0.6.6
 requests
 progressbar

@@ -8,12 +8,7 @@ from ckan import model
 from ckan.logic import get_action
 from ckan import plugins as p
 import ckan.lib.helpers as ckan_helpers
-try:
-    from ckan.tests import factories as ckan_factories
-    from ckan.tests.legacy import BaseCase
-except ImportError:
-    from ckan.new_tests import factories as ckan_factories
-    from ckan.tests import BaseCase
+from ckantoolkit.tests import factories as ckan_factories
 
 import ckanext.qa.tasks
 from ckanext.qa.tasks import resource_score, extension_variants
@@ -62,12 +57,12 @@ TODAY = datetime.datetime(year=2008, month=10, day=10)
 TODAY_STR = TODAY.isoformat()
 
 
-class TestTask(BaseCase):
-
-    @classmethod
+@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
+class TestTask():
+    @pytest.fixture(autouse=True)
     @pytest.mark.usefixtures('clean_db')
-    def setup_class(cls):
-        # reset_db()
+    def init_data(cls, clean_db):
         archiver_model.init_tables(model.meta.engine)
         qa_model.init_tables(model.meta.engine)
 
@@ -98,12 +93,12 @@ class TestTask(BaseCase):
         # TODO run celery and check it actually ran...
 
 
-class TestResourceScore(BaseCase):
-
-    @classmethod
+@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
+class TestResourceScore():
+    @pytest.fixture(autouse=True)
     @pytest.mark.usefixtures('clean_db')
-    def setup_class(cls):
-        # reset_db()
+    def init_data(cls, clean_db):
         archiver_model.init_tables(model.meta.engine)
         qa_model.init_tables(model.meta.engine)
         cls.fake_resource = {
@@ -271,7 +266,7 @@ class TestResourceScore(BaseCase):
                                                    ' Attempted on 10/10/2008. This URL last worked on: 01/10/2008.')
 
 
-class TestExtensionVariants:
+class TestExtensionVariants():
     def test_0_normal(self):
         assert extension_variants('http://dept.gov.uk/coins-data-1996.csv') == ['csv']
 
@@ -285,11 +280,12 @@ class TestExtensionVariants:
         assert extension_variants('http://dept.gov.uk/coins-data-1996') == []
 
 
-class TestSaveQaResult(object):
-    @classmethod
+@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
+class TestSaveQaResult():
+    @pytest.fixture(autouse=True)
     @pytest.mark.usefixtures('clean_db')
-    def setup_class(cls):
-        # reset_db()
+    def init_data(cls, clean_db):
         archiver_model.init_tables(model.meta.engine)
         qa_model.init_tables(model.meta.engine)
 
@@ -318,11 +314,12 @@ class TestSaveQaResult(object):
         assert qa.updated == qa.updated
 
 
-class TestUpdatePackage(object):
-    @classmethod
+@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
+class TestUpdatePackage():
+    @pytest.fixture(autouse=True)
     @pytest.mark.usefixtures('clean_db')
-    def setup_class(cls):
-        # reset_db()
+    def init_data(cls, clean_db):
         archiver_model.init_tables(model.meta.engine)
         qa_model.init_tables(model.meta.engine)
 
@@ -343,11 +340,12 @@ class TestUpdatePackage(object):
         assert qa.openness_score_reason == 'License not open'
 
 
-class TestUpdateResource(object):
-    @classmethod
+@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
+class TestUpdateResource():
+    @pytest.fixture(autouse=True)
     @pytest.mark.usefixtures('clean_db')
-    def setup_class(cls):
-        # reset_db()
+    def init_data(cls, clean_db):
         archiver_model.init_tables(model.meta.engine)
         qa_model.init_tables(model.meta.engine)
 

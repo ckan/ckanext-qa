@@ -1,7 +1,7 @@
 import logging
 import sys
 import ckan.plugins as p
-import ckanext.qa.utils as utils
+from ckanext.qa.utils import init_db, update, sniff, view, clean, migrate1
 
 REQUESTS_HEADER = {'content-type': 'application/json',
                    'User-Agent': 'ckanext-qa commands'}
@@ -92,24 +92,24 @@ class QACommand(p.toolkit.CkanCommand):
             self.log.error('Command "%s" not recognized' % (cmd,))
 
     def init_db(self):
-        utils.init_db()
+        init_db()
 
     def update(self):
         if len(self.args) > 1:
             ids = self.args[1:]
-        utils.update(ids, self.options.queue)
+        update(ids, self.options.queue)
 
     def sniff(self):
         if len(self.args) < 2:
             print('Not enough arguments', self.args)
             sys.exit(1)
-        utils.sniff(self.args[1:])
+        sniff(self.args[1:])
 
     def view(self, package_ref=None):
-        utils.view(package_ref)
+        view(package_ref)
 
     def clean(self):
-        utils.clean()
+        clean()
 
     def migrate1(self):
-        utils.migrate1()
+        migrate1()

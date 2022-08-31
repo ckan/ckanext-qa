@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from io import BytesIO
+from io import BytesIO, open
 import sys
 import re
 import zipfile
@@ -12,7 +12,6 @@ import xlrd
 import magic
 import messytables
 
-import ckanext.qa.lib as lib
 from ckan.lib import helpers as ckan_helpers
 
 
@@ -389,6 +388,7 @@ def get_zipped_format(filepath):
     '''For a given zip file, return the format of file inside.
     For multiple files, choose by the most open, and then by the most
     popular extension.'''
+    from ckanext.qa.lib import resource_format_scores
     # just check filename extension of each file inside
     try:
         # note: Cannot use "with" with a zipfile before python 2.7
@@ -427,7 +427,7 @@ def get_zipped_format(filepath):
         extension = os.path.splitext(filepath)[-1][1:].lower()
         format_tuple = ckan_helpers.resource_formats().get(extension)
         if format_tuple:
-            score = lib.resource_format_scores().get(format_tuple[1])
+            score = resource_format_scores().get(format_tuple[1])
             if score is not None and score > top_score:
                 top_score = score
                 top_scoring_extension_counts = defaultdict(int)

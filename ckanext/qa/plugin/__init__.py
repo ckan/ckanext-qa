@@ -7,8 +7,8 @@ from ckan.plugins import toolkit
 from ckanext.archiver.interfaces import IPipe
 from ckanext.qa.logic import action, auth
 from ckanext.qa.model import QA, aggregate_qa_for_a_dataset
-import ckanext.qa.helpers as helpers
-import ckanext.qa.lib as lib
+from ckanext.qa.helpers import qa_openness_stars_resource_html, qa_openness_stars_dataset_html
+from ckanext.qa.lib import create_qa_update_package_task
 from ckanext.report.interfaces import IReport
 
 
@@ -47,7 +47,7 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
         dataset = model.Package.get(dataset_id)
         assert dataset
 
-        lib.create_qa_update_package_task(dataset, queue=queue)
+        create_qa_update_package_task(dataset, queue=queue)
 
     # IReport
 
@@ -77,9 +77,9 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
     def get_helpers(self):
         return {
             'qa_openness_stars_resource_html':
-            helpers.qa_openness_stars_resource_html,
+            qa_openness_stars_resource_html,
             'qa_openness_stars_dataset_html':
-            helpers.qa_openness_stars_dataset_html,
+            qa_openness_stars_dataset_html,
             }
 
     # IPackageController

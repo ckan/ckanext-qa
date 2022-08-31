@@ -2,11 +2,16 @@ from flask import Blueprint
 import json
 import mimetypes
 import posixpath
+import sys
 from ckan.plugins.toolkit import request
 from ckanext.archiver.tasks import link_checker, LinkCheckerError
 from ckan.lib import helpers as ckan_helpers
-import urllib
 from ckan.lib.helpers import parse_rfc_2822_date
+
+if sys.version_info[0] >= 3:
+    from urllib.parse import urlparse
+else:
+    from urlparse import urlparse
 
 
 def qa_resource_checklink():
@@ -21,7 +26,7 @@ def _check_link(url):
     Does not handle 30x redirects.
     """
 
-    parsed_url = urllib.parse.urlparse(url)
+    parsed_url = urlparse(url)
     scheme = parsed_url.scheme
     path = parsed_url.path
 
@@ -66,7 +71,7 @@ def _extract_file_format(url, headers):
     the mimetype from the headers is passed to `mimetypes.guess_extension()`.
     """
     formats = []
-    parsed_url = urllib.parse.urlparse(url)
+    parsed_url = urlparse(url)
     path = parsed_url.path
     base, extension = posixpath.splitext(path)
     while extension:

@@ -13,7 +13,6 @@ from ckan.common import _
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
 from ckanext.qa.sniff_format import sniff_file_format
-import ckanext.qa.lib as lib
 from ckanext.archiver.model import Archival, Status
 
 import logging
@@ -291,6 +290,7 @@ def score_by_sniffing_data(archival, resource, score_reasons):
       * If it cannot work out the format then format_string is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa.lib import resource_format_scores
     if not archival or not archival.cache_filepath:
         score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
         return (None, None)
@@ -302,7 +302,7 @@ def score_by_sniffing_data(archival, resource, score_reasons):
     else:
         if filepath:
             sniffed_format = sniff_file_format(filepath)
-            score = lib.resource_format_scores().get(sniffed_format['format']) \
+            score = resource_format_scores().get(sniffed_format['format']) \
                 if sniffed_format else None
             if sniffed_format:
                 score_reasons.append(_('Content of file appeared to be format "%s" which receives openness score: %s.')
@@ -340,6 +340,7 @@ def score_by_url_extension(resource, score_reasons):
       * If it cannot work out the format then format is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa.lib import resource_format_scores
     extension_variants_ = extension_variants(resource.url.strip())
     if not extension_variants_:
         score_reasons.append(_('Could not determine a file extension in the URL.'))
@@ -347,7 +348,7 @@ def score_by_url_extension(resource, score_reasons):
     for extension in extension_variants_:
         format_ = format_get(extension)
         if format_:
-            score = lib.resource_format_scores().get(format_)
+            score = resource_format_scores().get(format_)
             if score:
                 score_reasons.append(
                     _('URL extension "%s" relates to format "%s" and receives score: %s.') % (extension, format_, score))
@@ -393,16 +394,17 @@ def score_by_format_field(resource, score_reasons):
       * If it cannot work out the format then format_string is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa.lib import resource_format_scores, munge_format_to_be_canonical
     format_field = resource.format or ''
     if not format_field:
         score_reasons.append(_('Format field is blank.'))
         return (None, None)
     format_tuple = ckan_helpers.resource_formats().get(format_field.lower()) or \
-        ckan_helpers.resource_formats().get(lib.munge_format_to_be_canonical(format_field))
+        ckan_helpers.resource_formats().get(munge_format_to_be_canonical(format_field))
     if not format_tuple:
         score_reasons.append(_('Format field "%s" does not correspond to a known format.') % format_field)
         return (None, None)
-    score = lib.resource_format_scores().get(format_tuple[1])
+    score = resource_format_scores().get(format_tuple[1])
     score_reasons.append(_('Format field "%s" receives score: %s.') %
                          (format_field, score))
     return (score, format_tuple[1])
