@@ -1,5 +1,7 @@
+import sys
 import uuid
 import datetime
+import six
 
 from sqlalchemy import Column
 from sqlalchemy import types
@@ -14,8 +16,12 @@ log = __import__('logging').getLogger(__name__)
 Base = declarative_base()
 
 
+if sys.version_info[0] >= 3:
+    unicode = str
+
+
 def make_uuid():
-    return unicode(uuid.uuid4())
+    return six.text_type(uuid.uuid4())
 
 
 class QA(Base):
@@ -40,7 +46,7 @@ class QA(Base):
 
     def __repr__(self):
         summary = 'score=%s format=%s' % (self.openness_score, self.format)
-        details = unicode(self.openness_score_reason).encode('unicode_escape')
+        details = six.text_type(self.openness_score_reason).encode('unicode_escape')
         package = model.Package.get(self.package_id)
         package_name = package.name if package else '?%s?' % self.package_id
         return '<QA %s /dataset/%s/resource/%s %s>' % \

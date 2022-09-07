@@ -1,16 +1,17 @@
-from collections import Counter
 import copy
+import logging
+from collections import Counter
+
+import ckan.model as model
+import ckan.plugins as p
+
+from ckanext.report import lib
+
 try:
     from collections import OrderedDict  # from python 2.7
 except ImportError:
     from sqlalchemy.util import OrderedDict
 
-from ckan.common import _
-import ckan.model as model
-import ckan.plugins as p
-from ckanext.report import lib
-
-import logging
 
 log = logging.getLogger(__name__)
 
@@ -72,6 +73,8 @@ def openness_index(include_sub_organizations=False):
 
     table = []
     for org_name, org_counts in results.iteritems():
+        if not org_counts['score_counts']:  # Let's skip if there are no counts at all.
+            continue
         total_stars = sum([k*v for k, v in org_counts['score_counts'].items() if k])
         num_pkgs_scored = sum([v for k, v in org_counts['score_counts'].items()
                               if k is not None])
@@ -163,9 +166,9 @@ def openness_report_combinations():
 
 openness_report_info = {
     'name': 'openness',
-    'title': _('Openness (Five Stars)'),
-    'description': _('Datasets graded on Tim Berners Lees\' Five Stars of Openness - openly licensed,'
-                     ' openly accessible, structured, open format, URIs for entities, linked.'),
+    'title': 'Openness (Five Stars)',
+    'description': 'Datasets graded on Tim Berners-Lee\'s Five Stars of Openness - openly licensed,'
+                   ' openly accessible, structured, open format, URIs for entities, linked.',
     'option_defaults': OrderedDict((('organization', None),
                                     ('include_sub_organizations', False),
                                     )),

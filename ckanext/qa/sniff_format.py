@@ -1,20 +1,27 @@
+# -*- coding: utf-8 -*-
+
+from io import BytesIO, open
+import sys
 import re
 import zipfile
 import os
 from collections import defaultdict
 import subprocess
-import StringIO
 
 import xlrd
 import magic
 import messytables
 
-import lib
 from ckan.lib import helpers as ckan_helpers
+
+
+if sys.version_info[0] >= 3:
+    unicode = str
 
 import logging
 
 log = logging.getLogger(__name__)
+
 
 def sniff_file_format(filepath):
     '''For a given filepath, work out what file format it is.
@@ -38,8 +45,8 @@ def sniff_file_format(filepath):
     mime_type = magic.from_file(filepath_utf8, mime=True)
     log.info('Magic detects file as: %s', mime_type)
     if mime_type:
-        if mime_type == 'application/xml':
-            with open(filepath) as f:
+        if mime_type in ('application/xml', 'text/xml'):
+            with open(filepath, 'r', encoding='ISO-8859-1') as f:
                 buf = f.read(5000)
             format_ = get_xml_variant_including_xml_declaration(buf)
         elif mime_type == 'application/zip':
@@ -58,15 +65,22 @@ def sniff_file_format(filepath):
                 # e.g. Shapefile
                 format_ = run_bsd_file(filepath)
             if not format_:
-                with open(filepath) as f:
+                with open(filepath, 'r', encoding='ISO-8859-1') as f:
                     buf = f.read(500)
                 format_ = is_html(buf)
         elif mime_type == 'text/html':
             # Magic can mistake IATI for HTML
-            with open(filepath) as f:
+            with open(filepath, 'r', encoding='ISO-8859-1') as f:
                 buf = f.read(100)
             if is_iati(buf):
                 format_ = {'format': 'IATI'}
+        elif mime_type == 'application/csv':
+            with open(filepath, 'r', encoding='ISO-8859-1', newline=None) as f:
+                buf = f.read(10000)
+            if is_csv(buf):
+                format_ = {'format': 'CSV'}
+            elif is_psv(buf):
+                format_ = {'format': 'PSV'}
 
         if format_:
             return format_
@@ -78,7 +92,7 @@ def sniff_file_format(filepath):
         if not format_:
             if mime_type.startswith('text/'):
                 # is it JSON?
-                with open(filepath, 'rU') as f:
+                with open(filepath, 'r', encoding='ISO-8859-1', newline=None) as f:
                     buf = f.read(10000)
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
@@ -98,7 +112,7 @@ def sniff_file_format(filepath):
 
             if format_['format'] == 'TXT':
                 # is it JSON?
-                with open(filepath, 'rU') as f:
+                with open(filepath, 'r', encoding='ISO-8859-1', newline=None) as f:
                     buf = f.read(10000)
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
@@ -115,7 +129,7 @@ def sniff_file_format(filepath):
 
             elif format_['format'] == 'HTML':
                 # maybe it has RDFa in it
-                with open(filepath) as f:
+                with open(filepath, 'r', encoding='ISO-8859-1') as f:
                     buf = f.read(100000)
                 if has_rdfa(buf):
                     format_ = {'format': 'RDFa'}
@@ -139,14 +153,14 @@ def is_json(buf):
     JSON format.'''
     string = '"[^"]*"'
     string_re = re.compile(string)
-    number_re = re.compile('-?\d+(\.\d+)?([eE][+-]?\d+)?')
+    number_re = re.compile(r'-?\d+(\.\d+)?([eE][+-]?\d+)?')
     extra_values_re = re.compile('true|false|null')
-    object_start_re = re.compile('{%s:\s?' % string)
-    object_middle_re = re.compile('%s:\s?' % string)
+    object_start_re = re.compile(r'{%s:\s?' % string)
+    object_middle_re = re.compile(r'%s:\s?' % string)
     object_end_re = re.compile('}')
-    comma_re = re.compile(',\s?')
-    array_start_re = re.compile('\[')
-    array_end_re = re.compile('\]')
+    comma_re = re.compile(r',\s?')
+    array_start_re = re.compile(r'\[')
+    array_end_re = re.compile(r'\]')
     any_value_regexs = [string_re, number_re, object_start_re, array_start_re, extra_values_re]
 
     # simplified state machine - just looks at stack of object/array and
@@ -201,14 +215,14 @@ def is_json(buf):
 
 def is_csv(buf):
     '''If the buffer is a CSV file then return True.'''
-    buf_rows = StringIO.StringIO(buf)
+    buf_rows = BytesIO(buf.encode('ISO-8859-1'))
     table_set = messytables.CSVTableSet(buf_rows)
     return _is_spreadsheet(table_set, 'CSV')
 
 
 def is_psv(buf):
     '''If the buffer is a PSV file then return True.'''
-    buf_rows = StringIO.StringIO(buf)
+    buf_rows = BytesIO(buf.encode('ISO-8859-1'))
     table_set = messytables.CSVTableSet(buf_rows, delimiter='|')
     return _is_spreadsheet(table_set, 'PSV')
 
@@ -218,6 +232,7 @@ def _is_spreadsheet(table_set, format):
         if not num_rows:
             return 0
         return float(num_cells) / float(num_rows)
+
     num_cells = num_rows = 0
     try:
         table = table_set.tables[0]
@@ -256,7 +271,7 @@ def _is_spreadsheet(table_set, format):
 
 def is_html(buf):
     '''If this buffer is HTML, return that format type, else None.'''
-    xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<html[^>]*>'
+    xml_re = r'.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<html[^>]*>'
     match = re.match(xml_re, buf, re.IGNORECASE)
     if match:
         log.info('HTML tag detected')
@@ -266,7 +281,7 @@ def is_html(buf):
 
 def is_iati(buf):
     '''If this buffer is IATI format, return that format type, else None.'''
-    xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<iati-(activities|organisations)[^>]*>'
+    xml_re = r'.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<iati-(activities|organisations)[^>]*>'
     match = re.match(xml_re, buf, re.IGNORECASE)
     if match:
         log.info('IATI tag detected')
@@ -277,7 +292,7 @@ def is_iati(buf):
 def is_xml_but_without_declaration(buf):
     '''Decides if this is a buffer of XML, but missing the usual <?xml ...?>
     tag.'''
-    xml_re = '.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<([^>\s]*)([^>]*)>'
+    xml_re = r'.{0,3}\s*(<\?xml[^>]*>\s*)?(<!doctype[^>]*>\s*)?<([^>\s]*)([^>]*)>'
     match = re.match(xml_re, buf, re.IGNORECASE)
     if match:
         top_level_tag_name, top_level_tag_attributes = match.groups()[-2:]
@@ -314,13 +329,14 @@ def get_xml_variant_without_xml_declaration(buf):
 
     def start_element(name, attrs):
         raise GotFirstTag(name)
+
     p = xml.parsers.expat.ParserCreate()
     p.StartElementHandler = start_element
     try:
-        p.Parse(buf)
-    except GotFirstTag, e:
+        p.Parse(buf.encode('ISO-8859-1'))
+    except GotFirstTag as e:
         top_level_tag_name = str(e).lower()
-    except xml.sax.SAXException, e:
+    except xml.sax.SAXException as e:
         log.info('Sax parse error: %s %s', e, buf)
         return {'format': 'XML'}
 
@@ -354,8 +370,8 @@ def has_rdfa(buf):
         return False
 
     # more rigorous check for them as tag attributes
-    about_re = '<[^>]+\sabout="[^"]+"[^>]*>'
-    property_re = '<[^>]+\sproperty="[^"]+"[^>]*>'
+    about_re = r'<[^>]+\sabout="[^"]+"[^>]*>'
+    property_re = r'<[^>]+\sproperty="[^"]+"[^>]*>'
     # remove CR to catch tags spanning more than one line
     # buf = re.sub('\r\n', ' ', buf)
     if not re.search(about_re, buf):
@@ -372,6 +388,7 @@ def get_zipped_format(filepath):
     '''For a given zip file, return the format of file inside.
     For multiple files, choose by the most open, and then by the most
     popular extension.'''
+    from ckanext.qa.lib import resource_format_scores
     # just check filename extension of each file inside
     try:
         # note: Cannot use "with" with a zipfile before python 2.7
@@ -381,11 +398,11 @@ def get_zipped_format(filepath):
             filepaths = zip.namelist()
         finally:
             zip.close()
-    except zipfile.BadZipfile, e:
+    except zipfile.BadZipfile as e:
         log.info('Zip file open raised error %s: %s',
                  e, e.args)
         return
-    except Exception, e:
+    except Exception as e:
         log.warning('Zip file open raised exception %s: %s',
                     e, e.args)
         return
@@ -410,7 +427,7 @@ def get_zipped_format(filepath):
         extension = os.path.splitext(filepath)[-1][1:].lower()
         format_tuple = ckan_helpers.resource_formats().get(extension)
         if format_tuple:
-            score = lib.resource_format_scores().get(format_tuple[1])
+            score = resource_format_scores().get(format_tuple[1])
             if score is not None and score > top_score:
                 top_score = score
                 top_scoring_extension_counts = defaultdict(int)
@@ -438,7 +455,7 @@ def get_zipped_format(filepath):
 def is_excel(filepath):
     try:
         xlrd.open_workbook(filepath)
-    except Exception, e:
+    except Exception as e:
         log.info('Not Excel - failed to load: %s %s', e, e.args)
         return False
     else:
@@ -465,7 +482,7 @@ def run_bsd_file(filepath):
     '''Run the BSD command-line tool "file" to determine file type. Returns
     a format dict or None if it fails.'''
     result = check_output(['file', filepath])
-    match = re.search('Name of Creating Application: ([^,]*),', result)
+    match = re.search(b'Name of Creating Application: ([^,]*),', result)
     if match:
         app_name = match.groups()[0]
         format_map = {'Microsoft Office PowerPoint': 'ppt',
@@ -481,7 +498,7 @@ def run_bsd_file(filepath):
             log.info('"file" detected file format: %s',
                      format_tuple[2])
             return {'format': format_tuple[1]}
-    match = re.search(': ESRI Shapefile', result)
+    match = re.search(b': ESRI Shapefile', result)
     if match:
         format_ = {'format': 'SHP'}
         log.info('"file" detected file format: %s',
@@ -493,7 +510,8 @@ def run_bsd_file(filepath):
 
 def is_ttl(buf):
     '''If the buffer is a Turtle RDF file then return True.'''
-    # Turtle spec: "Turtle documents may have the strings '@prefix' or '@base' (case dependent) near the beginning of the document."
+    # Turtle spec: "Turtle documents may have the strings '@prefix' or '@base' (case dependent) near the
+    # beginning of the document."
     at_re = '^@(prefix|base) '
     match = re.search(at_re, buf, re.MULTILINE)
     if match:
@@ -534,12 +552,12 @@ def turtle_regex():
     '''
     global turtle_regex_
     if not turtle_regex_:
-        rdf_term = '(<[^ >]+>|_:\S+|".+?"(@\w+)?(\^\^\S+)?|\'.+?\'(@\w+)?(\^\^\S+)?|""".+?"""(@\w+)' \
-                   '?(\^\^\S+)?|\'\'\'.+?\'\'\'(@\w+)?(\^\^\S+)?|[+-]?([0-9]+|[0-9]*\.[0-9]+)(E[+-]?[0-9]+)?|false|true)'
+        rdf_term = r'(<[^ >]+>|_:\S+|".+?"(@\w+)?(\^\^\S+)?|\'.+?\'(@\w+)?(\^\^\S+)?|""".+?"""(@\w+)' \
+                   r'?(\^\^\S+)?|\'\'\'.+?\'\'\'(@\w+)?(\^\^\S+)?|[+-]?([0-9]+|[0-9]*\.[0-9]+)(E[+-]?[0-9]+)?|false|true)'
 
         # simple case is: triple_re = '^T T T \.$'.replace('T', rdf_term)
         # but extend to deal with multiple predicate-objects:
         # triple = '^T T T\s*(;\s*T T\s*)*\.\s*$'.replace('T', rdf_term).replace(' ', '\s+')
-        triple = '(^T|;)\s*T T\s*(;|\.\s*$)'.replace('T', rdf_term).replace(' ', '\s+')
+        triple = r'(^T|;)\s*T T\s*(;|\.\s*$)'.replace('T', rdf_term).replace(' ', r'\s+')
         turtle_regex_ = re.compile(triple, re.MULTILINE)
     return turtle_regex_
