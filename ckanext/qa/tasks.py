@@ -2,25 +2,25 @@
 Provide some Quality Assurance by scoring datasets against Sir Tim
 Berners-Lee\'s five stars of openness
 '''
+import sys
 import datetime
 import json
 import os
 import traceback
-import urlparse
-import routes
 
 from ckan.common import _
 
-from ckan.lib import i18n
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
-from sniff_format import sniff_file_format
-import lib
+from ckanext.qa.sniff_format import sniff_file_format
 from ckanext.archiver.model import Archival, Status
 
 import logging
 
 log = logging.getLogger(__name__)
+
+if sys.version_info[0] >= 3:
+    unicode = str
 
 if toolkit.check_ckan_version(max_version='2.6.99'):
     from ckan.lib import celery_app
@@ -49,76 +49,17 @@ OPENNESS_SCORE_DESCRIPTION = {
 }
 
 
-def register_translator():
-    # Register a translator in this thread so that
-    # the _() functions in logic layer can work
-    from paste.registry import Registry
-    from pylons import translator
-    from ckan.lib.cli import MockTranslator
-    global registry
-    registry = Registry()
-    registry.prepare()
-    global translator_obj
-    translator_obj = MockTranslator()
-    registry.register(translator, translator_obj)
-
-
-def load_config(ckan_ini_filepath):
-    import paste.deploy
-    config_abs_path = os.path.abspath(ckan_ini_filepath)
-    conf = paste.deploy.appconfig('config:' + config_abs_path)
-    import ckan
-    ckan.config.environment.load_environment(conf.global_conf,
-                                             conf.local_conf)
-
-    # give routes enough information to run url_for
-    parsed = urlparse.urlparse(conf.get('ckan.site_url', 'http://0.0.0.0'))
-    request_config = routes.request_config()
-    request_config.host = parsed.netloc + parsed.path
-    request_config.protocol = parsed.scheme
-
-    load_translations(conf.get('ckan.locale_default', 'en'))
-
-
-def load_translations(lang):
-    # Register a translator in this thread so that
-    # the _() functions in logic layer can work
-    from paste.registry import Registry
-    from pylons import translator
-    from pylons import request
-    registry = Registry()
-    registry.prepare()
-
-    class FakePylons:
-        translator = None
-
-    fakepylons = FakePylons()
-
-    class FakeRequest:
-        # Stores details of the translator
-        environ = {'pylons.pylons': fakepylons}
-
-    registry.register(request, FakeRequest())
-
-    # create translator
-    i18n.set_lang(lang)
-
-    # pull out translator and register it
-    registry.register(translator, fakepylons.translator)
-
-
-def update_package(ckan_ini_filepath, package_id):
+def update_package(package_id):
     """
     Given a package, calculates an openness score for each of its resources.
     It is more efficient to call this than 'update' for each resource.
 
     Returns None
     """
-    load_config(ckan_ini_filepath)
 
     try:
         update_package_(package_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_package: %s: %s',
                   e.__class__.__name__, unicode(e))
         raise
@@ -145,7 +86,7 @@ def update_package_(package_id):
     _update_search_index(package.id)
 
 
-def update(ckan_ini_filepath, resource_id):
+def update(resource_id):
     """
     Given a resource, calculates an openness score.
 
@@ -154,10 +95,9 @@ def update(ckan_ini_filepath, resource_id):
         'openness_score': score (int)
         'openness_score_reason': the reason for the score (string)
     """
-    load_config(ckan_ini_filepath)
     try:
         update_resource_(resource_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_resource: %s: %s',
                   e.__class__.__name__, unicode(e))
         raise
@@ -227,8 +167,6 @@ def resource_score(resource):
     score_reason = ''
     format_ = None
 
-    register_translator()
-
     try:
         score_reasons = []  # a list of strings detailing how we scored it
         archival = Archival.get_for_resource(resource_id=resource.id)
@@ -256,7 +194,7 @@ def resource_score(resource):
                             format_ = get_qa_format(resource.id)
         score_reason = ' '.join(score_reasons)
         format_ = format_ or None
-    except Exception, e:
+    except Exception as e:
         log.error('Unexpected error while calculating openness score %s: %s\nException: %s',
                   e.__class__.__name__, unicode(e), traceback.format_exc())
         score_reason = _("Unknown error: %s") % str(e)
@@ -352,6 +290,7 @@ def score_by_sniffing_data(archival, resource, score_reasons):
       * If it cannot work out the format then format_string is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa.lib import resource_format_scores
     if not archival or not archival.cache_filepath:
         score_reasons.append(_('This file had not been downloaded at the time of scoring it.'))
         return (None, None)
@@ -363,7 +302,7 @@ def score_by_sniffing_data(archival, resource, score_reasons):
     else:
         if filepath:
             sniffed_format = sniff_file_format(filepath)
-            score = lib.resource_format_scores().get(sniffed_format['format']) \
+            score = resource_format_scores().get(sniffed_format['format']) \
                 if sniffed_format else None
             if sniffed_format:
                 score_reasons.append(_('Content of file appeared to be format "%s" which receives openness score: %s.')
@@ -401,6 +340,7 @@ def score_by_url_extension(resource, score_reasons):
       * If it cannot work out the format then format is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa.lib import resource_format_scores
     extension_variants_ = extension_variants(resource.url.strip())
     if not extension_variants_:
         score_reasons.append(_('Could not determine a file extension in the URL.'))
@@ -408,7 +348,7 @@ def score_by_url_extension(resource, score_reasons):
     for extension in extension_variants_:
         format_ = format_get(extension)
         if format_:
-            score = lib.resource_format_scores().get(format_)
+            score = resource_format_scores().get(format_)
             if score:
                 score_reasons.append(
                     _('URL extension "%s" relates to format "%s" and receives score: %s.') % (extension, format_, score))
@@ -454,16 +394,17 @@ def score_by_format_field(resource, score_reasons):
       * If it cannot work out the format then format_string is None
       * If it cannot score it, then score is None
     '''
+    from ckanext.qa.lib import resource_format_scores, munge_format_to_be_canonical
     format_field = resource.format or ''
     if not format_field:
         score_reasons.append(_('Format field is blank.'))
         return (None, None)
     format_tuple = ckan_helpers.resource_formats().get(format_field.lower()) or \
-        ckan_helpers.resource_formats().get(lib.munge_format_to_be_canonical(format_field))
+        ckan_helpers.resource_formats().get(munge_format_to_be_canonical(format_field))
     if not format_tuple:
         score_reasons.append(_('Format field "%s" does not correspond to a known format.') % format_field)
         return (None, None)
-    score = lib.resource_format_scores().get(format_tuple[1])
+    score = resource_format_scores().get(format_tuple[1])
     score_reasons.append(_('Format field "%s" receives score: %s.') %
                          (format_field, score))
     return (score, format_tuple[1])

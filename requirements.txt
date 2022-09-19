@@ -1,4 +1,10 @@
-xlrd==1.0.0
+ckantoolkit>=0.0.7
+SQLAlchemy>=0.6.6
+requests
+progressbar
+six>=1.9  # until messytables->html5lib releases https://github.com/html5lib/html5lib-python/pull/301
+xlrd==2.0.1
 python-magic==0.4.12
 messytables==0.15.2
-progressbar==2.3
+progressbar2==3.53.3
+future>=0.18.2
