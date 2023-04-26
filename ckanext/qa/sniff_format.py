@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import tempfile
 from io import open
 import sys
 import re
@@ -74,11 +74,9 @@ def sniff_file_format(filepath):
             if is_iati(buf):
                 format_ = {'format': 'IATI'}
         elif mime_type == 'application/csv':
-            with open(filepath, 'r', encoding='ISO-8859-1', newline=None) as f:
-                buf = f.read(10000)
-            if is_csv(buf):
+            if is_csv(filepath):
                 format_ = {'format': 'CSV'}
-            elif is_psv(buf):
+            elif is_psv(filepath):
                 format_ = {'format': 'PSV'}
 
         if format_:
@@ -96,9 +94,9 @@ def sniff_file_format(filepath):
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
                 # is it CSV?
-                elif is_csv(buf):
+                elif is_csv(filepath):
                     format_ = {'format': 'CSV'}
-                elif is_psv(buf):
+                elif is_psv(filepath):
                     format_ = {'format': 'PSV'}
 
         if not format_:
@@ -116,9 +114,9 @@ def sniff_file_format(filepath):
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
                 # is it CSV?
-                elif is_csv(buf):
+                elif is_csv(filepath):
                     format_ = {'format': 'CSV'}
-                elif is_psv(buf):
+                elif is_psv(filepath):
                     format_ = {'format': 'PSV'}
                 # XML files without the "<?xml ... ?>" tag end up here
                 elif is_xml_but_without_declaration(buf):
@@ -212,11 +210,27 @@ def is_json(buf):
     return True
 
 
-def is_csv(buf):
-    '''If the buffer is a CSV file then return True.'''
-    # TODO: analyze the file
-    # return _is_spreadsheet(table_set, 'CSV')
-    return False
+def is_csv(filepath):
+    '''If the file is a CSV file then return True.'''
+
+    qsv_input_csv = tempfile.NamedTemporaryFile(suffix=".csv")
+    try:
+        subprocess.run(
+            [
+                "qsv",
+                "input",
+                filepath,
+                "--trim-headers",
+                "--output",
+                qsv_input_csv.name,
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        log.info("Could not process given file as csv, so not as csv: {}".format(e))
+        return False
+
+    return True
 
 
 def is_psv(buf):
