@@ -46,6 +46,15 @@ jobs:
       CKAN_REDIS_URL: redis://redis:6379/1
 
     steps:
+
+      - name: Setup qsv
+        run: |
+          wget https://github.com/jqnatividad/qsv/releases/download/0.99.1/qsv-0.99.1-x86_64-unknown-linux-musl.zip
+          unzip qsv-0.99.1-x86_64-unknown-linux-musl.zip -d qsvbin
+          echo "$GITHUB_WORKSPACE/qsvbin" >> $GITHUB_PATH
+
+      - run: qsv --version
+
       - uses: actions/checkout@v3
       - name: Install requirements
         run: |
@@ -55,12 +64,6 @@ jobs:
           pip install -e .
           # Replace default path to CKAN core config file with the one on the container
           sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
-          
-          # Install qsv
-          wget https://github.com/jqnatividad/qsv/releases/download/0.99.0/qsv-0.99.0-x86_64-unknown-linux-gnu.zip
-          unzip qsv-0.99.0-x86_64-unknown-linux-gnu.zip
-          rm qsv-0.99.0-x86_64-unknown-linux-gnu.zip
-          sudo mv qsv* /usr/local/bin
 
       - name: Setup extension
         run: |
