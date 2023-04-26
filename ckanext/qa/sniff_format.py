@@ -10,7 +10,6 @@ import subprocess
 
 import xlrd
 import magic
-import messytables
 
 from ckan.lib import helpers as ckan_helpers
 
@@ -215,16 +214,16 @@ def is_json(buf):
 
 def is_csv(buf):
     '''If the buffer is a CSV file then return True.'''
-    buf_rows = BytesIO(buf.encode('ISO-8859-1'))
-    table_set = messytables.CSVTableSet(buf_rows)
-    return _is_spreadsheet(table_set, 'CSV')
+    # TODO: analyze the file
+    # return _is_spreadsheet(table_set, 'CSV')
+    return False
 
 
 def is_psv(buf):
     '''If the buffer is a PSV file then return True.'''
-    buf_rows = BytesIO(buf.encode('ISO-8859-1'))
-    table_set = messytables.CSVTableSet(buf_rows, delimiter='|')
-    return _is_spreadsheet(table_set, 'PSV')
+    # TODO: analyze the file, using delimiter '|'
+    # return _is_spreadsheet(table_set, 'PSV')
+    return False
 
 
 def _is_spreadsheet(table_set, format):
