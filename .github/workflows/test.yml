@@ -55,6 +55,13 @@ jobs:
           pip install -e .
           # Replace default path to CKAN core config file with the one on the container
           sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+          
+          # Install qsv
+          wget https://github.com/jqnatividad/qsv/releases/download/0.99.0/qsv-0.99.0-x86_64-unknown-linux-gnu.zip
+          unzip qsv-0.99.0-x86_64-unknown-linux-gnu.zip
+          rm qsv-0.99.0-x86_64-unknown-linux-gnu.zip
+          sudo mv qsv* /usr/local/bin
+
       - name: Setup extension
         run: |
           ckan -c test.ini db init
