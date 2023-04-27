@@ -12,7 +12,7 @@ import xlrd
 import magic
 
 from ckan.lib import helpers as ckan_helpers
-
+from ckan.plugins.toolkit import config
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -20,6 +20,9 @@ if sys.version_info[0] >= 3:
 import logging
 
 log = logging.getLogger(__name__)
+
+
+qsv_bin = config.get('ckanext.qa.qsv_bin')
 
 
 def sniff_file_format(filepath):
@@ -217,7 +220,7 @@ def is_csv(filepath):
     try:
         subprocess.run(
             [
-                "qsv",
+                qsv_bin,
                 "input",
                 filepath,
                 "--trim-headers",
