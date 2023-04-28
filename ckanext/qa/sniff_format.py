@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import tempfile
 from io import open
 import sys
 import re
@@ -220,16 +219,12 @@ def is_json(buf):
 def is_csv(filepath):
     '''If the file is a CSV file then return True.'''
 
-    qsv_input_csv = tempfile.NamedTemporaryFile(suffix=".csv")
     try:
         subprocess.run(
             [
                 qsv_bin,
-                "input",
+                "sniff",
                 filepath,
-                "--trim-headers",
-                "--output",
-                qsv_input_csv.name,
             ],
             check=True,
         )
@@ -243,17 +238,12 @@ def is_csv(filepath):
 def is_psv(filepath):
     '''If the file is a PSV file then return True.'''
 
-    qsv_input_psv = tempfile.NamedTemporaryFile(suffix=".psv")
     try:
         subprocess.run(
             [
                 qsv_bin,
-                "input",
+                "sniff",
                 filepath,
-                "--trim-headers",
-                "--delimeter |",
-                "--output",
-                qsv_input_psv.name,
             ],
             check=True,
         )
