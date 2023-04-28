@@ -236,7 +236,7 @@ def is_csv(filepath):
         return False
 
     result = json.loads(result.stdout)
-    if result.delimiter_char == ',':
+    if result.get('delimiter_char') == ',':
         return True
     return False
 
@@ -260,7 +260,7 @@ def is_psv(filepath):
         return False
 
     result = json.loads(result.stdout)
-    if result.delimiter_char == '|':
+    if result.get('delimiter_char') == '|':
         return True
     return False
 
