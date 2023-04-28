@@ -240,11 +240,28 @@ def is_csv(filepath):
     return True
 
 
-def is_psv(buf):
-    '''If the buffer is a PSV file then return True.'''
-    # TODO: analyze the file, using delimiter '|'
-    # return _is_spreadsheet(table_set, 'PSV')
-    return False
+def is_psv(filepath):
+    '''If the file is a PSV file then return True.'''
+
+    qsv_input_psv = tempfile.NamedTemporaryFile(suffix=".psv")
+    try:
+        subprocess.run(
+            [
+                qsv_bin,
+                "input",
+                filepath,
+                "--trim-headers",
+                "--output",
+                "--delimeter |",
+                qsv_input_psv.name,
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        log.info("Could not process given file as psv, so not as p: {}".format(e))
+        return False
+
+    return True
 
 
 def _is_spreadsheet(table_set, format):
