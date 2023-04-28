@@ -53,24 +53,8 @@ jobs:
           wget https://github.com/jqnatividad/qsv/releases/download/0.99.1/qsv-0.99.1-x86_64-unknown-linux-musl.zip
           unzip qsv-0.99.1-x86_64-unknown-linux-musl.zip -d qsvbin
           echo "$GITHUB_WORKSPACE/qsvbin" >> $GITHUB_PATH
-          echo "qsv_bin=$GITHUB_WORKSPACE/qsvbin" >> $GITHUB_ENV
-          cd $GITHUB_WORKSPACE/qsvbin
-          pwd
-          ls $GITHUB_WORKSPACE/qsvbin/qsv
 
-
-          
-
-      
-
-      - name: Test qsv
-        run: |
-          qsv --version
-          if [ -f ${{ env.qsv_bin }}/qsv ]; then
-            echo "File qsv exists"
-          else
-            echo "File qsv does not exist"
-          fi
+      - run: qsv --version
 
       - name: Install requirements
         run: |
@@ -81,12 +65,12 @@ jobs:
           # Replace default path to CKAN core config file with the one on the container
           sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
 
-      - name: Replace qsv path in test.ini for tests
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          find: "ckanext.qa.qsv_bin.*"
-          replace: "ckanext.qa.qsv_bin = ${{ env.qsv_bin }}/qsv"
-          include: "test.ini"
+      #- name: Replace qsv path in test.ini for tests
+      #  uses: jacobtomlinson/gha-find-replace@v3
+      #  with:
+      #    find: "ckanext.qa.qsv_bin.*"
+      #    replace: "ckanext.qa.qsv_bin = ${{ env.qsv_bin }}/qsv"
+      #    include: "test.ini"
 
       - name: Setup extension
         run: |
