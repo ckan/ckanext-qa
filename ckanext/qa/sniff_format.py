@@ -7,6 +7,7 @@ import zipfile
 import os
 from collections import defaultdict
 import subprocess
+from pathlib import Path
 
 import xlrd
 import magic
@@ -23,6 +24,9 @@ log = logging.getLogger(__name__)
 
 
 qsv_bin = config.get('ckanext.qa.qsv_bin')
+qsv_path = Path(qsv_bin)
+if not qsv_path.is_file():
+    log.error("{} not found.".format(qsv_bin))
 
 
 def sniff_file_format(filepath):
