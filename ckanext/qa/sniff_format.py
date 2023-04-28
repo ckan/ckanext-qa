@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from io import open
 import sys
 import re
@@ -220,38 +221,48 @@ def is_csv(filepath):
     '''If the file is a CSV file then return True.'''
 
     try:
-        subprocess.run(
+        result = subprocess.run(
             [
                 qsv_bin,
                 "sniff",
+                "--json",
                 filepath,
             ],
             check=True,
+            stdout=subprocess.PIPE
         )
     except subprocess.CalledProcessError as e:
         log.info("Could not process given file as csv, so not as csv: {}".format(e))
         return False
 
-    return True
+    result = json.loads(result.stdout)
+    if result.delimiter_char == ',':
+        return True
+    return False
 
 
 def is_psv(filepath):
     '''If the file is a PSV file then return True.'''
 
     try:
-        subprocess.run(
+        result = subprocess.run(
             [
                 qsv_bin,
                 "sniff",
+                "--json",
                 filepath,
             ],
             check=True,
+            stdout=subprocess.PIPE
         )
     except subprocess.CalledProcessError as e:
         log.info("Could not process given file as psv, so not as p: {}".format(e))
         return False
 
-    return True
+    result = json.loads(result.stdout)
+    if result.delimiter_char == '|':
+        return True
+    return False
 
 
 def _is_spreadsheet(table_set, format):
