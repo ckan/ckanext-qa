@@ -2,14 +2,18 @@ import os
 import json
 import re
 import logging
-from ckan.plugins.toolkit import config
+from ckan.plugins import toolkit as tk
 
 from ckan import plugins as p
 from ckanext.qa.tasks import update_package, update
 
 log = logging.getLogger(__name__)
 
+config = tk.config
+enqueue_job = tk.enqueue_job
+
 _RESOURCE_FORMAT_SCORES = None
+
 
 
 def compat_enqueue(name, fn, queue, args=None):
@@ -19,10 +23,10 @@ def compat_enqueue(name, fn, queue, args=None):
     '''
     try:
         # Try to use RQ
-        from ckan.plugins.toolkit import enqueue_job
         enqueue_job(fn, args=args, queue=queue)
     except ImportError:
         # Fallback to Celery
+        log.debug('RQ not installed, falling back to Celery')
         import uuid
         from ckan.lib.celery_app import celery
         celery.send_task(name, args=args + [queue], task_id=str(uuid.uuid4()))

@@ -61,6 +61,7 @@ def update(ids, queue):
 
 @qa.command()
 @click.argument('filepaths', nargs=-1)
+@click.option('-f', '--filepaths', help='Filepaths to sniff')
 def sniff(filepaths):
     if len(filepaths) < 1:
         print('Not enough arguments', filepaths)
