@@ -23,7 +23,9 @@ import logging
 log = logging.getLogger(__name__)
 
 
-qsv_bin = config.get('ckanext.qa.qsv_bin', '/usr/local/bin/qsv')
+qsv_bin = config.get('ckanext.qa.qsv_bin')
+if not qsv_bin:
+    log.error("ckanext.qa.qsv_bin not set in config.")
 qsv_path = Path(qsv_bin)
 if not qsv_path.is_file():
     log.error("{} not found.".format(qsv_bin))

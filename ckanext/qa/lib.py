@@ -15,7 +15,6 @@ enqueue_job = tk.enqueue_job
 _RESOURCE_FORMAT_SCORES = None
 
 
-
 def compat_enqueue(name, fn, queue, args=None):
 
     u'''
@@ -23,6 +22,7 @@ def compat_enqueue(name, fn, queue, args=None):
     '''
     try:
         # Try to use RQ
+        log.debug('Trying to use RQ')
         enqueue_job(fn, args=args, queue=queue)
     except ImportError:
         # Fallback to Celery
@@ -91,7 +91,7 @@ def munge_format_to_be_canonical(format_name):
 def create_qa_update_package_task(package, queue):
 
     compat_enqueue('qa.update_package', update_package, queue,  args=[package.id])
-    log.debug('QA of package put into celery queue %s: %s',
+    log.debug('QA of package put into queue %s: %s',
               queue, package.name)
 
 
@@ -103,5 +103,5 @@ def create_qa_update_task(resource, queue):
 
     compat_enqueue('qa.update', update, queue, args=[resource.id])
 
-    log.debug('QA of resource put into celery queue %s: %s/%s url=%r',
+    log.debug('QA of resource put into queue %s: %s/%s url=%r',
               queue, package.name, resource.id, resource.url)

@@ -4,11 +4,11 @@
   {{ super() }}
 
   {% block package_openness %}
-    {% if c.pkg_dict %}
+    {% if g.pkg_dict %}
       <div class="module module-narrow module-shallow context-info">
         <h2 class="module-heading"><i class="fa fa-eye"></i> {{ _('Openness') }}</h2>
         <section class="module-content">
-          {{ h.qa_openness_stars_dataset_html(c.pkg_dict) }}<br>
+          {{ h.qa_openness_stars_dataset_html(g.pkg_dict) }}<br>
         </section>
       </div>
     {% endif %}
