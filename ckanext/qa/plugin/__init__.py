@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import ckan.model as model
 import ckan.plugins as p
@@ -35,6 +36,16 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
     def update_config(self, config):
         toolkit.add_template_directory(config, '../templates')
 
+        # check for qsv config
+        qsv_config = config.get('ckanext.qa.qsv_config')
+        if not qsv_config:
+            log.error('ckanext.qa.qsv_config not set')
+        if qsv_config:
+            qsv_path = Path(qsv_config)
+            if not qsv_path.is_file():
+                log.error('ckanext.qa.qsv_config file not found: %s', qsv_path)
+        
+        
     # IPipe
 
     def receive_data(self, operation, queue, **params):

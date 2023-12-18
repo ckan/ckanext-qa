@@ -23,14 +23,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-qsv_bin = config.get('ckanext.qa.qsv_bin')
-if not qsv_bin:
-    log.error("ckanext.qa.qsv_bin not set in config.")
-qsv_path = Path(qsv_bin)
-if not qsv_path.is_file():
-    log.error("{} not found.".format(qsv_bin))
-
-
 def sniff_file_format(filepath):
     '''For a given filepath, work out what file format it is.
 
@@ -47,6 +39,7 @@ def sniff_file_format(filepath):
     one.
     '''
     format_ = None
+    qsv_bin = config.get('ckanext.qa.qsv_bin')
     log.info('Sniffing file format of: %s', filepath)
     filepath_utf8 = filepath.encode('utf8') if isinstance(filepath, unicode) \
         else filepath
@@ -83,9 +76,9 @@ def sniff_file_format(filepath):
             if is_iati(buf):
                 format_ = {'format': 'IATI'}
         elif mime_type == 'application/csv':
-            if is_csv(filepath):
+            if is_csv(filepath, qsv_bin):
                 format_ = {'format': 'CSV'}
-            elif is_psv(filepath):
+            elif is_psv(filepath, qsv_bin):
                 format_ = {'format': 'PSV'}
 
         if format_:
@@ -103,9 +96,9 @@ def sniff_file_format(filepath):
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
                 # is it CSV?
-                elif is_csv(filepath):
+                elif is_csv(filepath, qsv_bin):
                     format_ = {'format': 'CSV'}
-                elif is_psv(filepath):
+                elif is_psv(filepath, qsv_bin):
                     format_ = {'format': 'PSV'}
 
         if not format_:
@@ -123,9 +116,9 @@ def sniff_file_format(filepath):
                 if is_json(buf):
                     format_ = {'format': 'JSON'}
                 # is it CSV?
-                elif is_csv(filepath):
+                elif is_csv(filepath, qsv_bin):
                     format_ = {'format': 'CSV'}
-                elif is_psv(filepath):
+                elif is_psv(filepath, qsv_bin):
                     format_ = {'format': 'PSV'}
                 # XML files without the "<?xml ... ?>" tag end up here
                 elif is_xml_but_without_declaration(buf):
@@ -219,7 +212,7 @@ def is_json(buf):
     return True
 
 
-def is_csv(filepath):
+def is_csv(filepath, qsv_bin):
     '''If the file is a CSV file then return True.'''
 
     try:
@@ -243,7 +236,7 @@ def is_csv(filepath):
     return False
 
 
-def is_psv(filepath):
+def is_psv(filepath, qsv_bin):
     '''If the file is a PSV file then return True.'''
 
     try:
