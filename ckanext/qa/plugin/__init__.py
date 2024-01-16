@@ -44,8 +44,7 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
             qsv_path = Path(qsv_config)
             if not qsv_path.is_file():
                 log.error('ckanext.qa.qsv_config file not found: %s', qsv_path)
-        
-        
+
     # IPipe
 
     def receive_data(self, operation, queue, **params):

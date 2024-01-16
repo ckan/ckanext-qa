@@ -7,7 +7,6 @@ import zipfile
 import os
 from collections import defaultdict
 import subprocess
-from pathlib import Path
 
 import xlrd
 import magic
