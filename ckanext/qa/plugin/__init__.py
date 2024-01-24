@@ -37,13 +37,13 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
         toolkit.add_template_directory(config, '../templates')
 
         # check for qsv config
-        qsv_config = config.get('ckanext.qa.qsv_config')
+        qsv_config = config.get('ckanext.qa.qsv_bin')
         if not qsv_config:
-            log.error('ckanext.qa.qsv_config not set')
+            log.error('ckanext.qa.qsv_bin not set')
         if qsv_config:
             qsv_path = Path(qsv_config)
             if not qsv_path.is_file():
-                log.error('ckanext.qa.qsv_config file not found: %s', qsv_path)
+                log.error('ckanext.qa.qsv_bin file not found: %s', qsv_path)
 
     # IPipe
 
