@@ -121,3 +121,10 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
                 del qa_dict['package_id']
                 del qa_dict['resource_id']
                 res['qa'] = qa_dict
+
+    def before_dataset_index(self, pkg_dict):
+        '''
+        remove `qa` from index
+        '''
+        pkg_dict.pop('qa', None)
+        return pkg_dict
