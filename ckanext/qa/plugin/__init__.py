@@ -37,13 +37,13 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
         toolkit.add_template_directory(config, '../templates')
 
         # check for qsv config
-        qsv_config = config.get('ckanext.qa.qsv_config')
-        if not qsv_config:
-            log.error('ckanext.qa.qsv_config not set')
-        if qsv_config:
-            qsv_path = Path(qsv_config)
+        qsv_bin = config.get('ckanext.qa.qsv_bin')
+        if qsv_bin:
+            qsv_path = Path(qsv_bin)
             if not qsv_path.is_file():
-                log.error('ckanext.qa.qsv_config file not found: %s', qsv_path)
+                log.error('ckanext.qa.qsv_bin file not found: %s', qsv_path)
+        else:
+            log.error('ckanext.qa.qsv_bin not set')
 
     # IPipe
 
@@ -121,3 +121,10 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
                 del qa_dict['package_id']
                 del qa_dict['resource_id']
                 res['qa'] = qa_dict
+
+    def before_dataset_index(self, pkg_dict):
+        '''
+        remove `qa` from index
+        '''
+        pkg_dict.pop('qa', None)
+        return pkg_dict
