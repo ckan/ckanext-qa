@@ -1,9 +1,8 @@
 from setuptools import setup, find_packages
-from ckanext.qa import __version__
 
 setup(
     name='ckanext-qa',
-    version=__version__,
+    version='2.0',
     description='Quality Assurance plugin for CKAN',
     long_description='',
     classifiers=[],
