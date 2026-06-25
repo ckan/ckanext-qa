@@ -54,11 +54,11 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Setup qsv
         run: |
           apt update
-          apt install unzip
+          apt install unzip wget
           wget https://github.com/jqnatividad/qsv/releases/download/3.3.0/qsv-3.3.0-x86_64-unknown-linux-musl.zip
           unzip qsv-3.3.0-x86_64-unknown-linux-musl.zip -d $RUNNER_TEMP/qsvbin
           echo "$RUNNER_TEMP/qsvbin" >> $GITHUB_PATH
