@@ -4,8 +4,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.10'
       - name: Install requirements
@@ -20,6 +20,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - ckan-version: "2.12"
+            ckan-image: "ckan/ckan-dev:2.12"
           - ckan-version: "2.11"
             ckan-image: "ckan/ckan-dev:2.11-py3.10"
           - ckan-version: "2.10"
@@ -69,10 +71,10 @@ jobs:
           pip install -e .
           # Replace default path to CKAN core config file with the one on the container
           sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
-        
+
           # Replace qsv bin to one in path, will produce error in logs
-          sed -i -e 's/ckanext.qa.qsv_bin.*/ckanext.qa.qsv_bin = qsv/' test.ini      
-      
+          sed -i -e 's/ckanext.qa.qsv_bin.*/ckanext.qa.qsv_bin = qsv/' test.ini
+
       - name: Setup extension
         run: |
           ckan -c test.ini db init
