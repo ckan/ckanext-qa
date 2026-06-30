@@ -9,7 +9,7 @@ import os
 import traceback
 
 from ckan.common import _
-
+from ckan.lib.search import rebuild
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
 from ckanext.qa.sniff_format import sniff_file_format
@@ -414,14 +414,7 @@ def _update_search_index(package_id):
     '''
     Tells CKAN to update its search index for a given package.
     '''
-    from ckan import model
-    from ckan.lib.search.index import PackageSearchIndex
-    package_index = PackageSearchIndex()
-    context_ = {'model': model, 'ignore_auth': True, 'session': model.Session,
-                'use_cache': False, 'validate': False}
-    package = toolkit.get_action('package_show')(context_, {'id': package_id})
-    package_index.index_package(package, defer_commit=False)
-    log.info('Search indexed %s', package['name'])
+    rebuild(package_id)
 
 
 def save_qa_result(resource, qa_result):
