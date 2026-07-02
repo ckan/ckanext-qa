@@ -1,3 +1,2 @@
 progressbar
-six>=1.9  # until messytables->html5lib releases https://github.com/html5lib/html5lib-python/pull/301
 progressbar2==3.53.3

@@ -4,4 +4,4 @@ groups:
     options:
       - key: ckanext.qa.qsv_bin
         description: Path to QSV binary
-        default: /usr/local/bin/qsv
+        default: /usr/bin/qsv

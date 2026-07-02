@@ -1,4 +1,5 @@
-﻿<ProjectData>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectData>
   <Project RecordNumber="1" ProjectReference="100234" ProjectTitle="Admin Project for A0011 (Uganda- Admin)" ProjectPurpose="" StartDate="01/04/2002" EndDate="30/06/2099" ProjectStage="Operational" ProjectBudget="255567.93" ProjectSpend="240923.52" DFIDCountryCode="AC" DFIDCountryName="Administrative/Capital" DACCountryCode="998" DACCountryName="Bilateral Unallocated" DACContinentName="World Unallocated" DACRegionName="World Unallocated" DFIDDepartment="DFID Uganda" UrlToProjectDetail="http://projects.dfid.gov.uk/project.aspx?Project=100234" GenderEquality="Admin - Exempt" HivAids="Admin - Exempt">
     <ProjectSector DACGroupCode="910" DACGroupName="Administrative costs of donors" DACSectorCode="91010" DACSectorName="Administrative costs" Percentage="100" />
     <Component ComponentReference="100234-105" ComponentTitle="Consultancies" StartDate="01/04/2002" EndDate="30/06/2099" WhatsItFor="Procurement of services" DFIDCountryCode="NS" DFIDCountryName="Non Specific Country" DACCountryCode="998" DACCountryName="Bilateral Unallocated" DACContinentName="World Unallocated" DFIDDepartment="DFID Uganda">

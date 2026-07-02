@@ -4,22 +4,16 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-      - name: Install requirements
-        run: pip install flake8 pycodestyle
-      - name: Check syntax
-        run: flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan
-      - name: Run flake8
-        run: flake8 . --count --max-line-length=127 --statistics --exclude ckan
+      - uses: actions/checkout@v7
+      - uses: astral-sh/ruff-action@v4.0.0
 
   test:
     needs: lint
     strategy:
       matrix:
         include:
+          - ckan-version: "2.12"
+            ckan-image: "ckan/ckan-dev:2.12"
           - ckan-version: "2.11"
             ckan-image: "ckan/ckan-dev:2.11-py3.10"
           - ckan-version: "2.10"
@@ -42,7 +36,7 @@ jobs:
           POSTGRES_DB: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
       redis:
-        image: redis:3
+        image: redis:7
     env:
       CKAN_SQLALCHEMY_URL: postgresql://ckan_default:pass@postgres/ckan_test
       CKAN_DATASTORE_WRITE_URL: postgresql://datastore_write:pass@postgres/datastore_test
@@ -52,12 +46,13 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Setup qsv
         run: |
-          apt install unzip
-          wget https://github.com/jqnatividad/qsv/releases/download/3.3.0/qsv-3.3.0-x86_64-unknown-linux-musl.zip
-          unzip qsv-3.3.0-x86_64-unknown-linux-musl.zip -d $RUNNER_TEMP/qsvbin
+          apt update
+          apt install unzip wget file -y
+          wget https://github.com/dathere/qsv/releases/download/21.1.0/qsv-21.1.0-x86_64-unknown-linux-musl.zip
+          unzip qsv-21.1.0-x86_64-unknown-linux-musl.zip -d $RUNNER_TEMP/qsvbin
           echo "$RUNNER_TEMP/qsvbin" >> $GITHUB_PATH
 
       - run: qsv --version
@@ -69,10 +64,10 @@ jobs:
           pip install -e .
           # Replace default path to CKAN core config file with the one on the container
           sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
-        
+
           # Replace qsv bin to one in path, will produce error in logs
-          sed -i -e 's/ckanext.qa.qsv_bin.*/ckanext.qa.qsv_bin = qsv/' test.ini      
-      
+          sed -i -e 's/ckanext.qa.qsv_bin.*/ckanext.qa.qsv_bin = qsv/' test.ini
+
       - name: Setup extension
         run: |
           ckan -c test.ini db init
