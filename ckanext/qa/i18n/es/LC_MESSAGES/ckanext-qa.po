@@ -1,0 +1,119 @@
+# Spanish (ES) translations for ckanext-qa.
+# Copyright (C) 2024
+# This file is distributed under the same license as the ckanext-qa project.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-qa\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-10-11 16:18+0000\n"
+"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Last-Translator: ChatGPT\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ckanext/qa/templates/qa/openness_stars.html:10
+#: ckanext/qa/templates/qa/openness_stars_brief.html:7
+msgid "Openness Score:"
+msgstr "Grado de apertura:"
+
+#: ckanext/qa/templates/qa/openness_stars.html:15
+msgid "Score:"
+msgstr "Puntuación:"
+
+#: ckanext/qa/templates/qa/openness_stars.html:19
+msgid "Date of score:"
+msgstr "Fecha de la puntuación:"
+
+#: ckanext/qa/templates/qa/openness_stars.html:23
+#: ckanext/qa/templates/qa/openness_stars_brief.html:11
+msgid "Reason"
+msgstr "Motivo"
+
+#: ckanext/qa/templates/qa/openness_stars.html:23
+#: ckanext/qa/templates/qa/openness_stars_brief.html:11
+msgid "Checked"
+msgstr "Comprobado"
+
+#: ckanext/qa/tasks.py:284
+msgid "Could not determine a file extension in the URL."
+msgstr "No se pudo determinar una extensión de archivo en la URL."
+
+#: ckanext/qa/tasks.py:294
+#, python-format
+msgid "URL extension \"%s\" relates to format \"%s\" and receives score: %s."
+msgstr "La extensión de la URL \"%s\" se relaciona con el formato \"%s\" y recibe puntuación: %s."
+
+#: ckanext/qa/tasks.py:303
+#, python-format
+msgid ""
+"URL extension \"%s\" relates to format \"%s\" but a score for that format "
+"is not configured, so giving it default score %s."
+msgstr ""
+"La extensión de la URL \"%s\" se relaciona con el formato \"%s\", pero no existe una puntuación configurada para ese formato, así que se aplica la puntuación predeterminada: %s."
+
+#: ckanext/qa/tasks.py:310
+#, python-format
+msgid "URL extension \"%s\" is an unknown format."
+msgstr "La extensión de la URL \"%s\" es un formato desconocido."
+
+#: ckanext/qa/tasks.py:395
+#, python-format
+msgid "The format \"%s\" is known but could not be scored."
+msgstr "El formato \"%s\" es conocido pero no se pudo puntuar."
+
+#: ckanext/qa/tasks.py:399
+#, python-format
+msgid "The format \"%s\" is not known or is not machine-readable."
+msgstr "El formato \"%s\" no es conocido o no es legible por máquina."
+
+#: ckanext/qa/tasks.py:426
+#, python-format
+msgid "Content could not be retrieved from the resource: %s"
+msgstr "No se pudo obtener el contenido del recurso: %s"
+
+#: ckanext/qa/tasks.py:434
+#, python-format
+msgid "Content retrieved, size %s bytes"
+msgstr "Contenido obtenido, tamaño %s bytes"
+
+#: ckanext/qa/tasks.py:454
+msgid "The file format is not supported for content checks."
+msgstr "El formato del archivo no es compatible con las comprobaciones de contenido."
+
+#: ckanext/qa/tasks.py:476
+msgid "Content appears to be valid according to the format."
+msgstr "El contenido parece ser válido según su formato."
+
+#: ckanext/qa/tasks.py:480
+msgid "Content does not appear to be valid according to the format."
+msgstr "El contenido no parece ser válido según su formato."
+
+#: ckanext/qa/commands/qa.py:60
+msgid "No datasets to refresh"
+msgstr "No hay conjuntos de datos para actualizar"
+
+#: ckanext/qa/commands/qa.py:64
+msgid "QA refresh queued for all datasets"
+msgstr "Actualización de QA en cola para todos los conjuntos de datos"
+
+#: ckanext/qa/commands/qa.py:71
+msgid "No resources found for dataset"
+msgstr "No se encontraron recursos para el conjunto de datos"
+
+#: ckanext/qa/commands/qa.py:76
+msgid "QA refresh queued for dataset"
+msgstr "Actualización de QA en cola para el conjunto de datos"
+
+#: ckanext/qa/commands/qa.py:87
+msgid "No such dataset"
+msgstr "No existe ese conjunto de datos"
+
+#: ckanext/qa/commands/qa.py:108
+msgid "QA update completed"
+msgstr "Actualización de QA completada"
+
